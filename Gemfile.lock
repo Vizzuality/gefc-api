@@ -89,6 +89,10 @@ GEM
       puma (>= 4.0, < 6.0)
     concurrent-ruby (1.1.8)
     crass (1.0.6)
+    dotenv (2.7.6)
+    dotenv-rails (2.7.6)
+      dotenv (= 2.7.6)
+      railties (>= 3.2)
     erubi (1.10.0)
     ffi (1.15.0)
     globalid (0.4.2)
@@ -240,6 +244,7 @@ DEPENDENCIES
   capistrano-rbenv (~> 2.2)
   capistrano-yarn
   capistrano3-puma
+  dotenv-rails
   jbuilder (~> 2.7)
   listen (~> 3.3)
   pg (~> 1.1)
