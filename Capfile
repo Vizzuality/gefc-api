@@ -12,7 +12,6 @@ set :rbenv_roles, :all # default value
 set :rbenv_ruby, '3.0.0p0'
 
 install_plugin Capistrano::Puma, load_hooks: true
-install_plugin Capistrano::Puma::Systemd
 
 # Load the SCM plugin appropriate to your project:
 #
