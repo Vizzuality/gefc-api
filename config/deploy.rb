@@ -10,7 +10,6 @@ set :rbenv_ruby, '3.0.0'
 set :rbenv_prefix, "RBENV_ROOT=#{fetch(:rbenv_path)} RBENV_VERSION=#{fetch(:rbenv_ruby)} #{fetch(:rbenv_path)}/bin/rbenv exec"
 set :rbenv_map_bins, %w{rake gem bundle ruby rails}
 set :rbenv_roles, :all
-server 'server', port: 7171, roles: [:web, :app, :db], primary: true
 set :puma_threads, [1, 16]
 set :puma_workers, 0
 set :puma_bind,       'unix:///var/www/gefc_api/shared/tmp/sockets/puma.sock'
