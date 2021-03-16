@@ -10,6 +10,10 @@ development:
 test:
   <<: *default
   database: gefc_api_test
+staging:
+  <<: *default
+  database: gefc_api_staging
+  password: <%= ENV['STAGING_DATABASE_URL'] %>
 
 production:
   <<: *default
