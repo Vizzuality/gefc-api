@@ -12,4 +12,5 @@ set :rbenv_ruby, '3.0.0p0'
 
 install_plugin Capistrano::SCM::Git
 install_plugin Capistrano::Puma, load_hooks: true
+install_plugin Capistrano::Puma::Systemd
 Dir.glob("lib/capistrano/tasks/*.rake").each { |r| import r }
