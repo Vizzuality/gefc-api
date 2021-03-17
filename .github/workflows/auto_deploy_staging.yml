@@ -18,3 +18,4 @@ jobs:
       with:
         target: production
         deploy_key: ${{ secrets.ID_RSA_ENC_PASS }}
+        enc_rsa_key_pth: ./config/deploy/encrypted_keys/deploy_gefc_staging_rsa_enc
