@@ -24,6 +24,8 @@ gem 'jbuilder', '~> 2.7'
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
+
+# .env files
 gem 'dotenv-rails'
 
 # Reduces boot times through caching; required in config/boot.rb
@@ -50,6 +52,7 @@ group :development do
   gem 'capistrano3-puma'
   gem 'capistrano-yarn'
   gem 'rubocop', '~> 1.10.0', require: false
+  gem 'rubocop-rails'
   gem 'rubocop-performance', require: false
 end
 
