@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_23_162010) do
+ActiveRecord::Schema.define(version: 2021_03_23_163303) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -28,6 +28,19 @@ ActiveRecord::Schema.define(version: 2021_03_23_162010) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["subgroup_id"], name: "index_indicators_on_subgroup_id"
+  end
+
+  create_table "records", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "indicator_id"
+    t.float "value"
+    t.integer "year"
+    t.string "category_1"
+    t.string "category_2"
+    t.string "category_3"
+    t.string "category_4"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["indicator_id"], name: "index_records_on_indicator_id"
   end
 
   create_table "subgroups", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
