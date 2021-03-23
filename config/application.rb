@@ -34,5 +34,10 @@ module GefcApi
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    # Generate always using uuid by default
+    config.generators do |g|
+      g.orm :active_record, primary_key_type: :uuid
+    end
   end
 end
