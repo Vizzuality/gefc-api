@@ -5,4 +5,8 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+Widget.create([{ name: 'chart'}, { name: 'pie' }])
 Group.create([{ name: 'group one'}, { name: 'group two' }])
+Subgroup.create(name: 'subgroup one', group: Group.first)
+first_indicator = Indicator.create(name: 'indicator one', subgroups: Subgroup.first)
+first_indicator.widgets << Widget.first
