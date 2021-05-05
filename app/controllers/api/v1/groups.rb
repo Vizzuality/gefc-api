@@ -6,7 +6,7 @@ module API
 			resource :groups do
 				desc "Return all groups"
 				get "", root: :groups do
-					Group.all
+					present Group.all, with: API::V1::Entities::Group
 				end
 
 				desc "Return a group"
@@ -15,7 +15,7 @@ module API
 						group"
 				end
 				get ":id", root: "group" do
-					Group.where(id: permitted_params[:id]).first!
+					present Group.where(id: permitted_params[:id]).first!, with: API::V1::Entities::Group
 				end
 			end
 		end
