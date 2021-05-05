@@ -29,6 +29,8 @@ gem 'dotenv-rails'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false
 
+gem 'devise'
+
 # REST-like API framework for Ruby. Read more: https://github.com/ruby-grape/grape
 gem 'grape'
 # Is an API focused facade that sits on top of an object model. Read more: https://github.com/ruby-grape/grape-entity 
