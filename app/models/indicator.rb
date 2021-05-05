@@ -5,5 +5,5 @@ class Indicator < ApplicationRecord
     has_many :indicator_widgets
     has_many :widgets, through: :indicator_widgets
     #default widget
-    belongs_to :widget
+    belongs_to :widget, optional: true
 end
