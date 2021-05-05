@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_29_044123) do
+ActiveRecord::Schema.define(version: 2021_05_05_135625) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -20,6 +20,8 @@ ActiveRecord::Schema.define(version: 2021_04_29_044123) do
     t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "published", default: false, null: false
+    t.string "description"
   end
 
   create_table "indicator_widgets", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -35,6 +37,8 @@ ActiveRecord::Schema.define(version: 2021_04_29_044123) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "widget_id"
+    t.boolean "published", default: false, null: false
+    t.string "description"
     t.index ["subgroup_id"], name: "index_indicators_on_subgroup_id"
     t.index ["widget_id"], name: "index_indicators_on_widget_id"
   end
@@ -74,6 +78,8 @@ ActiveRecord::Schema.define(version: 2021_04_29_044123) do
     t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "published", default: false, null: false
+    t.string "description"
     t.index ["group_id"], name: "index_subgroups_on_group_id"
   end
 
