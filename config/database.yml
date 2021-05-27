@@ -2,9 +2,7 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  username: <%= ENV['POSTGRES_USER'] %>
-  password: <%= ENV.fetch("POSTGRES_PASSWORD") { } %>
+  pool: <%= ENV("RAILS_MAX_THREADS") { 5 } %>
 
 development:
   <<: *default
@@ -14,10 +12,16 @@ test:
   database: gefc_api_test
 staging:
   <<: *default
-  database: gefc_api_staging
-  password: <%= ENV['STAGING_DATABASE_URL'] %>
+  database: <%= ENV['RDS_DATABASE'] %>
+  username: <%= ENV['RDS_USERNAME'] %>
+  password: <%= ENV['RDS_PASSWORD'] %>
+  host: <%= ENV['RDS_HOST'] %>
+  post: 5432
 
 production:
   <<: *default
-  database: gefc_api_staging
-  password: <%= ENV['STAGING_DATABASE_URL'] %>
+  database: <%= ENV['RDS_DATABASE'] %>
+  username: <%= ENV['RDS_USERNAME'] %>
+  password: <%= ENV['RDS_PASSWORD'] %>
+  host: <%= ENV['RDS_HOST'] %>
+  post: 5432
