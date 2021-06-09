@@ -1,3 +1,10 @@
+GIT
+  remote: https://github.com/mimemagicrb/mimemagic
+  revision: 01f92d86d15d85cfd0f20dabd025dcbd36a8a60f
+  ref: 01f92d8
+  specs:
+    mimemagic (0.3.5)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -381,6 +388,7 @@ DEPENDENCIES
   grape-swagger-rails
   jbuilder (~> 2.7)
   listen (~> 3.3)
+  mimemagic (= 0.3.5)!
   pg (~> 1.1)
   puma (~> 5.0)
   rack-cors
