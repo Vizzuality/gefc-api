@@ -53,6 +53,23 @@ module API
 				get ":id/subgroups/:subgroup_id/indicators/:indicator_id" do
 					present Indicator.find(permitted_params[:indicator_id]), with: API::V1::Entities::FullIndicator
 				end
+
+				desc "Return indicator records"
+				params do
+					requires :id, type: String, desc: "ID of the group"
+					requires :subgroup_id, type: String, desc: "ID of the subgroup"
+					requires :indicator_id, type: String, desc: "ID of the indicator"
+					optional :category_1, type: String, desc: "Name of the category"
+					# optional :category_2, type: String, desc: "Name of the category"
+				end
+				get ":id/subgroups/:subgroup_id/indicators/:indicator_id/records" do
+					if params[:category_1]
+						records = Record.where(indicator_id: permitted_params[:id]).where(category_1: params[:category_1])
+					else
+						records = Record.where(indicator_id: permitted_params[:id])
+					end
+					present records, with: API::V1::Entities::Record
+				end
 			end
 		end
 	end
