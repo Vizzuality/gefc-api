@@ -14,6 +14,7 @@ install_plugin Capistrano::SCM::Git
 install_plugin Capistrano::Puma, load_hooks: true
 install_plugin Capistrano::Puma::Systemd
 
-require "capistrano/rails"
+# require "capistrano/rails"
+require "capistrano/rails/migrations"
 
 Dir.glob("lib/capistrano/tasks/*.rake").each { |r| import r }
