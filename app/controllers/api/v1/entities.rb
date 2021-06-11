@@ -51,7 +51,7 @@ module API
             expose :description, documentation: { type: "String", desc: "Group's description." }
             expose :published, documentation: { type: "Boolean", desc: "Group's published status." }
             expose :subgroups, using: API::V1::Entities::Subgroup
-        end      
+        end 
     end
   end
 end
