@@ -47,7 +47,9 @@ module API
 
         class Group < Grape::Entity
             expose :id, documentation: { type: "String", desc: "Group's unique id." }
+            expose :slug, documentation: { type: "String", desc: "Group's slug." }
             expose :name, documentation: { type: "String", desc: "Group's name." }
+            expose :subtitle, documentation: { type: "String", desc: "Group's name." }
             expose :description, documentation: { type: "String", desc: "Group's description." }
             expose :published, documentation: { type: "Boolean", desc: "Group's published status." }
             expose :subgroups, using: API::V1::Entities::Subgroup
