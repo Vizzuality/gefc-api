@@ -37,7 +37,7 @@ module API
             expose :records, using: API::V1::Entities::Record
         end
 
-        class Subgroup < Grape::Entity
+        class FullSubgroup < Grape::Entity
             expose :id, documentation: { type: "String", desc: "Subgroup's unique id." }
             expose :name, documentation: { type: "String", desc: "Subgroup's name." }
             expose :description, documentation: { type: "String", desc: "Subgroup's description." }
@@ -45,12 +45,20 @@ module API
             expose :indicators, using: API::V1::Entities::Indicator
         end
 
+        class BasicSubgroup < Grape::Entity
+            expose :id, documentation: { type: "String", desc: "Subgroup's unique id." }
+            expose :name, documentation: { type: "String", desc: "Subgroup's name." }
+        end
+
         class Group < Grape::Entity
             expose :id, documentation: { type: "String", desc: "Group's unique id." }
+            expose :slug, documentation: { type: "String", desc: "Group's slug." }
             expose :name, documentation: { type: "String", desc: "Group's name." }
+            expose :subtitle, documentation: { type: "String", desc: "Group's name." }
             expose :description, documentation: { type: "String", desc: "Group's description." }
-            expose :published, documentation: { type: "Boolean", desc: "Group's published status." }
-            expose :subgroups, using: API::V1::Entities::Subgroup
+            expose :published, documentation: { type: "Boolean", desc: "Group's published status." }, as: :status
+            expose :default_subgroup, as: :default_subgroup
+            expose :subgroups, using: API::V1::Entities::BasicSubgroup
         end 
     end
   end
