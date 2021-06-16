@@ -7,4 +7,8 @@ class Group < ApplicationRecord
     def set_slug
         self.slug = name.downcase.gsub(/[[:space:]]/, '-')
     end
+
+    def default_subgroup
+        subgroups&.first.name
+    end
 end
