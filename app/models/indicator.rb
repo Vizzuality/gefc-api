@@ -6,8 +6,8 @@ class Indicator < ApplicationRecord
     has_many :records
     has_many :indicator_widgets
     has_many :widgets, through: :indicator_widgets
-    #default widget
-    belongs_to :widget, optional: true
+    has_one :indicator_widget, -> { by_default }, class_name: 'IndicatorWidget'
+    has_one :widget, through: :indicator_widget
 
     scope :by_default, -> { where(by_default: true) }
 
