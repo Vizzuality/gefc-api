@@ -1,6 +1,21 @@
 class Subgroup < ApplicationRecord
+    before_validation :set_by_default, if: :by_default?
+    
     validates_presence_of :name
+    validates_uniqueness_of :by_default, scope: :group_id, if: :by_default?
 
     belongs_to :group
-    has_many   :indicators
+    has_many :indicators
+
+    scope :by_default, -> { where(by_default: true) }
+
+    # TODO move it into a Subgroup creator to avoid realying in callbacks
+    #
+    def set_by_default
+        current_default = group.subgroup
+        if current_default.present?
+            current_default.by_default = false
+            current_default.save!
+        end
+    end
 end

@@ -1,7 +1,9 @@
 class Group < ApplicationRecord
     validates_presence_of :name
-    has_many :subgroups
 
+    has_many :subgroups
+    has_one :subgroup, ->{ by_default }, class_name: 'Subgroup'
+    
     before_create :set_slug
 
     def set_slug
