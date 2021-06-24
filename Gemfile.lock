@@ -78,6 +78,8 @@ GEM
       zeitwerk (~> 2.3)
     airbrussh (1.4.0)
       sshkit (>= 1.6.1, != 1.7.0)
+    appsignal (3.0.8)
+      rack
     arbre (1.4.0)
       activesupport (>= 3.0.0, < 6.2)
       ruby2_keywords (>= 0.0.2, < 1.0)
@@ -368,6 +370,7 @@ PLATFORMS
 
 DEPENDENCIES
   activeadmin
+  appsignal
   bootsnap (>= 1.4.4)
   byebug
   capistrano (~> 3.15)
