@@ -36,6 +36,8 @@ gem 'bootsnap', '>= 1.4.4', require: false
 gem 'devise'
 
 gem 'activeadmin'
+# Exception tracking
+gem 'appsignal'
 
 # REST-like API framework for Ruby. Read more: https://github.com/ruby-grape/grape
 gem 'grape'
