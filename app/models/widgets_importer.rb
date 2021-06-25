@@ -1,8 +1,14 @@
 class WidgetsImporter
   # TO DO Use the FileValidator and handle_invalid_file_exception
   #
+  # Creates Group, Subgroup and Indicator  in the db if they don't exist
+  # for each element of the json in the file_path.
+  # Sets Indicator.by_default.
+  # Creates a relationship between Indicator and Widgets.
+  # Sets Indicator.default_widget.
+  # params: file_path, String.
+  #
   def import_from_json(file_path)
-    file_path = ENV['file_name']
     file_path = Rails.root.to_s + '/' + file_path
 
     file = File.read(file_path)
