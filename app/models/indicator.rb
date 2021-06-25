@@ -20,4 +20,34 @@ class Indicator < ApplicationRecord
             current_default.save!
         end
     end
+
+    def default_visualization
+        widget.name
+    end
+    def category_1
+        records.pluck(:category_1).uniq
+    end
+
+    def category_filters
+        category_filters = {}
+        category_1.each do |category_1|
+            category_filters[category_1] = records.where(category_1: category_1).pluck(:category_2).uniq
+        end
+        category_filters
+    end
+
+    def start_date
+        records.where("year > ?", 1900).order(year: :asc).pluck(:year).first
+    end
+
+    def end_date
+        records.where("year > ?", 1900).order(year: :desc).pluck(:year).first
+    end
+
+
+    # Looks like Widgetable class is needed around...
+    # 
+    def widgets_list
+        widgets.pluck(:name)
+    end
 end

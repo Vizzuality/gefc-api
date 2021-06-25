@@ -5,7 +5,7 @@ class Record < ApplicationRecord
     has_many :record_widgets
     has_many :widgets, through: :record_widgets
 
-    def record_widgets_list
+    def widgets_list
         widgets.pluck(:name)
     end
 end

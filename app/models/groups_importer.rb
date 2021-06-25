@@ -28,9 +28,10 @@ class GroupsImporter
       # Bulk is better.
       #
       current_record = Record.create(indicator: current_indicator,
-       category_1: row_data["category_1"], category_2: row_data["category_2"],
+       category_1: row_data["category_1_en"], category_2: row_data["category_2_en"],
        region: current_region, unit: current_unit, value: row_data["value"], year: row_data["year"] )
-
+      
+       puts "Records count >> #{Record.all.count}"
       # Widgets:
       #
       all_widgets = Widget.all
@@ -42,7 +43,6 @@ class GroupsImporter
       }
 
       record_widgets.select{ |k,v| v == "True" }.keys.each do |k|
-        puts "RecordWidgets count >> #{RecordWidget.all.count}"
         RecordWidget.create!(widget: Widget.find_or_create_by(name: k), record: current_record)
         # TO DO Shall be uniq
       end
