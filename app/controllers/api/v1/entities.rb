@@ -22,6 +22,7 @@ module API
             expose :category_2, documentation: { type: "String", desc: "Record's category." }
             expose :unit, using: API::V1::Entities::Unit
             expose :region, using: API::V1::Entities::Region
+            expose :record_widgets_list, as: :record_widgets_list
         end
         class Indicator < Grape::Entity
             expose :id, documentation: { type: "String", desc: "Indicator's unique id" }
