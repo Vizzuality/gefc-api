@@ -19,3 +19,5 @@ require "capistrano-yarn"
 #require "capistrano/rails/migrations"
 
 Dir.glob("lib/capistrano/tasks/*.rake").each { |r| import r }
+
+require 'appsignal/capistrano'

@@ -23,7 +23,7 @@ module API
 					requires :id, type: String, desc: "ID of the group"
 				end
 				get ":id/subgroups" do
-					present Subgroup.where(group_id: permitted_params[:id]), with: API::V1::Entities::Subgroup
+					present Subgroup.where(group_id: permitted_params[:id]), with: API::V1::Entities::BasicSubgroup
 				end
 
 				desc "Return a group subgroup by id"
@@ -32,7 +32,7 @@ module API
 					requires :subgroup_id, type: String, desc: "ID of the subgroup"
 				end
 				get ":id/subgroups/:subgroup_id" do
-					present Subgroup.find(permitted_params[:subgroup_id]), with: API::V1::Entities::Subgroup
+					present Subgroup.find(permitted_params[:subgroup_id]), with: API::V1::Entities::FullSubgroup
 				end
 
 				desc "Return subgroup indicators"
