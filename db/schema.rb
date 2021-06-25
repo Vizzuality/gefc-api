@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_16_145905) do
+ActiveRecord::Schema.define(version: 2021_06_23_180642) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -91,6 +91,7 @@ ActiveRecord::Schema.define(version: 2021_06_16_145905) do
     t.uuid "widget_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "by_default", default: true, null: false
   end
 
   create_table "indicators", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -101,6 +102,8 @@ ActiveRecord::Schema.define(version: 2021_06_16_145905) do
     t.uuid "widget_id"
     t.boolean "published", default: false, null: false
     t.string "description"
+    t.boolean "by_default", default: true, null: false
+    t.index ["subgroup_id", "by_default"], name: "index_indicators_on_subgroup_id_and_by_default", unique: true, where: "by_default"
     t.index ["subgroup_id"], name: "index_indicators_on_subgroup_id"
     t.index ["widget_id"], name: "index_indicators_on_widget_id"
   end
@@ -142,7 +145,8 @@ ActiveRecord::Schema.define(version: 2021_06_16_145905) do
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "published", default: false, null: false
     t.string "description"
-    t.boolean "default", default: false, null: false
+    t.boolean "by_default", default: true, null: false
+    t.index ["group_id", "by_default"], name: "index_subgroups_on_group_id_and_by_default", unique: true, where: "by_default"
     t.index ["group_id"], name: "index_subgroups_on_group_id"
   end
 
