@@ -11,7 +11,9 @@ class Group < ApplicationRecord
         self.slug = name.downcase.gsub(/[[:space:]]/, '-')
     end
 
+    # Returns subgroup name if exist or nil
+    #
     def default_subgroup
-        subgroup.name
+        subgroup&.name
     end
 end
