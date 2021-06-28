@@ -11,4 +11,15 @@ RSpec.describe Group, type: :model do
 
     expect(group).to_not be_valid
   end
+  it "has a uniq name" do
+    group = create(:group)
+    new_group = build(:group, name: group.name)
+
+    expect(new_group).to_not be_valid
+  end
+  it "has a valid slug" do
+    group = create(:group)
+
+    expect(group.slug).to eq(group.name.downcase.gsub(/[[:space:]]/, '-'))
+  end
 end

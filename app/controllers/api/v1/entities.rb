@@ -52,6 +52,7 @@ module API
 
         class FullSubgroup < Grape::Entity
             expose :id, documentation: { type: "String", desc: "Subgroup's unique id." }
+            expose :slug, documentation: { type: "String", desc: "Subgroup's slug." }            
             expose :name, documentation: { type: "String", desc: "Subgroup's name." }
             expose :description, documentation: { type: "String", desc: "Subgroup's description." }
             expose :published, documentation: { type: "Boolean", desc: "Subgroup's published status." }
@@ -60,6 +61,7 @@ module API
 
         class BasicSubgroup < Grape::Entity
             expose :id, documentation: { type: "String", desc: "Subgroup's unique id." }
+            expose :slug, documentation: { type: "String", desc: "Subgroup's slug." }
             expose :name, documentation: { type: "String", desc: "Subgroup's name." }
         end
 
