@@ -12,6 +12,6 @@ class Group < ApplicationRecord
     end
 
     def default_subgroup
-        subgroups&.first&.name
+        subgroup.name
     end
 end
