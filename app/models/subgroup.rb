@@ -1,10 +1,10 @@
 class Subgroup < ApplicationRecord
+    include Slugable
+
     before_validation :set_by_default, if: :by_default?
     validates_uniqueness_of :by_default, scope: :group_id, if: :by_default?
     validates_uniqueness_of :name
     validates_presence_of :name
-
-    before_create :set_slug
     
     belongs_to :group
     has_many :indicators
@@ -20,9 +20,5 @@ class Subgroup < ApplicationRecord
             current_default.by_default = false
             current_default.save!
         end
-    end
-
-    def set_slug
-        self.slug = name.downcase.gsub(/[[:space:]]/, '-')
     end
 end
