@@ -15,7 +15,7 @@ module API
         Region.create(
           name_en: attributes['region_en'],
           name_cn: attributes['region_cn'],
-          region_type: attributes['region_type']
+          region_type: attributes['region_type']&.downcase&.to_sym
         )
       end
     end
