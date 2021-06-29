@@ -11,6 +11,8 @@ class Indicator < ApplicationRecord
 
     scope :by_default, -> { where(by_default: true) }
 
+    translates :name, :description
+
     # TODO move it into an Indicator creator to avoid realying in callbacks
     #
     def set_by_default
@@ -22,13 +24,13 @@ class Indicator < ApplicationRecord
     end
 
     def default_visualization
-        widget.name
+        widget&.name
     end
     
     # Returns an Array with records category_1.
     #
     def category_1
-        records.pluck(:category_1).uniq
+        records.pluck(Record.current_locale_column(:category_1)).uniq
     end
 
     # Returns an Array with records category_2 for each category_1.
@@ -36,7 +38,10 @@ class Indicator < ApplicationRecord
     def category_filters
         category_filters = {}
         category_1.each do |category_1|
-            category_filters[category_1] = records.where(category_1: category_1).pluck(:category_2).uniq
+            category_filters[category_1] = records.
+                where(Record.current_locale_column(:category_1) => category_1).
+                pluck(Record.current_locale_column(:category_2)).
+                uniq
         end
         category_filters
     end

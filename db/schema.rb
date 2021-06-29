@@ -71,13 +71,16 @@ ActiveRecord::Schema.define(version: 2021_06_28_115157) do
   end
 
   create_table "groups", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "name"
+    t.string "name_en"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "published", default: false, null: false
-    t.string "description"
+    t.text "description_en"
     t.string "slug"
-    t.string "subtitle"
+    t.string "subtitle_en"
+    t.string "name_cn"
+    t.string "description_cn"
+    t.string "subtitle_cn"
   end
 
   create_table "groups_import_attempts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -96,13 +99,15 @@ ActiveRecord::Schema.define(version: 2021_06_28_115157) do
 
   create_table "indicators", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "subgroup_id"
-    t.string "name"
+    t.string "name_en"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "widget_id"
     t.boolean "published", default: false, null: false
-    t.string "description"
+    t.text "description_en"
     t.boolean "by_default", default: true, null: false
+    t.string "name_cn"
+    t.text "description_cn"
     t.index ["subgroup_id", "by_default"], name: "index_indicators_on_subgroup_id_and_by_default", unique: true, where: "by_default"
     t.index ["subgroup_id"], name: "index_indicators_on_subgroup_id"
     t.index ["widget_id"], name: "index_indicators_on_widget_id"
@@ -119,42 +124,50 @@ ActiveRecord::Schema.define(version: 2021_06_28_115157) do
     t.uuid "indicator_id"
     t.float "value"
     t.integer "year"
-    t.string "category_1"
-    t.string "category_2"
+    t.string "category_1_en"
+    t.string "category_2_en"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "unit_id"
     t.uuid "region_id"
     t.json "original_categories"
+    t.string "category_1_cn"
+    t.string "category_2_cn"
+    t.string "category_3_en"
+    t.string "category_3_cn"
     t.index ["indicator_id"], name: "index_records_on_indicator_id"
     t.index ["region_id"], name: "index_records_on_region_id"
     t.index ["unit_id"], name: "index_records_on_unit_id"
   end
 
   create_table "regions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "name"
+    t.string "name_en"
     t.integer "region_type"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "name_cn"
   end
 
   create_table "subgroups", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "group_id"
-    t.string "name"
+    t.string "name_en"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "published", default: false, null: false
-    t.string "description"
+    t.text "description_en"
     t.boolean "by_default", default: true, null: false
     t.string "slug"
+    t.string "name_cn"
+    t.string "description_cn"
     t.index ["group_id", "by_default"], name: "index_subgroups_on_group_id_and_by_default", unique: true, where: "by_default"
     t.index ["group_id"], name: "index_subgroups_on_group_id"
   end
 
   create_table "units", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "name"
+    t.string "name_en"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "name_cn"
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

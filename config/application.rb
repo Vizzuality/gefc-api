@@ -39,5 +39,8 @@ module GefcApi
     config.generators do |g|
       g.orm :active_record, primary_key_type: :uuid
     end
+
+    # Permitted locales available for the application
+    config.i18n.available_locales = [:en, :cn]
   end
 end

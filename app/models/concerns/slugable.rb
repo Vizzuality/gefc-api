@@ -8,6 +8,6 @@ module Slugable
   end
 
   def set_slug
-    self.slug = name.downcase.gsub(/[[:space:]]/, '-')
+    self.slug = name_en.downcase.gsub(/[[:space:]]/, '-')
   end
 end

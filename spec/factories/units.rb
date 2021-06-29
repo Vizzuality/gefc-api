@@ -1,5 +1,6 @@
 FactoryBot.define do
   factory :unit do
-    name { 'factory unit' }
+    name_en { 'factory unit' }
+    name_cn { "社会经济" }
   end
 end

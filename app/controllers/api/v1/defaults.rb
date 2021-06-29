@@ -32,6 +32,10 @@ module API
 				rescue_from ActiveRecord::RecordInvalid do |e|
 					error_response(message: e.message, status: 422)
 				end
+
+				params do
+					optional :locale, type: String, desc: 'Name of the locale (en|cn)'
+				end
 			end
 		end
 	end
