@@ -146,6 +146,8 @@ GEM
     factory_bot_rails (6.1.0)
       factory_bot (~> 6.1.0)
       railties (>= 5.0.0)
+    faker (2.18.0)
+      i18n (>= 1.6, < 2)
     ffi (1.15.0)
     formtastic (4.0.0)
       actionpack (>= 5.2.0)
@@ -384,6 +386,7 @@ DEPENDENCIES
   devise
   dotenv-rails
   factory_bot_rails
+  faker
   grape
   grape-entity
   grape-swagger
