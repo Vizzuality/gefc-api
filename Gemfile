@@ -49,6 +49,8 @@ gem 'grape-swagger'
 gem 'grape-swagger-rails'
 # Provides support for Cross-Origin Resource Sharing (CORS) for Rack compatible web applications. Read more: https://github.com/cyu/rack-cors
 gem 'rack-cors', :require => 'rack/cors'
+# Model translations
+gem 'traco'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

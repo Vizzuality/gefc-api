@@ -9,6 +9,8 @@ class Subgroup < ApplicationRecord
 
     scope :by_default, -> { where(by_default: true) }
 
+    translates :name, :description
+
     # TODO move it into a Subgroup creator to avoid realying in callbacks
     #
     def set_by_default

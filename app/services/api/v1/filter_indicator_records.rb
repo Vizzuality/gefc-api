@@ -16,7 +16,7 @@ module API
       def filter_by_category(category_1)
         return unless category_1.present?
 
-        @query = @query.where(category_1: category_1)
+        @query = @query.where(Record.current_locale_column(:category_1) => category_1)
       end
 
       def filter_by_year_range(start_year, end_year)

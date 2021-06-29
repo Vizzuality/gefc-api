@@ -6,6 +6,8 @@ class Group < ApplicationRecord
     
     before_create :set_slug
 
+    translates :name, :description, :subtitle
+
     def set_slug
         self.slug = name.downcase.gsub(/[[:space:]]/, '-')
     end
