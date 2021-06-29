@@ -12,6 +12,6 @@ class Group < ApplicationRecord
     # Returns subgroup name if exist or nil
     #
     def default_subgroup
-        subgroup&.name_en
+        subgroup&.name
     end
 end
