@@ -29,6 +29,12 @@ module API
             expose :name, documentation: { type: "String", desc: "Indicator's name." }
             expose :description, documentation: { type: "String", desc: "Indicator's description." }
             expose :published, documentation: { type: "Boolean", desc: "Indicator's published status." }
+            expose :default_visualization, as: :default_visualization
+            expose :widgets_list, as: :visualizationTypes
+            expose :category_1, as: :categories
+            expose :category_filters, as: :category_filters
+            expose :start_date, as: :start_date
+            expose :end_date, as: :end_date
         end
         class FullIndicator < Grape::Entity
             expose :id, documentation: { type: "String", desc: "Indicator's unique id" }
@@ -46,14 +52,16 @@ module API
 
         class FullSubgroup < Grape::Entity
             expose :id, documentation: { type: "String", desc: "Subgroup's unique id." }
+            expose :slug, documentation: { type: "String", desc: "Subgroup's slug." }            
             expose :name, documentation: { type: "String", desc: "Subgroup's name." }
             expose :description, documentation: { type: "String", desc: "Subgroup's description." }
             expose :published, documentation: { type: "Boolean", desc: "Subgroup's published status." }
-            expose :indicators, using: API::V1::Entities::FullIndicator
+            expose :indicators, using: API::V1::Entities::Indicator
         end
 
         class BasicSubgroup < Grape::Entity
             expose :id, documentation: { type: "String", desc: "Subgroup's unique id." }
+            expose :slug, documentation: { type: "String", desc: "Subgroup's slug." }
             expose :name, documentation: { type: "String", desc: "Subgroup's name." }
         end
 

@@ -10,6 +10,11 @@ module API
 				format :json
 
 				helpers do
+					params :pagination do
+						optional :page, type: Integer, default: 1
+						optional :per_page, type: Integer, default: 3000
+					end
+
 					def permitted_params
 						@permitted_params ||= declared(params, 
 								include_missing: false)

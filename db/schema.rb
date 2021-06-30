@@ -159,6 +159,7 @@ ActiveRecord::Schema.define(version: 2021_06_29_113106) do
     t.boolean "by_default", default: false, null: false
     t.string "name_cn"
     t.string "description_cn"
+    t.string "slug"
     t.index ["group_id", "by_default"], name: "index_subgroups_on_group_id_and_by_default", unique: true, where: "by_default"
     t.index ["group_id"], name: "index_subgroups_on_group_id"
   end

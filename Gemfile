@@ -59,6 +59,8 @@ group :development, :test do
   gem 'rspec-rails', '~> 5.0.0'
   # factory_bot is a fixtures replacement with a straightforward definition syntax. Read more: https://github.com/thoughtbot/factory_bot
   gem "factory_bot_rails"
+  # This gem is a port of Perl's Data::Faker library that generates fake data. Read more: https://github.com/faker-ruby/faker
+  gem 'faker'
 end
 
 group :development do

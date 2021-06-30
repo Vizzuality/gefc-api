@@ -5,8 +5,11 @@ module API
 
 			resource :groups do
 				desc "Return all groups"
+				params do
+					use :pagination
+				end
 				get "", root: :groups do
-					present Group.all, with: API::V1::Entities::Group
+					present Group.page(params[:page]).per(params[:per_page]).order(:name_en), with: API::V1::Entities::Group
 				end
 
 				desc "Return a group"
@@ -21,9 +24,10 @@ module API
 				desc "Return a group subgroups"
 				params do
 					requires :id, type: String, desc: "ID of the group"
+					use :pagination
 				end
 				get ":id/subgroups" do
-					present Subgroup.where(group_id: permitted_params[:id]), with: API::V1::Entities::BasicSubgroup
+					present Subgroup.where(group_id: permitted_params[:id]).page(params[:page]).per(params[:per_page]).order(:name_en), with: API::V1::Entities::BasicSubgroup
 				end
 
 				desc "Return a group subgroup by id"
@@ -39,9 +43,10 @@ module API
 				params do
 					requires :id, type: String, desc: "ID of the group"
 					requires :subgroup_id, type: String, desc: "ID of the subgroup"
+					use :pagination
 				end
 				get ":id/subgroups/:subgroup_id/indicators" do
-					present Indicator.where(subgroup_id: permitted_params[:subgroup_id]), with: API::V1::Entities::FullIndicator
+					present Indicator.where(subgroup_id: permitted_params[:subgroup_id]).page(params[:page]).per(params[:per_page]).order(:name_en), with: API::V1::Entities::Indicator
 				end
 				
 				desc "Return subgroup indicator by id"
@@ -61,12 +66,13 @@ module API
 					requires :indicator_id, type: String, desc: "ID of the indicator"
 					optional :category_1, type: String, desc: "Name of the category"
 					# optional :category_2, type: String, desc: "Name of the category"
+					use :pagination
 				end
 				get ":id/subgroups/:subgroup_id/indicators/:indicator_id/records" do
 					if params[:category_1]
-						records = Record.where(indicator_id: permitted_params[:id]).where(category_1: params[:category_1])
+						records = Record.where(indicator_id: permitted_params[:id]).where(category_1: params[:category_1]).page(params[:page]).per(params[:per_page]).order(year: :desc)
 					else
-						records = Record.where(indicator_id: permitted_params[:id])
+						records = Record.where(indicator_id: permitted_params[:id]).page(params[:page]).per(params[:per_page]).order(year: :desc)
 					end
 					present records, with: API::V1::Entities::Record
 				end

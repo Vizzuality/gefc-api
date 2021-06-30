@@ -26,10 +26,15 @@ class Indicator < ApplicationRecord
     def default_visualization
         widget&.name
     end
+    
+    # Returns an Array with records category_1.
+    #
     def category_1
         records.pluck(Record.current_locale_column(:category_1)).uniq
     end
 
+    # Returns an Array with records category_2 for each category_1.
+    #
     def category_filters
         category_filters = {}
         category_1.each do |category_1|

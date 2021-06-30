@@ -21,7 +21,7 @@ class WidgetsImporter
       #DRY
       #
       current_group = Group.find_or_create_by(name_en: indicator_data["classification"]["group_en"])
-      current_subgroup = Subgroup.create_with(group: current_group).find_or_create_by(name_en: indicator_data["classification"]["subgroup_en"], by_default: false)
+      current_subgroup = Subgroup.create_with(group: current_group).find_or_create_by(name_en: indicator_data["classification"]["subgroup_en"], by_default: indicator_data["classification"]["subgroup_default"])
       current_indicator = Indicator.create_with(subgroup: current_subgroup).find_or_create_by(name_en: indicator_data["indicator_en"], by_default: indicator_data["default"])
 
       #Widgets
