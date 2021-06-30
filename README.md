@@ -15,6 +15,12 @@ Things you may want to cover:
 
 * Database initialization
 
+```
+file_name=socioecon_widgets_2306.csv bundle exec rake groups:import_csv
+file_name=geometries_poly.geojson bundle exec rake geometries:polygons:import_geojson
+file_name=geometries_point.geojson bundle exec rake geometries:points:import_geojson
+```
+
 * How to run the test suite
 
 * Services (job queues, cache servers, search engines, etc.)
