@@ -65,4 +65,11 @@ class Indicator < ApplicationRecord
     def widgets_list
         widgets.pluck(:name)
     end
+
+    def self.find_by_id_or_slug!(slug_or_id, filters, includes)
+        rel = Indicator.where('id::TEXT = :id OR slug = :id', id: slug_or_id)
+        rel = rel.includes(*includes) if includes.any?
+        rel = rel.where(filters) if filters.any?
+        rel.first!
+    end
 end

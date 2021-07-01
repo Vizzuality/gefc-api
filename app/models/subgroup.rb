@@ -23,4 +23,11 @@ class Subgroup < ApplicationRecord
             current_default.save!
         end
     end
+
+    def self.find_by_id_or_slug!(slug_or_id, filters)
+        Subgroup.
+            where('id::TEXT = :id OR slug = :id', id: slug_or_id).
+            where(filters).
+            first!
+    end
 end
