@@ -73,7 +73,7 @@ module API
             expose :subtitle, documentation: { type: "String", desc: "Group's name." }
             expose :description, documentation: { type: "String", desc: "Group's description." }
             expose :published, documentation: { type: "Boolean", desc: "Group's published status." }, as: :status
-            expose :default_subgroup, as: :default_subgroup
+            expose :default_subgroup_slug, as: :default_subgroup
             expose :subgroups, using: API::V1::Entities::BasicSubgroup
         end
     end

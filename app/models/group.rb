@@ -5,13 +5,11 @@ class Group < ApplicationRecord
     validates_presence_of :name_en
 
     has_many :subgroups
-    has_one :subgroup, ->{ by_default }, class_name: 'Subgroup'
+    has_one :default_subgroup, -> { by_default }, class_name: 'Subgroup'
 
     translates :name, :description, :subtitle
 
-    # Returns subgroup name if exist or nil
-    #
-    def default_subgroup
-        subgroup&.name
+    def default_subgroup_slug
+        default_subgroup&.slug
     end
 end

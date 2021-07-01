@@ -35,10 +35,10 @@ RSpec.describe WidgetsImporter, type: :model do
     data_hash.each do |indicator_data|
       if indicator_data["classification"]["subgroup_default"] == true
 
-        expect(Group.find_by(name_en: indicator_data["classification"]["group_en"]).subgroup).to eq(Subgroup.find_by(name_en: indicator_data["classification"]["subgroup_en"]))
+        expect(Group.find_by(name_en: indicator_data["classification"]["group_en"]).default_subgroup).to eq(Subgroup.find_by(name_en: indicator_data["classification"]["subgroup_en"]))
       else
         
-        expect(Group.find_by(name_en: indicator_data["classification"]["group_en"]).subgroup).to_not eq(Subgroup.find_by(name_en: indicator_data["classification"]["subgroup_en"]))
+        expect(Group.find_by(name_en: indicator_data["classification"]["group_en"]).default_subgroup).to_not eq(Subgroup.find_by(name_en: indicator_data["classification"]["subgroup_en"]))
       end
     end    
   end
