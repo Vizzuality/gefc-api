@@ -3,6 +3,7 @@ require 'csv'
 
 RSpec.describe WidgetsImporter, type: :model do
   let(:file_path) { "spec/files/local_json/widgets_import_test.json" }
+
   # Happy path with a valid JSON.
   #
   # Atention! we are using a json with 5 elements
@@ -10,7 +11,7 @@ RSpec.describe WidgetsImporter, type: :model do
   it "creates exact number of indicators for a valid json" do
     file = File.read(file_path)
     data_hash = JSON.parse(file)
-    expect{ WidgetsImporter.new.import_from_json(file_path) }.to change{ Indicator.all.count }.by(data_hash.count)
+    expect { WidgetsImporter.new.import_from_json(file_path) }.to change { Indicator.all.count }.by(data_hash.count)
   end
   it "sets Indicator.by_default for each indicator" do
     file = File.read(file_path)
@@ -34,12 +35,11 @@ RSpec.describe WidgetsImporter, type: :model do
     WidgetsImporter.new.import_from_json("spec/files/local_json/default_group_import_test.json")
     data_hash.each do |indicator_data|
       if indicator_data["classification"]["subgroup_default"] == true
-
         expect(Group.find_by(name_en: indicator_data["classification"]["group_en"]).default_subgroup).to eq(Subgroup.find_by(name_en: indicator_data["classification"]["subgroup_en"]))
       else
         
         expect(Group.find_by(name_en: indicator_data["classification"]["group_en"]).default_subgroup).to_not eq(Subgroup.find_by(name_en: indicator_data["classification"]["subgroup_en"]))
       end
-    end    
+    end
   end
 end

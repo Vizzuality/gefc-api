@@ -1,18 +1,18 @@
 module API
   module V1
-    class FindOrCreateWidget < FindOrCreateEntity
-      def call(attributes)
-        super(attributes, 'name')
-      end
-
+    class FindOrUpsertWidget < FindOrUpsertEntity
       def reload
         @dict = Hash[Widget.all.map { |e| [e.name, e] }]
       end
 
       private
 
+      def lookup_attributes
+        [:name]
+      end
+
       def create(attributes)
-        Widget.create(name: attributes['name'])
+        Widget.create(attributes)
       end
     end
   end
