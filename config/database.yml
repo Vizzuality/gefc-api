@@ -1,6 +1,6 @@
 
 default: &default
-  adapter: postgresql
+  adapter: postgis
   encoding: unicode
   pool: <%= ENV['RAILS_MAX_THREADS'] { 5 } %>
 
