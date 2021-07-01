@@ -1,7 +1,12 @@
 class Indicator < ApplicationRecord
+    include Slugable
+
     before_validation :set_by_default, if: :by_default?
+
     validates_uniqueness_of :by_default, scope: :subgroup_id, if: :by_default?
-    
+    validates_uniqueness_of :name_en
+    validates_presence_of :name_en
+
     belongs_to :subgroup
     has_many :records
     has_many :indicator_widgets
