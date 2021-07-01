@@ -4,7 +4,6 @@ require 'grape'
 module API
   module V1
     module Entities
-    
         class Region < Grape::Entity
             expose :id, documentation: { type: "String", desc: "Region's unique id" }
             expose :name, documentation: { type: "String", desc: "Region's name." }
@@ -52,17 +51,19 @@ module API
 
         class FullSubgroup < Grape::Entity
             expose :id, documentation: { type: "String", desc: "Subgroup's unique id." }
-            expose :slug, documentation: { type: "String", desc: "Subgroup's slug." }            
+            expose :slug, documentation: { type: "String", desc: "Subgroup's slug." }
             expose :name, documentation: { type: "String", desc: "Subgroup's name." }
             expose :description, documentation: { type: "String", desc: "Subgroup's description." }
             expose :published, documentation: { type: "Boolean", desc: "Subgroup's published status." }
             expose :indicators, using: API::V1::Entities::Indicator
+            expose :default_indicator, using: API::V1::Entities::Indicator
         end
 
         class BasicSubgroup < Grape::Entity
             expose :id, documentation: { type: "String", desc: "Subgroup's unique id." }
             expose :slug, documentation: { type: "String", desc: "Subgroup's slug." }
             expose :name, documentation: { type: "String", desc: "Subgroup's name." }
+            expose :default_indicator, using: API::V1::Entities::Indicator
         end
 
         class Group < Grape::Entity
@@ -74,7 +75,7 @@ module API
             expose :published, documentation: { type: "Boolean", desc: "Group's published status." }, as: :status
             expose :default_subgroup, as: :default_subgroup
             expose :subgroups, using: API::V1::Entities::BasicSubgroup
-        end 
+        end
     end
   end
 end
