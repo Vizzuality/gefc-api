@@ -10,7 +10,6 @@ class WidgetsImporter
   #
   def import_from_json(file_path)
     clear_all
-    file_path = Rails.root.to_s + '/' + file_path
 
     file = File.read(file_path)
     data_hash = JSON.parse(file)
