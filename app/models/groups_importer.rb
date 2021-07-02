@@ -33,7 +33,11 @@ class GroupsImporter
       indicator_attributes = {name_en: row_data['indicator_en'], name_cn: row_data['indicator_cn']}
       current_indicator = API::V1::FindOrUpsertIndicator.call(indicator_attributes, current_subgroup)
       current_unit = API::V1::FindOrUpsertUnit.call({name_en: row_data['units_en']})
-      region_attributes = {name_en: row_data['region_en'], name_cn: row_data['region_cn'], region_type: row_data['region_type']&.downcase&.to_sym}
+      region_attributes = {
+        name_en: row_data['region_en']&.strip,
+        name_cn: row_data['region_cn'],
+        region_type: row_data['region_type']&.downcase&.split(' ')&.join('_')&.to_sym
+      }
       current_region = API::V1::FindOrUpsertRegion.call(region_attributes)
       # Bulk is better.
       #
