@@ -23,8 +23,10 @@ class GroupsImporter
       'choropleth' => API::V1::FindOrUpsertWidget.call(name: 'choropleth')
     }
 
-    CSV.foreach(file_path, headers: true, converters: :numeric) do |row|
+    CSV.foreach(file_path, headers: true, converters: :numeric).with_index do |row, index|
+
       row_data = row.to_hash.transform_keys! { |key| key.to_s.downcase }
+      next unless valid_row?(row_data, index)
 
       group_attributes = {name_en: row_data['group_en'], name_cn: row_data['group_cn']}
       current_group = API::V1::FindOrUpsertGroup.call(group_attributes)
@@ -82,5 +84,17 @@ class GroupsImporter
     API::V1::FindOrUpsertUnit.reload
     API::V1::FindOrUpsertRegion.reload
     API::V1::FindOrUpsertWidget.reload
+  end
+
+  # Validates that values with headers containing '_en' are not Chinesse characters.
+  def valid_row?(row_data, index)
+    english_columns = row_data.select{ |key, value| key.include?('_en') }
+
+    unless english_columns.values.join('').gsub(/\s+/, "").scan(/\p{Han}/).count == 0
+      puts "Error in row ##{index + 2} >> #{english_columns.values.join('|').gsub(/\s+/, "")}" 
+      return false
+    else
+      return true
+    end
   end
 end
