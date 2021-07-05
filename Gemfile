@@ -32,9 +32,12 @@ gem 'dotenv-rails'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false
-
+# 
 gem 'devise'
-
+# Is a devise extension which uses JWT tokens for user authentication. Read more: https://github.com/waiting-for-dev/devise-jwt
+# gem 'devise-jwt'
+gem 'jwt'
+#
 gem 'activeadmin'
 # Exception tracking
 gem 'appsignal'

@@ -74,7 +74,16 @@ module API
             expose :published, documentation: { type: "Boolean", desc: "Group's published status." }, as: :status
             expose :default_subgroup, as: :default_subgroup
             expose :subgroups, using: API::V1::Entities::BasicSubgroup
-        end 
+        end
+
+        class UserWithJWT < Grape::Entity
+            expose :email, documentation: { type: "String", desc: "User's email."}
+            expose :jwt_token, as: :jwt_token
+        end
+
+        class UserInfo < Grape::Entity
+            expose :email, documentation: { type: "String", desc: "User's email."}
+        end
     end
   end
 end

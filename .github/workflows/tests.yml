@@ -2,6 +2,7 @@ env:
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: postgres
   POSTGRES_DB: gefc_api_test
+  API_CLIENT_KEY: 123
 
 name: Tests
 

@@ -156,7 +156,7 @@ ActiveRecord::Schema.define(version: 2021_06_29_113106) do
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "published", default: false, null: false
     t.text "description_en"
-    t.boolean "by_default", default: false, null: false
+    t.boolean "by_default", default: true, null: false
     t.string "name_cn"
     t.string "description_cn"
     t.string "slug"
