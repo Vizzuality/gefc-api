@@ -10,6 +10,11 @@ Things you may want to cover:
 * System dependencies
 
 * Configuration
+Remember to add to your credentials:
+devise_secret_key: { generated with rails secret }
+api_client_key: { generated with rails secret }
+api_valid_jwt: { generated using API::V1::Authentication.api_jwt }
+
 
 * Database creation
 

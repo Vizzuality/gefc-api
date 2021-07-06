@@ -32,12 +32,11 @@ gem 'dotenv-rails'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false
-# 
+# Devise is a flexible authentication solution for Rails based on Warden.. Read more: https://github.com/heartcombo/devise
 gem 'devise'
-# Is a devise extension which uses JWT tokens for user authentication. Read more: https://github.com/waiting-for-dev/devise-jwt
-# gem 'devise-jwt'
+# A ruby implementation of the RFC 7519 OAuth JSON Web Token (JWT) standard. Read more: https://github.com/jwt/ruby-jwt
 gem 'jwt'
-#
+# A Ruby on Rails framework for creating elegant backends for website administration. Read more: https://github.com/activeadmin/activeadmin
 gem 'activeadmin'
 # access to features of the PostGIS geospatial database from ActiveRecord
 gem 'activerecord-postgis-adapter'
