@@ -2,8 +2,7 @@ env:
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: postgres
   POSTGRES_DB: gefc_api_test
-  DEVISE_SECRET_KEY=5e243ed9f91bd24f588e36e26bb6fc55df86808529ed183442aa0384d0b7181395b7886b4d60e533df40ec14793076357e44d8be180510da0135fda43de93657
-
+  
 name: Tests
 
 on: [push, workflow_dispatch]

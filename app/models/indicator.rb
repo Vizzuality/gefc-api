@@ -1,8 +1,6 @@
 class Indicator < ApplicationRecord
     include Slugable
 
-    before_validation :set_by_default, if: :by_default?
-
     validates_uniqueness_of :by_default, scope: :subgroup_id, if: :by_default?
     validates_uniqueness_of :name_en
     validates_presence_of :name_en
@@ -11,27 +9,17 @@ class Indicator < ApplicationRecord
     has_many :records
     has_many :indicator_widgets
     has_many :widgets, through: :indicator_widgets
-    has_one :indicator_widget, -> { by_default }, class_name: 'IndicatorWidget'
-    has_one :widget, through: :indicator_widget
+    has_one :default_indicator_widget, -> { by_default }, class_name: 'IndicatorWidget'
+    has_one :default_widget, through: :default_indicator_widget, source: :widget
 
     scope :by_default, -> { where(by_default: true) }
 
     translates :name, :description
 
-    # TODO move it into an Indicator creator to avoid realying in callbacks
-    #
-    def set_by_default
-        current_default = subgroup.indicator
-        if current_default.present?
-            current_default.by_default = false
-            current_default.save!
-        end
+    def default_visualization
+        default_widget&.name
     end
 
-    def default_visualization
-        widget&.name
-    end
-    
     # Returns an Array with records category_1.
     #
     def category_1

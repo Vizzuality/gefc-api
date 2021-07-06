@@ -1,7 +1,7 @@
 # @abstract
 module API
   module V1
-    class FindOrCreateEntity
+    class FindOrUpsertEntity
       include Singleton
 
       def initialize
@@ -13,13 +13,14 @@ module API
         delegate :reload, to: :instance
       end
 
-      # @param lookup_keys [Array<String>]
-      # @param entity_attributes [Hash]
-      def call(entity_attributes, *lookup_attributes)
+      def call(entity_attributes)
         lookup_keys = lookup_attributes.map { |a| entity_attributes[a] }
         entity = lookup(*lookup_keys)
         unless entity
           entity = create(entity_attributes)
+          add(entity, *lookup_keys)
+        else
+          entity = update(entity, entity_attributes)
           add(entity, *lookup_keys)
         end
         entity
@@ -37,6 +38,14 @@ module API
       # @raise [NotImplementedError] when not defined in subclass
       def create(attributes)
         raise NotImplementedError
+      end
+
+      def update(entity, attributes)
+        attributes_for_update = attributes.except(*lookup_attributes)
+        return entity unless attributes_for_update.any?
+
+        entity.update(attributes_for_update)
+        entity
       end
 
       def lookup(*lookup_keys)
