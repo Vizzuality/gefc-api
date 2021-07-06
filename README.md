@@ -22,6 +22,7 @@ api_valid_jwt: { generated using API::V1::Authentication.api_jwt }
 
 ```
 file_name=socioecon_widgets_2306.csv bundle exec rake groups:import_csv
+file_name=socioecon_widgets.json bundle exec rake widgets:import_json
 file_name=geometries_poly.geojson bundle exec rake geometries:polygons:import_geojson
 file_name=geometries_point.geojson bundle exec rake geometries:points:import_geojson
 ```

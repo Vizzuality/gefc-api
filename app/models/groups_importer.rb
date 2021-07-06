@@ -17,20 +17,30 @@ class GroupsImporter
     # Widgets:
     #
     widgets = {
-      'pie' => API::V1::FindOrCreateWidget.call('name' => 'pie'),
-      'line' => API::V1::FindOrCreateWidget.call('name' => 'line'),
-      'bar' => API::V1::FindOrCreateWidget.call('name' => 'bar'),
-      'choropleth' => API::V1::FindOrCreateWidget.call('name' => 'choropleth')
+      'pie' => API::V1::FindOrUpsertWidget.call(name: 'pie'),
+      'line' => API::V1::FindOrUpsertWidget.call(name: 'line'),
+      'bar' => API::V1::FindOrUpsertWidget.call(name: 'bar'),
+      'choropleth' => API::V1::FindOrUpsertWidget.call(name: 'choropleth')
     }
 
-    CSV.foreach(file_path, headers: true, converters: :numeric) do |row|
-      row_data = row.to_hash.transform_keys! { |key| key.to_s.downcase }
+    CSV.foreach(file_path, headers: true, converters: :numeric).with_index do |row, index|
 
-      current_group = API::V1::FindOrCreateGroup.call(row_data)
-      current_subgroup = API::V1::FindOrCreateSubgroup.call(row_data, current_group)
-      current_indicator = API::V1::FindOrCreateIndicator.call(row_data, current_subgroup)
-      current_unit = API::V1::FindOrCreateUnit.call(row_data)
-      current_region = API::V1::FindOrCreateRegion.call(row_data)
+      row_data = row.to_hash.transform_keys! { |key| key.to_s.downcase }
+      next unless valid_row?(row_data, index)
+
+      group_attributes = {name_en: row_data['group_en'], name_cn: row_data['group_cn']}
+      current_group = API::V1::FindOrUpsertGroup.call(group_attributes)
+      subgroup_attributes = {name_en: row_data['subgroup_en'], name_cn: row_data['subgroup_cn']}
+      current_subgroup = API::V1::FindOrUpsertSubgroup.call(subgroup_attributes, current_group)
+      indicator_attributes = {name_en: row_data['indicator_en'], name_cn: row_data['indicator_cn']}
+      current_indicator = API::V1::FindOrUpsertIndicator.call(indicator_attributes, current_subgroup)
+      current_unit = API::V1::FindOrUpsertUnit.call({name_en: row_data['units_en']})
+      region_attributes = {
+        name_en: row_data['region_en']&.strip,
+        name_cn: row_data['region_cn'],
+        region_type: row_data['region_type']&.downcase&.split(' ')&.join('_')&.to_sym
+      }
+      current_region = API::V1::FindOrUpsertRegion.call(region_attributes)
       # Bulk is better.
       #
       current_record = Record.create(
@@ -57,17 +67,34 @@ class GroupsImporter
 
   def clear_all
     Record.delete_all
+    RecordWidget.delete_all
     Group.delete_all
     Subgroup.delete_all
     Indicator.delete_all
     Unit.delete_all
     Region.delete_all
     Widget.delete_all
-    API::V1::FindOrCreateGroup.reload
-    API::V1::FindOrCreateSubgroup.reload
-    API::V1::FindOrCreateIndicator.reload
-    API::V1::FindOrCreateUnit.reload
-    API::V1::FindOrCreateRegion.reload
-    API::V1::FindOrCreateWidget.reload
+    reset_dictionaries
+  end
+
+  def reset_dictionaries
+    API::V1::FindOrUpsertGroup.reload
+    API::V1::FindOrUpsertSubgroup.reload
+    API::V1::FindOrUpsertIndicator.reload
+    API::V1::FindOrUpsertUnit.reload
+    API::V1::FindOrUpsertRegion.reload
+    API::V1::FindOrUpsertWidget.reload
+  end
+
+  # Validates that values with headers containing '_en' are not Chinesse characters.
+  def valid_row?(row_data, index)
+    english_columns = row_data.select{ |key, value| key.include?('_en') }
+
+    unless english_columns.values.join('').gsub(/\s+/, "").scan(/\p{Han}/).count == 0
+      puts "Error in row ##{index + 2} >> #{english_columns.values.join('|').gsub(/\s+/, "")}" 
+      return false
+    else
+      return true
+    end
   end
 end
