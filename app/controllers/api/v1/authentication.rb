@@ -12,15 +12,9 @@ module API
 					end
 
 					def api_authenticate!
-						return false unless request.headers['Api-Auth'].present?
-
-						token = request.headers['Api-Auth']
-						segments_count = token.split('.').count
-						return false unless segments_count >= 2
-
-						payload = JsonWebToken.decode(token)
-						return false unless (payload['sub'] .present?) and (payload['sub'] == Rails.application.credentials.api_client_key)
-						return true
+						api_authenticator = APIAuthenticator.new(request)
+						return false unless api_authenticator.valid?
+						api_authenticator.authenticate!
 					end
 
 					def api_jwt
