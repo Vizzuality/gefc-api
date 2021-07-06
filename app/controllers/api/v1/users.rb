@@ -42,9 +42,7 @@ module API
 				desc "Returns the current user's information if the user is authenticated"
 				get "/me" do
 					if authenticate! == true
-						token = @request.headers.fetch('Authorization', '').split(' ').last
-						payload = JsonWebToken.decode(token)
-						user = User.find(payload['sub'])
+						user = user_authenticated
 						present user, with: API::V1::Entities::UserInfo
 					else
 						error!({ :error_code => 401, :error_message => authenticate! }, 401)
@@ -59,9 +57,7 @@ module API
 				end
 				put "/me" do
 					if authenticate! == true
-						token = @request.headers.fetch('Authorization', '').split(' ').last
-						payload = JsonWebToken.decode(token)
-						user = User.find(payload['sub'])
+						user = user_authenticated
 						user.update(params)
 
 						present user, with: API::V1::Entities::UserInfo

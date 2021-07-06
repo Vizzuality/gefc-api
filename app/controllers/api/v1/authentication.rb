@@ -10,6 +10,7 @@ module API
 						return 'Auth token is invalid' unless user_authenticator.valid?
 						user_authenticator.authenticate!
 					end
+
 					def api_authenticate!
 						return false unless request.headers['Api-Auth'].present?
 
@@ -24,6 +25,11 @@ module API
 
 					def api_jwt
 						JsonWebToken.encode(sub: Rails.application.credentials.api_client_key)
+					end
+
+					def user_authenticated
+						user_authenticator = UserAuthenticator.new(request)
+						user_authenticator.current_user
 					end
 				end
 			end

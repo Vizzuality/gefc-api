@@ -13,7 +13,7 @@ Things you may want to cover:
 Remember to add to your credentials:
 devise_secret_key: { generated with rails secret }
 api_client_key: { generated with rails secret }
-api_valid_jwt: { generated using API::V1::Authentication.api_jwt }
+api_valid_jwt: { generated using API::V1::Authentication.api_jwt } Expires in two weeks!
 
 
 * Database creation
