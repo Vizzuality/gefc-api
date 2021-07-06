@@ -42,5 +42,14 @@ module GefcApi
 
     # Permitted locales available for the application
     config.i18n.available_locales = [:en, :cn]
+
+    config_files = ['secrets.yml']
+
+    def credentials
+      encrypted(
+          "config/credentials.yml.enc",
+          key_path: "config/master.key"
+        )
+    end
   end
 end

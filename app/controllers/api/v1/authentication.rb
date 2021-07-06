@@ -18,12 +18,12 @@ module API
 						return false unless segments_count >= 2
 
 						payload = JsonWebToken.decode(token)
-						return false unless (payload['sub'] .present?) and (payload['sub'] == ENV['API_CLIENT_KEY'])
+						return false unless (payload['sub'] .present?) and (payload['sub'] == Rails.application.credentials.api_client_key)
 						return true
 					end
 
 					def api_jwt
-						JsonWebToken.encode(sub: ENV['API_CLIENT_KEY'])
+						JsonWebToken.encode(sub: Rails.application.credentials.api_client_key)
 					end
 				end
 			end

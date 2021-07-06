@@ -16,14 +16,14 @@ RSpec.describe API::V1::Users do
     end
     context 'When posting a user with valid params and valid Api-Auth' do
       it 'returns 200 and status ok' do
-        header "Api-Auth", ENV['API_VALID_JWT']
+        header "Api-Auth", Rails.application.credentials.api_valid_jwt
         params = { 'email': "valid@example.com", "password": "password", 'password_confirmation':  "password" }
         post "/api/v1/users/signup", params, as: :json
 
         expect(last_response.status).to eq 201
       end
       it 'returns email and jwt_token with the user id' do
-        header "Api-Auth", ENV['API_VALID_JWT']
+        header "Api-Auth", Rails.application.credentials.api_valid_jwt
         params = { 'email': "valid@example.com", "password": "password", 'password_confirmation':  "password" }
         post "/api/v1/users/signup", params, as: :json
 
@@ -54,14 +54,14 @@ RSpec.describe API::V1::Users do
 
     context 'When login a user with valid params' do
       it 'returns 200 and status ok' do
-        header "Api-Auth", ENV['API_VALID_JWT']
+        header "Api-Auth", Rails.application.credentials.api_valid_jwt
         params = { 'email': user.email, "password": "password" }
         post "/api/v1/users/login", params, as: :json
 
         expect(last_response.status).to eq 201
       end
       it 'returns email and jwt_token' do
-        header "Api-Auth", ENV['API_VALID_JWT']
+        header "Api-Auth", Rails.application.credentials.api_valid_jwt
         params = { 'email': user.email, "password": "password" }
         post "/api/v1/users/login", params, as: :json
 
