@@ -39,6 +39,8 @@ gem 'devise'
 gem 'jwt'
 #
 gem 'activeadmin'
+# access to features of the PostGIS geospatial database from ActiveRecord
+gem 'activerecord-postgis-adapter'
 # Exception tracking
 gem 'appsignal'
 
@@ -52,6 +54,8 @@ gem 'grape-swagger'
 gem 'grape-swagger-rails'
 # Provides support for Cross-Origin Resource Sharing (CORS) for Rack compatible web applications. Read more: https://github.com/cyu/rack-cors
 gem 'rack-cors', :require => 'rack/cors'
+# GeoJSON encoding and decoding
+gem 'rgeo-geojson'
 # Model translations
 gem 'traco'
 

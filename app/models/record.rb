@@ -8,6 +8,6 @@ class Record < ApplicationRecord
     translates :category_1, :category_2, :category_3
 
     def widgets_list
-        widgets.pluck(:name)
+        widgets.pluck(:name).uniq
     end
 end

@@ -6,27 +6,28 @@ module API
 			resource :indicators do
 				desc "Return all indicators"
 				get :indicators do
-					indicators = Indicator.includes(records: [:unit, :region]).all
+					indicators = Indicator.includes(records: [:unit, :region, :widgets]).all
 					present indicators, with: API::V1::Entities::FullIndicator
 				end
 				desc "Return an indicator"
 				params do
-					requires :id, type: String, desc: "ID of the indicator"
+					requires :id, type: String, desc: "ID / slug of the indicator"
 				end
 				get ":id", root: "indicator" do
-					indicator = Indicator.includes(records: [:unit, :region]).first
+					indicator = Indicator.find_by_id_or_slug!(permitted_params[:id], {}, [{records: [:unit, :region, :widgets]}])
 					present indicator, with: API::V1::Entities::FullIndicator
 				end
 
 				desc "Return an indicator's records"
 				params do
-					requires :id, type: String, desc: "ID of the indicator"
+					requires :id, type: String, desc: "ID / slug of the indicator"
 					optional :category_1, type: String, desc: "Name of the category"
 					optional :start_year, type: Integer, desc: "Start year"
 					optional :end_year, type: Integer, desc: "End year"
 				end
 				get ":id/records" do
-					filter = FilterIndicatorRecords.new(permitted_params[:id], params.slice(:category_1, :start_year, :end_year))
+					indicator = Indicator.find_by_id_or_slug!(permitted_params[:id], {}, [])
+					filter = FilterIndicatorRecords.new(indicator, params.slice(:category_1, :start_year, :end_year))
 					records = filter.call.includes(:unit, :region)
 
 					present records, with: API::V1::Entities::Record

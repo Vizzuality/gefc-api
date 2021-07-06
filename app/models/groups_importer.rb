@@ -14,7 +14,6 @@ class GroupsImporter
     clear_all
     puts "indicators count >> #{Indicator.count}"
 
-    file_path = Rails.root.to_s + '/' + file_path
     # Widgets:
     #
     widgets = {

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_29_113106) do
+ActiveRecord::Schema.define(version: 2021_07_01_140312) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -34,11 +34,11 @@ ActiveRecord::Schema.define(version: 2021_06_29_113106) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
-    t.bigint "record_id", null: false
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
+    t.uuid "record_id", null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
-    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "active_storage_attachments_uniqueness_idx", unique: true
   end
 
   create_table "active_storage_blobs", force: :cascade do |t|
@@ -69,6 +69,42 @@ ActiveRecord::Schema.define(version: 2021_06_29_113106) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["email"], name: "index_admin_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
+  end
+
+  create_table "geometry_points", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.bigint "region_id"
+    t.geography "geometry", limit: {:srid=>4326, :type=>"geometry", :geographic=>true}
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["region_id"], name: "index_geometry_points_on_region_id"
+  end
+
+  create_table "geometry_points_import_attempts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "total_rows_count"
+    t.integer "imported_records_count"
+    t.integer "jid"
+    t.integer "status"
+    t.string "file_path"
+  end
+
+  create_table "geometry_polygons", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.bigint "region_id"
+    t.geography "geometry", limit: {:srid=>4326, :type=>"geometry", :geographic=>true}
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["region_id"], name: "index_geometry_polygons_on_region_id"
+  end
+
+  create_table "geometry_polygons_import_attempts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "total_rows_count"
+    t.integer "imported_records_count"
+    t.integer "jid"
+    t.integer "status"
+    t.string "file_path"
   end
 
   create_table "groups", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -109,6 +145,7 @@ ActiveRecord::Schema.define(version: 2021_06_29_113106) do
     t.boolean "by_default", default: true, null: false
     t.string "name_cn"
     t.text "description_cn"
+    t.string "slug"
     t.index ["subgroup_id", "by_default"], name: "index_indicators_on_subgroup_id_and_by_default", unique: true, where: "by_default"
     t.index ["subgroup_id"], name: "index_indicators_on_subgroup_id"
     t.index ["widget_id"], name: "index_indicators_on_widget_id"
