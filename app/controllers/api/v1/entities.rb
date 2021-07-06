@@ -25,6 +25,7 @@ module API
         end
         class Indicator < Grape::Entity
             expose :id, documentation: { type: "String", desc: "Indicator's unique id" }
+            expose :slug, documentation: { type: "String", desc: "Indicator's slug." }
             expose :name, documentation: { type: "String", desc: "Indicator's name." }
             expose :description, documentation: { type: "String", desc: "Indicator's description." }
             expose :published, documentation: { type: "Boolean", desc: "Indicator's published status." }
@@ -37,6 +38,7 @@ module API
         end
         class FullIndicator < Grape::Entity
             expose :id, documentation: { type: "String", desc: "Indicator's unique id" }
+            expose :slug, documentation: { type: "String", desc: "Indicator's slug." }
             expose :name, documentation: { type: "String", desc: "Indicator's name." }
             expose :description, documentation: { type: "String", desc: "Indicator's description." }
             expose :published, documentation: { type: "Boolean", desc: "Indicator's published status." }

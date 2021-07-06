@@ -12,4 +12,12 @@ class Subgroup < ApplicationRecord
     scope :by_default, -> { where(by_default: true) }
 
     translates :name, :description
+
+    def self.find_by_id_or_slug!(slug_or_id, filters)
+        Subgroup.
+            where('id::TEXT = :id OR slug = :id', id: slug_or_id).
+            where(filters).
+            first!
+    end
+
 end

@@ -1,8 +1,8 @@
 module API
   module V1
     class FilterIndicatorRecords
-      def initialize(indicator_id, params = {})
-        @query = Record.where(indicator_id: indicator_id)
+      def initialize(indicator, params = {})
+        @query = Record.where(indicator_id: indicator.id)
         filter_by_category(params[:category_1])
         filter_by_year_range(params[:start_year], params[:end_year])
       end

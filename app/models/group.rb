@@ -12,4 +12,8 @@ class Group < ApplicationRecord
     def default_subgroup_slug
         default_subgroup&.slug
     end
+
+    def self.find_by_id_or_slug!(slug_or_id)
+        Group.where('id::TEXT = :id OR slug = :id', id: slug_or_id).first!
+    end
 end

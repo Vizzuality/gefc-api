@@ -1,5 +1,9 @@
 class Indicator < ApplicationRecord
+    include Slugable
+
     validates_uniqueness_of :by_default, scope: :subgroup_id, if: :by_default?
+    validates_uniqueness_of :name_en
+    validates_presence_of :name_en
 
     belongs_to :subgroup
     has_many :records
@@ -48,5 +52,12 @@ class Indicator < ApplicationRecord
     # 
     def widgets_list
         widgets.pluck(:name)
+    end
+
+    def self.find_by_id_or_slug!(slug_or_id, filters, includes)
+        rel = Indicator.where('id::TEXT = :id OR slug = :id', id: slug_or_id)
+        rel = rel.includes(*includes) if includes.any?
+        rel = rel.where(filters) if filters.any?
+        rel.first!
     end
 end
