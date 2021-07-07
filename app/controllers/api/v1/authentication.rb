@@ -6,9 +6,7 @@ module API
 			included do
 				helpers do
 					def authenticate!
-						user_authenticator = UserAuthenticator.new(request)
-						return 'Auth token is invalid' unless user_authenticator.valid?
-						user_authenticator.authenticate!
+						UserAuthenticator.new(request).authenticate!
 					end
 
 					def api_authenticate!

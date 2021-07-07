@@ -10,7 +10,9 @@ module API
       end
 
       def authenticate!
-        return true if current_user
+        return false unless valid?
+        return current_user.present?
+        
       rescue ::JWT::ExpiredSignature
         return "Auth token has expired"
       rescue ::JWT::DecodeError
