@@ -15,10 +15,6 @@ module API
 						api_authenticator.authenticate!
 					end
 
-					def api_jwt
-						JsonWebToken.encode(sub: Rails.application.credentials.api_client_key)
-					end
-
 					def user_authenticated
 						user_authenticator = UserAuthenticator.new(request)
 						user_authenticator.current_user

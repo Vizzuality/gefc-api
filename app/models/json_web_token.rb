@@ -1,7 +1,12 @@
 class JsonWebToken
-  def self.encode(payload)
-    expiration = 2.weeks.from_now.to_i
-    JWT.encode payload.merge(exp: expiration), Rails.application.credentials.devise_secret_key
+
+  def self.encode(payload, expire = true)
+    if expire
+      expiration = 2.weeks.from_now.to_i
+      payload = payload.merge(exp: expiration)      
+    end
+
+    JWT.encode payload, Rails.application.credentials.devise_secret_key
   end
   
   def self.decode(token)
