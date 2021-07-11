@@ -97,7 +97,7 @@ RSpec.describe API::V1::Users do
     end
 
     context 'When not logged in' do
-      it 'returns 401 and status ok' do
+      it 'returns 401' do
         header "Authentication", ''
         get "/api/v1/users/me"
 

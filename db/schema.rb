@@ -142,7 +142,7 @@ ActiveRecord::Schema.define(version: 2021_07_01_140312) do
     t.uuid "widget_id"
     t.boolean "published", default: false, null: false
     t.text "description_en"
-    t.boolean "by_default", default: true, null: false
+    t.boolean "by_default", default: false, null: false
     t.string "name_cn"
     t.text "description_cn"
     t.string "slug"

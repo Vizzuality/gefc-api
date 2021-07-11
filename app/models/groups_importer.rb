@@ -33,6 +33,7 @@ class GroupsImporter
       subgroup_attributes = {name_en: row_data['subgroup_en'], name_cn: row_data['subgroup_cn']}
       current_subgroup = API::V1::FindOrUpsertSubgroup.call(subgroup_attributes, current_group)
       indicator_attributes = {name_en: row_data['indicator_en'], name_cn: row_data['indicator_cn']}
+      # byebug
       current_indicator = API::V1::FindOrUpsertIndicator.call(indicator_attributes, current_subgroup)
       current_unit = API::V1::FindOrUpsertUnit.call({name_en: row_data['units_en']})
       region_attributes = {
@@ -56,6 +57,8 @@ class GroupsImporter
         value: row_data['value'],
         year: row_data['year']
       )
+      puts "Records count >> #{Record.all.count}"
+      puts "Records indicator >> #{current_indicator.slug}"
 
       widgets.keys.select{ |k| row_data[k]&.upcase == 'TRUE' }.each do |k|
         RecordWidget.create!(widget: widgets[k], record: current_record)

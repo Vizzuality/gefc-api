@@ -61,7 +61,7 @@ module API
             order(:name_en).
             page(params[:page]).
             per(params[:per_page])
-					present indicators, with: API::V1::Entities::Indicator
+					present indicators, with: API::V1::Entities::FullIndicator
 				end
 				
 				desc "Return subgroup indicator by id"
