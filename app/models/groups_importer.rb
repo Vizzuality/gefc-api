@@ -32,8 +32,10 @@ class GroupsImporter
       current_group = API::V1::FindOrUpsertGroup.call(group_attributes)
       subgroup_attributes = {name_en: row_data['subgroup_en'], name_cn: row_data['subgroup_cn']}
       current_subgroup = API::V1::FindOrUpsertSubgroup.call(subgroup_attributes, current_group)
+      puts "Subgroup.all.count >> #{Subgroup.all.count}"
       indicator_attributes = {name_en: row_data['indicator_en'], name_cn: row_data['indicator_cn']}
       current_indicator = API::V1::FindOrUpsertIndicator.call(indicator_attributes, current_subgroup)
+      puts "Indicator.all.count >> #{Indicator.all.count}"
       current_unit = API::V1::FindOrUpsertUnit.call({name_en: row_data['units_en']})
       region_attributes = {
         name_en: row_data['region_en']&.strip,
