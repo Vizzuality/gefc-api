@@ -78,6 +78,15 @@ module API
             expose :default_subgroup_slug, as: :default_subgroup
             expose :subgroups, using: API::V1::Entities::BasicSubgroup
         end
+
+        class UserWithJWT < Grape::Entity
+            expose :email, documentation: { type: "String", desc: "User's email."}
+            expose :jwt_token, as: :jwt_token
+        end
+
+        class UserInfo < Grape::Entity
+            expose :email, documentation: { type: "String", desc: "User's email."}
+        end
     end
   end
 end

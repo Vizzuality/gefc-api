@@ -1,7 +1,9 @@
-env:
-  POSTGRES_USER: postgres
-  POSTGRES_PASSWORD: postgres
+env: 
   POSTGRES_DB: gefc_api_test
+  POSTGRES_PASSWORD: postgres
+  POSTGRES_USER: postgres
+  RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+
   
 name: Tests
 
