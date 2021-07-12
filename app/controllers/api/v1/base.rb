@@ -5,6 +5,7 @@ module API
     class Base < API::Base
       mount API::V1::Groups
       mount API::V1::Indicators
+      mount API::V1::Users
       mount API::V1::Health
 
       # add_swagger_documentation
