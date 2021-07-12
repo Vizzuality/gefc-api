@@ -6,7 +6,7 @@ module API
       end
 
       def valid?
-        @request.headers['Authorization'].present?
+        @request.headers['Authentication'].present?
       end
 
       def authenticate!
@@ -20,7 +20,7 @@ module API
       end
 
       def current_user
-        token = @request.headers.fetch('Authorization', '').split(' ').last
+        token = @request.headers.fetch('Authentication', '').split(' ').last
         payload = JsonWebToken.decode(token)
         User.find(payload['sub'])
       end

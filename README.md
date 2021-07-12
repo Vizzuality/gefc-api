@@ -49,7 +49,7 @@ Both endpoints will return the user jwt that are needed to reach users/me.
 	 Once signup/login is successful the response to those endpoints will include a user valid jwt that must be provided to authenticate.
 	  ```
 curl --location --request GET 'http://localhost:3000/api/v1/users/me' \
---header 'Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMmZiY2Y4MS00NWM2LTQ4YTMtYTAxOC01N2M3MmM5OTY4ODMiLCJleHAiOjE2MjY4NzM2MjV9.3s6FZwkxobHcYNWnw-91SdJEnq_AoOlbl1V2lbn0-Ns' \
+--header 'Authentication: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMmZiY2Y4MS00NWM2LTQ4YTMtYTAxOC01N2M3MmM5OTY4ODMiLCJleHAiOjE2MjY4NzM2MjV9.3s6FZwkxobHcYNWnw-91SdJEnq_AoOlbl1V2lbn0-Ns' \
 --header 'Cookie: __profilin=p%3Dt' \
 --data-raw ''
 ```
