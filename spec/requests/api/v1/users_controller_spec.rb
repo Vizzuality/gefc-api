@@ -81,13 +81,13 @@ RSpec.describe API::V1::Users do
     
     context 'When logged in as a user with valid auth' do
       it 'returns 200 and status ok' do
-        header "Authorization", login_and_get_jwt(user)
+        header "Authentication", login_and_get_jwt(user)
         get "/api/v1/users/me"
 
         expect(last_response.status).to eq 200
       end
       it 'returns the email of the logged in user' do
-        header "Authorization", login_and_get_jwt(user)
+        header "Authentication", login_and_get_jwt(user)
         get "/api/v1/users/me"
 
         parsed_body = JSON.parse(last_response.body)
@@ -111,14 +111,14 @@ RSpec.describe API::V1::Users do
 
     context 'When logged in as a user with valid auth' do
       it 'returns 201' do
-        header "Authorization", login_and_get_jwt(user)
+        header "Authentication", login_and_get_jwt(user)
         params = { 'email': "new_email@example.com" }
         put "/api/v1/users/me", params, as: :json
 
         expect(last_response.status).to eq 200
       end
       it 'returns the updated user' do
-        header "Authorization", login_and_get_jwt(user)
+        header "Authentication", login_and_get_jwt(user)
         params = { 'email': "new_email@example.com" }
         put "/api/v1/users/me", params, as: :json
 

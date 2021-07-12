@@ -5,7 +5,14 @@ module API
 			include API::V1::Authentication
 
 			resource :users do
-				desc "Create a user and return email"
+				desc "Create a user and return email", {
+					headers: {
+						"Api-Auth" => {
+							description: "JWT that Validates the client",
+							required: true
+						}
+					}
+				}
 				params do
 					requires :email, type: String, desc: "email of the user"
 					requires :password, type: String, desc: "password"
@@ -21,7 +28,14 @@ module API
 					end
 				end
 
-				desc "login a user and return email"
+				desc "login a user and return email", {
+					headers: {
+						"Api-Auth" => {
+							description: "JWT that Validates the client",
+							required: true
+						}
+					}
+				}
 				params do
 					optional :email, type: String, desc: "email of the user"
 					optional :password, type: String, desc: "password"
@@ -39,7 +53,14 @@ module API
 					end
 				end
 				
-				desc "Returns the current user's information if the user is authenticated"
+				desc "Returns the current user's information if the user is authenticated", {
+					headers: {
+						"Authentication" => {
+							description: "JWT that Validates the user",
+							required: true
+						}
+					}
+				}
 				get "/me" do
 					if authenticate! == true
 						user = user_authenticated
@@ -49,7 +70,14 @@ module API
 					end
 				end
 
-				desc "Updates current user and Returns the current user's information if the user is authenticated"
+				desc "Updates current user and Returns the current user's information if the user is authenticated", {
+					headers: {
+						"Authentication" => {
+							description: "JWT that Validates the user",
+							required: true
+						}
+					}
+				}
 				params do
 					optional :email, type: String, desc: "email of the user"
 					optional :password, type: String, desc: "password"
