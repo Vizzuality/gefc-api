@@ -19,19 +19,15 @@ class WidgetsImporter
     data_hash.each do |indicator_data|
       puts "indicators count >> #{Indicator.count}"
 
-      #DRY
+      # Indicator
       #
       group_attributes = {name_en: indicator_data['classification']['group_en']}
       current_group = API::V1::FindOrUpsertGroup.call(group_attributes)
-      subgroup_attributes = {
-        name_en: indicator_data['classification']['subgroup_en'],
-        by_default: indicator_data['classification']['subgroup_default']
-      }
+      subgroup_attributes = {name_en: indicator_data['classification']['subgroup_en']}
+      subgroup_attributes['by_default'] = indicator_data['classification']['subgroup_default'] unless indicator_data['default'].nil?
       current_subgroup = API::V1::FindOrUpsertSubgroup.call(subgroup_attributes, current_group)
-      indicator_attributes = {
-        name_en: indicator_data['indicator_en'],
-        by_default: indicator_data['default']
-      }
+      indicator_attributes = {name_en: indicator_data['indicator_en']}
+      indicator_attributes['by_default'] = indicator_data['default'] unless indicator_data['default'].nil?
       current_indicator = API::V1::FindOrUpsertIndicator.call(indicator_attributes, current_subgroup)
 
       #Widgets
