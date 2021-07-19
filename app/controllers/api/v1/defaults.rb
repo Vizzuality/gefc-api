@@ -23,24 +23,6 @@ module API
 					def logger
 						Rails.logger
 					end
-
-					def generate_csv_link(records_collection)
-						byebug
-						new_csv = CSV.generate() do |csv_file|
-							csv_file << ['id','value']
-				
-							records_collection.each do |record|
-								csv_file << [ record.id, record.name ]
-							end
-						end
-
-						file_name = "#{Rails.root}/public/local_csv/foo_export.csv"
-						csv_data = new_csv
-
-						File.write(file_name, csv_data)
-
-						return file_name
-					end
 				end
 
 				rescue_from ActiveRecord::RecordNotFound do |e|
