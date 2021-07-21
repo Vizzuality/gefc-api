@@ -57,6 +57,8 @@ gem 'rack-cors', :require => 'rack/cors'
 gem 'rgeo-geojson'
 # Model translations
 gem 'traco'
+# A fast XML parser and Object marshaller as a Ruby gem. Read more: https://github.com/ohler55/ox
+gem 'ox'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

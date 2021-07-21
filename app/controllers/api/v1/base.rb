@@ -6,6 +6,7 @@ module API
       mount API::V1::Groups
       mount API::V1::Indicators
       mount API::V1::Users
+      mount API::V1::Downloads
       mount API::V1::Health
 
       # add_swagger_documentation
