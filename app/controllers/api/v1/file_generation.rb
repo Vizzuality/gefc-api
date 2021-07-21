@@ -229,7 +229,7 @@ module API
 					end
 
 					def file_name(indicator_name_en, file_format)
-						file_name = "#{Rails.root}//public/local_csv/#{indicator_name_en}_#{DateTime.new.strftime("%FT%T%:z")}.#{file_format}"
+						file_name = "#{Rails.root}#{env['DOWNLOADS_PATH']}#{indicator_name_en}_#{DateTime.new.strftime("%FT%T%:z")}.#{file_format}"
 					end
 				end
 			end
