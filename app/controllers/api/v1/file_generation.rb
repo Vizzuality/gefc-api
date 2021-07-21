@@ -1,6 +1,6 @@
 module API
 	module V1
-		module FileGenerator
+		module FileGeneration
 			extend ActiveSupport::Concern
 			require 'ox'
 
@@ -74,7 +74,7 @@ module API
 						end
 
 						xml = Ox.dump(doc)
-						file_name = "#{Rails.root}/public/local_csv/foo_export.xml"
+						file_name = file_name(records.first.indicator.name_en, 'xml')
 						open(file_name, "w:#{xml_encoding[current_locale]}") do |io|
 							io.write(xml)
 						end
@@ -143,7 +143,7 @@ module API
 						end
 
 						xml = Ox.dump(doc)
-						file_name = "#{Rails.root}/public/local_csv/foo_export.xml"
+						file_name = file_name(records.first.indicator.name_en, 'xml')
 						File.write(file_name, xml)
 
 						file_name
@@ -175,7 +175,7 @@ module API
 							data_hash['records'].push(record_attributes)
 						end
 
-						file_name = "#{Rails.root}/public/local_csv/foo_export.json"
+						file_name = file_name(records.first.indicator.name_en, 'json')
 						File.write(file_name, JSON.dump(data_hash))
 
 						return file_name
@@ -191,7 +191,7 @@ module API
 							records&.each { |record| csv_file << record_to_row(record, rejects, current_locale) }
 						end
 
-						file_name = "#{Rails.root}/public/local_csv/foo_export.csv"
+						file_name = file_name(records.first.indicator.name_en, 'csv')
 						csv_data = new_csv
 
 						File.write(file_name, csv_data)
@@ -226,6 +226,10 @@ module API
 						other_valid_locales = [:en, :cn]
 						other_valid_locales.delete(current_locale)
 						attr_name.include?("_#{other_valid_locales.pop.to_s}")
+					end
+
+					def file_name(indicator_name_en, file_format)
+						file_name = "#{Rails.root}//public/local_csv/#{indicator_name_en}_#{DateTime.new.strftime("%FT%T%:z")}.#{file_format}"
 					end
 				end
 			end

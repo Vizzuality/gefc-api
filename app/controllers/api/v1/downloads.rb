@@ -3,7 +3,8 @@ module API
 		class Downloads < Grape::API
 			include API::V1::Defaults
 			include API::V1::Authentication
-			include API::V1::FileGenerator
+			include API::V1::Authorization
+			include API::V1::FileGeneration
 
 			desc "Return csv"
 			params do
@@ -14,8 +15,7 @@ module API
 				optional :end_year, type: Integer, desc: "End year"
 			end
 			get 'downloads' do
-				
-        if authenticate!
+				if authenticate! and authorize!
 					indicator = Indicator.find_by_id_or_slug!(permitted_params[:id], {}, [])
 					filter = FilterIndicatorRecords.new(indicator, params.slice(:category_1, :start_year, :end_year))
 					records = filter.call.includes(:unit, :region)
@@ -38,7 +38,7 @@ module API
 					env['api.format'] = :binary
 					File.open(file_name, 'rb').read
         else
-          error!({ :error_code => 401, :error_message => authenticate! }, 401)
+          error!({ :error_code => 401, :error_message => authorize! }, 401)
         end
 			end
 		end
