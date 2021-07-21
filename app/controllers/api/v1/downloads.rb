@@ -6,7 +6,14 @@ module API
 			include API::V1::Authorization
 			include API::V1::FileGeneration
 
-			desc "Return csv"
+			desc "Returns a csv, json or xml file with the records of the indicator", {
+				headers: {
+					"Authentication" => {
+						description: "JWT that Validates the user as allowed to download",
+						required: true
+					}
+				}
+			}
 			params do
 				requires :id, type: String, desc: "ID / slug of the indicator"
 				requires :file_format, type: String, desc: "file format, must be csv, json or xml"
