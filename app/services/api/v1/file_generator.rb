@@ -18,8 +18,6 @@ module API
         end
       end
 
-      # CSV
-      #
       def generate_csv
         rejects = ['id', 'created_at', 'updated_at']
         headers = Record.column_names.reject { |column_name| rejects.include?(column_name)}
@@ -35,29 +33,6 @@ module API
 				return csv_file_name
       end
 
-      def record_to_row(record, rejects)
-        record_attributes_values = []
-        id_to_slug = ['indicator_id', 'unit_id', 'region_id']
-            record.attributes.each do |attr_name, attr_value|
-              unless rejects.include?(attr_name)
-                if id_to_slug.include?(attr_name)
-                  record_attributes_values.push(record.indicator.name) if attr_name == 'indicator_id'
-                  record_attributes_values.push(record.unit.name) if attr_name == 'unit_id'
-                  record_attributes_values.push(record.region.name) if attr_name == 'region_id' 
-                else
-                  record_attributes_values.push(attr_value) unless attr_name_match_current_locale?(attr_name) 
-                end
-              end
-            end
-        record_attributes_values
-      end
-
-      def attr_name_match_current_locale?(attr_name)
-        other_valid_locales = [:en, :cn]
-        other_valid_locales.delete(@current_locale)
-        attr_name.include?("_#{other_valid_locales.pop.to_s}")
-      end
-
       def generate_json
         rejects = ['id', 'created_at', 'updated_at']
         id_to_slug = ['indicator_id', 'unit_id', 'region_id']
@@ -67,7 +42,7 @@ module API
         @records.each do |record|
           record_attributes = {}
           record.attributes.each do |attr_name, attr_value|
-            next if attr_name_match_current_locale?(attr_name)
+            next if attr_name_dont_match_current_locale?(attr_name)
             unless rejects.include?(attr_name)
               if id_to_slug.include?(attr_name)
                 record_attributes['indicator'] = record.indicator.name if attr_name == 'indicator_id'
@@ -113,80 +88,83 @@ module API
 
           record.attributes.each do |attr_name, attr_value|
 
-            next if attr_name_match_current_locale?(attr_name)
+            next if attr_name_dont_match_current_locale?(attr_name)
 
             unless rejects.include?(attr_name)
-              #necesito esta linea?
               unfrozen_attr_value = attr_value.to_s.dup
 
-              if @current_locale != :en
-                # si el locale es cn y attr_value esta en cn
-                # si es nil lo cambio por "nil" else force_encoding
-                if chinese?(unfrozen_attr_value) and @current_locale != :en
+              if @current_locale == :cn
+                if attr_value_chinese?(unfrozen_attr_value)
                   attr_name = attr_name
                   value_to_xml = Ox::Element.new(attr_name)
 
                   attr_value = (attr_value.nil?)? "nil" : unfrozen_attr_value.force_encoding(xml_encoding[@current_locale])
                   value_to_xml << attr_value
                 else
-                  # si el locale es cn pero attr_value no es cn
                   case attr_name
                   when 'indicator_id'
                     attr_name = 'indicator'
+                    unless attr_value.nil?
+                      value_to_xml = attr_to_xml_node(attr_name, record.indicator.name_cn&.force_encoding(xml_encoding[@current_locale]))
+                    else
+                      value_to_xml = attr_to_xml_node(attr_name, "nil")
+                    end
                   when 'unit_id' 
                     attr_name = 'unit'
+                    unless attr_value.nil?
+                      value_to_xml = attr_to_xml_node(attr_name, record.unit.name&.force_encoding(xml_encoding[@current_locale]))
+                    else
+                      value_to_xml = attr_to_xml_node(attr_name, "nil")
+                    end
                   when 'region_id'
                     attr_name = 'region'
+                    unless attr_value.nil?
+                      value_to_xml = attr_to_xml_node(attr_name, record.region.name_cn&.force_encoding(xml_encoding[@current_locale]))
+                    else
+                      value_to_xml = attr_to_xml_node(attr_name, "nil")
+                    end
                   else
                     attr_name = attr_name
-                  end
-
-                  value_to_xml = Ox::Element.new(attr_name)
-                  unless attr_value.nil?
-                    case attr_name
-                    when 'indicator'
-                      value_to_xml << record.indicator.name_cn&.force_encoding(xml_encoding[@current_locale])
-                    when 'unit'
-                      value_to_xml << record.unit.name&.force_encoding(xml_encoding[@current_locale])
-                    when 'region'
-                      value_to_xml << record.region.name_cn&.force_encoding(xml_encoding[@current_locale])
+                    unless attr_value.nil?
+                      value_to_xml = attr_to_xml_node(attr_name, unfrozen_attr_value.force_encoding(xml_encoding[@current_locale]))
                     else
-                      value_to_xml << unfrozen_attr_value.force_encoding(xml_encoding[@current_locale])
-                    end 
-                  else
-                    value_to_xml << "nil"
+                      value_to_xml = attr_to_xml_node(attr_name, "nil")
+                    end
                   end
                 end
                 record_to_xml << value_to_xml
               else
-                #si el locale es en y el attr_value no es cn
-                if unfrozen_attr_value.scan(/\p{Han}/).count == 0
+                unless attr_value_chinese?(unfrozen_attr_value)
                   case attr_name
                   when 'indicator_id'
                     attr_name = 'indicator'
+                    unless attr_value.nil?
+                      value_to_xml = attr_to_xml_node(attr_name, record.indicator.name.force_encoding(xml_encoding[@current_locale]))
+                    else
+                      value_to_xml = attr_to_xml_node(attr_name, "nil")
+                    end
                   when 'unit_id' 
                     attr_name = 'unit'
+                    unless attr_value.nil?
+                      value_to_xml = attr_to_xml_node(attr_name, record.unit.name.force_encoding(xml_encoding[@current_locale]))
+                    else
+                      value_to_xml = attr_to_xml_node(attr_name, "nil")
+                    end
                   when 'region_id'
                     attr_name = 'region'
+                    unless attr_value.nil?
+                      value_to_xml = attr_to_xml_node(attr_name, record.region.name.force_encoding(xml_encoding[@current_locale]))
+                    else
+                      value_to_xml = attr_to_xml_node(attr_name, "nil")
+                    end
                   else
                     attr_name = attr_name
-                  end 
-
-                  value_to_xml = Ox::Element.new(attr_name)
-                  if attr_value.nil?
-                    value_to_xml << "nil"
-                  else
-                    case attr_name
-                    when 'indicator'
-                      value_to_xml << record.indicator.name.force_encoding(xml_encoding[@current_locale.to_sym])
-                    when 'unit' 
-                      value_to_xml << record.unit.name.force_encoding(xml_encoding[@current_locale])
-                    when 'region'
-                      value_to_xml << record.region.name_en.force_encoding(xml_encoding[@current_locale])
+                    unless attr_value.nil?
+                      value_to_xml = attr_to_xml_node(attr_name, unfrozen_attr_value.force_encoding(xml_encoding[@current_locale]))
                     else
-                      value_to_xml << unfrozen_attr_value.force_encoding(xml_encoding[@current_locale])
-                    end 
-                  end
+                      value_to_xml = attr_to_xml_node(attr_name, "nil")
+                    end
+                  end 
                   record_to_xml << value_to_xml
                 end
               end
@@ -209,8 +187,37 @@ module API
         file_name = "#{Rails.root}#{ENV['DOWNLOADS_PATH']}#{indicator_name_en}_#{DateTime.new.strftime("%FT%T%:z")}.#{@file_format}"
       end
 
-      def chinese?(string)
+      def attr_value_chinese?(string)
         string.scan(/\p{Han}/).count != 0
+      end
+
+      def attr_to_xml_node(name, value)
+        value_to_xml = Ox::Element.new(name)
+        value_to_xml << value
+        value_to_xml
+      end
+
+      def attr_name_dont_match_current_locale?(attr_name)
+        other_valid_locales = [:en, :cn]
+        other_valid_locales.delete(@current_locale)
+        attr_name.include?("_#{other_valid_locales.pop.to_s}")
+      end
+
+      def record_to_row(record, rejects)
+        record_attributes_values = []
+        id_to_slug = ['indicator_id', 'unit_id', 'region_id']
+            record.attributes.each do |attr_name, attr_value|
+              unless rejects.include?(attr_name)
+                if id_to_slug.include?(attr_name)
+                  record_attributes_values.push(record.indicator.name) if attr_name == 'indicator_id'
+                  record_attributes_values.push(record.unit.name) if attr_name == 'unit_id'
+                  record_attributes_values.push(record.region.name) if attr_name == 'region_id' 
+                else
+                  record_attributes_values.push(attr_value) unless attr_name_dont_match_current_locale?(attr_name) 
+                end
+              end
+            end
+        record_attributes_values
       end
     end
   end
