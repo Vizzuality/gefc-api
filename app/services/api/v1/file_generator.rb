@@ -12,16 +12,14 @@ module API
         when 'csv'
           generate_csv
         when 'xml'
-          if @current_locale == :cn
-            generate_xml_cn
-          else
-            generate_xml
-          end
+          generate_xml
         else
           generate_json
         end
       end
 
+      # CSV
+      #
       def generate_csv
         rejects = ['id', 'created_at', 'updated_at']
         headers = Record.column_names.reject { |column_name| rejects.include?(column_name)}
@@ -47,16 +45,16 @@ module API
                   record_attributes_values.push(record.unit.name) if attr_name == 'unit_id'
                   record_attributes_values.push(record.region.name) if attr_name == 'region_id' 
                 else
-                  record_attributes_values.push(attr_value) unless not_locale?(attr_name, @current_locale) 
+                  record_attributes_values.push(attr_value) unless attr_name_match_current_locale?(attr_name) 
                 end
               end
             end
         record_attributes_values
       end
 
-      def not_locale?(attr_name, current_locale)
+      def attr_name_match_current_locale?(attr_name)
         other_valid_locales = [:en, :cn]
-        other_valid_locales.delete(current_locale)
+        other_valid_locales.delete(@current_locale)
         attr_name.include?("_#{other_valid_locales.pop.to_s}")
       end
 
@@ -69,7 +67,7 @@ module API
         @records.each do |record|
           record_attributes = {}
           record.attributes.each do |attr_name, attr_value|
-            next if not_locale?(attr_name, @current_locale)
+            next if attr_name_match_current_locale?(attr_name)
             unless rejects.include?(attr_name)
               if id_to_slug.include?(attr_name)
                 record_attributes['indicator'] = record.indicator.name if attr_name == 'indicator_id'
@@ -91,7 +89,8 @@ module API
       
       def generate_xml
         xml_encoding = {
-          :en => 'UTF-8'
+          :en => 'UTF-8',
+          :cn => 'ASCII-8BIT'
         }
         first_record = @records.first
         
@@ -105,120 +104,95 @@ module API
         indicator = Ox::Element.new('indicator')
         indicator[:name] = first_record.indicator&.name_en
         doc << indicator
+
         @records.each do  |record|
           record_to_xml = Ox::Element.new('record')
 
           rejects = ['id', 'created_at', 'updated_at']
           record_attributes = {}
-          record.attributes.each do |attr_name, attr_value|
-            next if attr_name.include?('_cn')
-            unless rejects.include?(attr_name)
-              # remove freeze state
-              unfrozen_attr_value = attr_value.to_s.dup
-              if unfrozen_attr_value.scan(/\p{Han}/).count == 0
-                case attr_name
-                when 'indicator_id'
-                  attr_name = 'indicator'
-                when 'unit_id' 
-                  attr_name = 'unit'
-                when 'region_id'
-                  attr_name = 'region'
-                else
-                  attr_name = attr_name
-                end 
-                value_to_xml = Ox::Element.new(attr_name)
 
-                if attr_value.nil?
-                  value_to_xml << "nil"
+          record.attributes.each do |attr_name, attr_value|
+
+            next if attr_name_match_current_locale?(attr_name)
+
+            unless rejects.include?(attr_name)
+              #necesito esta linea?
+              unfrozen_attr_value = attr_value.to_s.dup
+
+              if @current_locale != :en
+                # si el locale es cn y attr_value esta en cn
+                # si es nil lo cambio por "nil" else force_encoding
+                if chinese?(unfrozen_attr_value) and @current_locale != :en
+                  attr_name = attr_name
+                  value_to_xml = Ox::Element.new(attr_name)
+
+                  attr_value = (attr_value.nil?)? "nil" : unfrozen_attr_value.force_encoding(xml_encoding[@current_locale])
+                  value_to_xml << attr_value
                 else
+                  # si el locale es cn pero attr_value no es cn
                   case attr_name
-                  when 'indicator'
-                    value_to_xml << record.indicator.name.force_encoding(xml_encoding[@current_locale.to_sym])
-                  when 'unit' 
-                    value_to_xml << record.unit.name.force_encoding(xml_encoding[@current_locale])
-                  when 'region'
-                    value_to_xml << record.region.name_en.force_encoding(xml_encoding[@current_locale])
+                  when 'indicator_id'
+                    attr_name = 'indicator'
+                  when 'unit_id' 
+                    attr_name = 'unit'
+                  when 'region_id'
+                    attr_name = 'region'
                   else
-                    value_to_xml << unfrozen_attr_value.force_encoding(xml_encoding[@current_locale])
-                  end 
+                    attr_name = attr_name
+                  end
+
+                  value_to_xml = Ox::Element.new(attr_name)
+                  unless attr_value.nil?
+                    case attr_name
+                    when 'indicator'
+                      value_to_xml << record.indicator.name_cn&.force_encoding(xml_encoding[@current_locale])
+                    when 'unit'
+                      value_to_xml << record.unit.name&.force_encoding(xml_encoding[@current_locale])
+                    when 'region'
+                      value_to_xml << record.region.name_cn&.force_encoding(xml_encoding[@current_locale])
+                    else
+                      value_to_xml << unfrozen_attr_value.force_encoding(xml_encoding[@current_locale])
+                    end 
+                  else
+                    value_to_xml << "nil"
+                  end
                 end
                 record_to_xml << value_to_xml
+              else
+                #si el locale es en y el attr_value no es cn
+                if unfrozen_attr_value.scan(/\p{Han}/).count == 0
+                  case attr_name
+                  when 'indicator_id'
+                    attr_name = 'indicator'
+                  when 'unit_id' 
+                    attr_name = 'unit'
+                  when 'region_id'
+                    attr_name = 'region'
+                  else
+                    attr_name = attr_name
+                  end 
+
+                  value_to_xml = Ox::Element.new(attr_name)
+                  if attr_value.nil?
+                    value_to_xml << "nil"
+                  else
+                    case attr_name
+                    when 'indicator'
+                      value_to_xml << record.indicator.name.force_encoding(xml_encoding[@current_locale.to_sym])
+                    when 'unit' 
+                      value_to_xml << record.unit.name.force_encoding(xml_encoding[@current_locale])
+                    when 'region'
+                      value_to_xml << record.region.name_en.force_encoding(xml_encoding[@current_locale])
+                    else
+                      value_to_xml << unfrozen_attr_value.force_encoding(xml_encoding[@current_locale])
+                    end 
+                  end
+                  record_to_xml << value_to_xml
+                end
               end
             end
           end
           indicator << record_to_xml
-        end
-
-        xml = Ox.dump(doc)
-        xml_file_name = file_name
-        File.write(xml_file_name, xml)
-
-        xml_file_name
-      end
-
-      def generate_xml_cn
-        xml_encoding = {
-          :cn => 'ASCII-8BIT'
-        }
-        doc = Ox::Document.new
-        instruct = Ox::Instruct.new(:xml)
-        instruct[:version] = '1.0'
-        instruct[:encoding] = xml_encoding[@current_locale]
-        instruct[:standalone] = 'yes'
-        doc << instruct
-        indicator = Ox::Element.new('indicator')
-        indicator[:name] = @records.first.indicator&.name_cn
-        doc << indicator
-
-        @records.each do  |record|
-          record_to_xml = Ox::Element.new('record')
-          record_attributes = {}
-          rejects = ['id', 'created_at', 'updated_at']
-
-          record.attributes.each do |attr_name, attr_value|
-            next if not_locale?(attr_name, @current_locale)
-            
-            unless rejects.include?(attr_name)
-              unfrozen_attr_value = attr_value.to_s.dup
-              if chinese?(unfrozen_attr_value) and @current_locale != :en
-                attr_name = attr_name
-                value_to_xml = Ox::Element.new(attr_name)
-
-                attr_value = (attr_value.nil?)? "nil" : unfrozen_attr_value.force_encoding(xml_encoding[@current_locale])
-                value_to_xml << attr_value
-              else
-                case attr_name
-                when 'indicator_id'
-                  attr_name = 'indicator'
-                when 'unit_id' 
-                  attr_name = 'unit'
-                when 'region_id'
-                  attr_name = 'region'
-                else
-                  attr_name = attr_name
-                end
-
-                value_to_xml = Ox::Element.new(attr_name)
-                unless attr_value.nil?
-                  case attr_name
-                  when 'indicator'
-                    value_to_xml << record.indicator.name_cn&.force_encoding(xml_encoding[@current_locale])
-                  when 'unit'
-                    value_to_xml << record.unit.name&.force_encoding(xml_encoding[@current_locale])
-                  when 'region'
-                    value_to_xml << record.region.name_cn&.force_encoding(xml_encoding[@current_locale])
-                  else
-                    value_to_xml << unfrozen_attr_value.force_encoding(xml_encoding[@current_locale])
-                  end 
-                else
-                  value_to_xml << "nil"
-                end
-              end
-              record_to_xml << value_to_xml
-            end
-          end
-          indicator << 	record_to_xml
-          doc << indicator
         end
 
         xml = Ox.dump(doc)
