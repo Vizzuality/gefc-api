@@ -1,15 +1,19 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
+API for Green Energy CHina Platform.
 
 * Ruby version
+3.0.0
 
 * System dependencies
+PostgreSQL 12
 
 * Configuration
+
+Grab a copy of the `.env` file
+
+* Authentication
+
  - How should the client authenticate?
 	Since /login and /signup are protected using authentication, the api expects a header with key 'Api-Auth' and a valid jwt as value, but only for those endpoints.
  - What makes valid an api jwt?
@@ -55,22 +59,41 @@ curl --location --request GET 'http://localhost:3000/api/v1/users/me' \
 ```
 
 
-
 * Database creation
+Grab a dump
 
-* Database initialization
+* Updating datasets
 
-```
-file_name=socioecon_widgets_2306.csv bundle exec rake groups:import_csv
-file_name=socioecon_widgets.json bundle exec rake widgets:import_json
-file_name=geometries_poly.geojson bundle exec rake geometries:polygons:import_geojson
-file_name=geometries_point.geojson bundle exec rake geometries:points:import_geojson
-```
+3 ways to do this:
+  1. using the CMS: import files in the order in which they come in the `Import` menu item:
+    1. Groups
+    2. Widgets
+    3. Points
+    4. Polygons
+  2. using individual rake tasks: need to be run in the correct order
+    ```
+    file_name=socioecon_widgets_2306.csv bundle exec rake groups:import_csv
+    file_name=socioecon_widgets.json bundle exec rake widgets:import_json
+    file_name=geometries_poly.geojson bundle exec rake geometries:polygons:import_geojson
+    file_name=geometries_point.geojson bundle exec rake geometries:points:import_geojson
+    ```
+  3. using a combo rake task
+    `groups_file_name=socioecon_widgets_2306.csv widgets_file_name=socioecon_widgets.json points_file_name=geometries_point.geojson polygons_file_name=geometries_poly.geojson bundle exec rake import:all`
+
+For running the rake tasks on staging, you need to:
+  - be able to ssh to the staging server
+    `ssh [user]@[server]` (check config/deploy/staging.rb for server address, your SSH key needs to be allowed on the server)
+  - upload your files to the staging server, e.g. using `scp`
+    `scp socioecon_widgets_2306.csv [user]@[server]:/var/www/gefc_api/current`
+  - navigate to the application directory on the server
+    `cd /var/www/gefc_api/current`
+  - run the tasks prepending `RAILS_ENV=staging`
+    e.g. `RAILS_ENV=staging file_name=socioecon_widgets_2306.csv bundle exec rake groups:import_csv`
 
 * How to run the test suite
+`bundle exec rspec spec`
 
 * Services (job queues, cache servers, search engines, etc.)
 
 * Deployment instructions
-
-* ...
+Remember to update `.env` if needed and then `cap staging deploy`.
