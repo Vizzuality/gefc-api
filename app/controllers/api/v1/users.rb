@@ -8,7 +8,7 @@ module API
 				desc "Create a user and return email", {
 					headers: {
 						"Api-Auth" => {
-							description: "JWT that Validates the client",
+							description: "JWT that Validates the api client",
 							required: true
 						}
 					}
@@ -31,7 +31,7 @@ module API
 				desc "login a user and return email", {
 					headers: {
 						"Api-Auth" => {
-							description: "JWT that Validates the client",
+							description: "JWT that Validates the api client",
 							required: true
 						}
 					}

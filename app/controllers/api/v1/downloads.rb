@@ -6,7 +6,14 @@ module API
 			include API::V1::Authorization
 			include API::V1::FileGeneration
 
-			desc "Return csv"
+			desc "Returns a csv, json or xml file with the records of the indicator", {
+				headers: {
+					"Authentication" => {
+						description: "JWT that Validates the user as allowed to download",
+						required: true
+					}
+				}
+			}
 			params do
 				requires :id, type: String, desc: "ID / slug of the indicator"
 				requires :file_format, type: String, desc: "file format, must be csv, json or xml"
@@ -19,19 +26,8 @@ module API
 					indicator = Indicator.find_by_id_or_slug!(permitted_params[:id], {}, [])
 					filter = FilterIndicatorRecords.new(indicator, params.slice(:category_1, :start_year, :end_year))
 					records = filter.call.includes(:unit, :region)
-					
-					case permitted_params[:file_format]
-					when "xml"
-						if params[:locale] == 'cn'
-							file_name = generate_xml_cn(records, I18n.locale)
-						else
-							file_name = generate_xml(records, I18n.locale)
-						end
-					when "csv"
-						file_name = generate_csv(records, I18n.locale)
-					else
-						file_name = generate_json(records, I18n.locale)
-					end
+
+					file_name = generate_file(records, permitted_params[:file_format], I18n.locale)
 
 					content_type "application/octet-stream"
 					header['Content-Disposition'] = "attachment; filename=#{file_name.split('/').last}"
