@@ -81,11 +81,13 @@ module API
 
         class UserWithJWT < Grape::Entity
             expose :email, documentation: { type: "String", desc: "User's email."}
+            expose :username, documentation: { type: "String", desc: "User's username."}
             expose :jwt_token, as: :jwt_token
         end
 
         class UserInfo < Grape::Entity
             expose :email, documentation: { type: "String", desc: "User's email."}
+            expose :username, documentation: { type: "String", desc: "User's username."}
         end
     end
   end
