@@ -17,6 +17,7 @@ module API
 					requires :email, type: String, desc: "email of the user"
 					requires :password, type: String, desc: "password"
 					requires :password_confirmation, type: String, desc: "password confirmation"
+					optional :username, type: String, desc: "username of the user"
 				end
 				post '/signup' do
 					if api_authenticate! == true
@@ -82,6 +83,7 @@ module API
 					optional :email, type: String, desc: "email of the user"
 					optional :password, type: String, desc: "password"
 					optional :password_confirmation, type: String, desc: "password confirmation"
+					optional :username, type: String, desc: "username of the user"
 				end
 				put "/me" do
 					if authenticate! == true
