@@ -49,6 +49,8 @@ module API
             expose :start_date, as: :start_date
             expose :end_date, as: :end_date
             expose :records, using: API::V1::Entities::Record
+            expose :subgroup, using: 'API::V1::Entities::MinimumSubgroup'
+            expose :group, using: 'API::V1::Entities::MinimumGroup'
         end
 
         class FullSubgroup < Grape::Entity
@@ -59,6 +61,12 @@ module API
             expose :published, documentation: { type: "Boolean", desc: "Subgroup's published status." }
             expose :indicators, using: API::V1::Entities::Indicator
             expose :default_indicator, using: API::V1::Entities::Indicator
+        end
+
+        class MinimumSubgroup < Grape::Entity
+            expose :id, documentation: { type: "String", desc: "Subgroup's unique id." }
+            expose :slug, documentation: { type: "String", desc: "Subgroup's slug." }
+            expose :name, documentation: { type: "String", desc: "Subgroup's name." }
         end
 
         class BasicSubgroup < Grape::Entity
@@ -77,6 +85,12 @@ module API
             expose :published, documentation: { type: "Boolean", desc: "Group's published status." }, as: :status
             expose :default_subgroup_slug, as: :default_subgroup
             expose :subgroups, using: API::V1::Entities::BasicSubgroup
+        end
+
+        class MinimumGroup < Grape::Entity
+            expose :id, documentation: { type: "String", desc: "Group's unique id." }
+            expose :slug, documentation: { type: "String", desc: "Group's slug." }
+            expose :name, documentation: { type: "String", desc: "Group's name." }
         end
 
         class UserWithJWT < Grape::Entity

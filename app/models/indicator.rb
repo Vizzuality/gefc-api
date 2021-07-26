@@ -12,6 +12,8 @@ class Indicator < ApplicationRecord
     has_one :default_indicator_widget, -> { by_default }, class_name: 'IndicatorWidget'
     has_one :default_widget, through: :default_indicator_widget, source: :widget
 
+    delegate :group, to: :subgroup, allow_nil: true
+
     scope :by_default, -> { where(by_default: true) }
 
     translates :name, :description
