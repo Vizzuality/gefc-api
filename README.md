@@ -1,18 +1,18 @@
 # README
 
-API for Green Energy CHina Platform.
+API for Green Energy China Platform.
 
-* Ruby version
+## Ruby version
 3.0.0
 
-* System dependencies
+## System dependencies
 PostgreSQL 12
 
-* Configuration
+## Configuration
 
 Grab a copy of the `.env` file
 
-* Authentication
+## Authentication
 
  - How should the client authenticate?
 	Since /login and /signup are protected using authentication, the api expects a header with key 'Api-Auth' and a valid jwt as value, but only for those endpoints.
@@ -36,8 +36,10 @@ Remember to add to your credentials:
 
 *this is the key that we encrypt into the api_jwt payload.*
 
- - How to use it:
- - This curl request creates a new user if Api-Auth is valid:
+### Usage example
+
+ - Signup request, which creates a new user if Api-Auth is valid:
+ ```
 	     curl --location --request POST 'http://127.0.0.1:3000/api/v1/users/signup' \
     --header 'Api-Auth: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5MDc0NzlmMTkzNDc1ZmRmOTQ5ZDkzN2QxZTA2ZDUxMmE5ZWRmMDdjNTUxZmFmODFlOGEyNWQyMTZmYmRiNTMxZjk0ZDhkNjcyZTZmNGYyZDVjMDFjYTQzNDBmODdhOTg0YTY0ZmEwZDYzM2IyM2QxNTFjNDlmYjIzZWRjYTY1NyIsImV4cCI6MTYyNjc3ODA2N30.kAAUhF35vHZYbHPN1lTebrRJm5wWj7OjO4Hv_Eh7uiY"' \
     --header 'Content-Type: application/json' \
@@ -47,22 +49,25 @@ Remember to add to your credentials:
         "password": "12345678",
         "password_confirmation": "12345678"
     }'
-Same for /login but without password_confirmation.
-Both endpoints will return the user jwt that are needed to reach users/me.
-	 - How we authenticate the user:
-	 Once signup/login is successful the response to those endpoints will include a user valid jwt that must be provided to authenticate.
-	  ```
+```
+
+Same for /login, but without password_confirmation.
+
+**Both endpoints will return the user jwt that are needed to reach users/me.**
+
+- Once signup/login is successful, the response to those endpoints will include a user valid jwt that must be provided to authenticate.
+
+```
 curl --location --request GET 'http://localhost:3000/api/v1/users/me' \
 --header 'Authentication: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMmZiY2Y4MS00NWM2LTQ4YTMtYTAxOC01N2M3MmM5OTY4ODMiLCJleHAiOjE2MjY4NzM2MjV9.3s6FZwkxobHcYNWnw-91SdJEnq_AoOlbl1V2lbn0-Ns' \
 --header 'Cookie: __profilin=p%3Dt' \
 --data-raw ''
 ```
 
-
-* Database creation
+## Database creation
 Grab a dump
 
-* Updating datasets
+## Updating datasets
 
 3 ways to do this:
   1. using the CMS: import files in the order in which they come in the `Import` menu item:
