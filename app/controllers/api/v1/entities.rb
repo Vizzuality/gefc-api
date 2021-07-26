@@ -102,6 +102,7 @@ module API
         class UserInfo < Grape::Entity
             expose :email, documentation: { type: "String", desc: "User's email."}
             expose :username, documentation: { type: "String", desc: "User's username."}
+            expose :role, documentation: { type: "String", desc: "User's role" }
         end
     end
   end
