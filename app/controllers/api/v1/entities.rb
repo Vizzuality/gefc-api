@@ -48,7 +48,6 @@ module API
             expose :category_filters, as: :category_filters
             expose :start_date, as: :start_date
             expose :end_date, as: :end_date
-            expose :records, using: API::V1::Entities::Record
             expose :subgroup, using: 'API::V1::Entities::MinimumSubgroup'
             expose :group, using: 'API::V1::Entities::MinimumGroup'
         end
