@@ -1,3 +1,5 @@
+class IndicatorRegionException < StandardError; end
+
 class Indicator < ApplicationRecord
     include Slugable
 
@@ -62,4 +64,13 @@ class Indicator < ApplicationRecord
         rel = rel.where(filters) if filters.any?
         rel.first!
     end
+
+    # Returns unique Regions for all indicator's records without.
+    # Raises exception if there are no Regions.
+    #
+    def regions
+      regions = Region.where(id: records.pluck(:region_id).uniq)
+      raise IndicatorRegionException.new("an error has ocurred:there are no regions for the indicator with id:#{id}") unless regions.any?
+      regions
+    end 
 end

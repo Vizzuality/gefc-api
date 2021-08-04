@@ -3,6 +3,10 @@ module API
 		class Indicators < Grape::API
 			include API::V1::Defaults
 
+			rescue_from IndicatorRegionException do |e|
+				error!("#{e.message}", 404)
+			end
+
 			resource :indicators do
 				desc "Return all indicators"
 				get :indicators do
@@ -31,6 +35,17 @@ module API
 					records = filter.call.includes(:unit, :region)
 
 					present records, with: API::V1::Entities::Record
+				end
+
+				desc "Return an indicator's regions"
+				params do
+					requires :id, type: String, desc: "ID / slug of the indicator"
+				end
+				get ":id/regions" do
+					indicator = Indicator.find_by_id_or_slug!(permitted_params[:id], {}, [])
+					regions = indicator.regions
+
+					present regions, with: API::V1::Entities::RegionWithGeometries
 				end
 			end
 		end
