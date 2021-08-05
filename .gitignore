@@ -53,3 +53,6 @@ yarn-debug.log*
 # Ignore environment variables
 /.env
 /notes.txt
+
+# Ignore coverage
+/coverage

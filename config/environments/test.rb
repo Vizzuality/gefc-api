@@ -1,4 +1,14 @@
 require "active_support/core_ext/integer/time"
+require 'simplecov'
+SimpleCov.start 'rails' do
+  add_filter '/bin/'
+  add_filter '/db/'
+  add_filter '/mailers/'
+  add_filter '/channels/'
+  add_filter '/jobs/'
+  add_filter '/spec/' # for rspec
+end
+puts "required simplecov"
 
 # The test environment is used exclusively to run your application's
 # test suite. You never need to work with it otherwise. Remember that

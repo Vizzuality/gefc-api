@@ -12,6 +12,16 @@ PostgreSQL 12
 
 Grab a copy of the `.env` file
 
+
+## Database creation
+Grab a dump
+
+## How to run the test suite
+`bundle exec rspec spec`
+
+## Check coverage
+After running the test suit you will find the a coverage report at coverage/index.html. Try running `xdg-open coverage/index.html`
+
 ## Authentication
 
  - How should the client authenticate?
@@ -64,9 +74,6 @@ curl --location --request GET 'http://localhost:3000/api/v1/users/me' \
 --data-raw ''
 ```
 
-## Database creation
-Grab a dump
-
 ## Updating datasets
 
 3 ways to do this:
@@ -95,8 +102,6 @@ For running the rake tasks on staging, you need to:
   - run the tasks prepending `RAILS_ENV=staging`
     e.g. `RAILS_ENV=staging file_name=socioecon_widgets_2306.csv bundle exec rake groups:import_csv`
 
-* How to run the test suite
-`bundle exec rspec spec`
 
 * Services (job queues, cache servers, search engines, etc.)
 

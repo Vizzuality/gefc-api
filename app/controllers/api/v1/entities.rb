@@ -4,6 +4,12 @@ require 'grape'
 module API
   module V1
     module Entities
+        class RegionWithGeometries < Grape::Entity
+            expose :id, documentation: { type: "String", desc: "Region's unique id" }
+            expose :name, documentation: { type: "String", desc: "Region's name." }
+            expose :region_type, documentation: { type: "String", desc: "Region type." }
+            expose :geometry_encoded, as: :geometry
+        end
         class Region < Grape::Entity
             expose :id, documentation: { type: "String", desc: "Region's unique id" }
             expose :name, documentation: { type: "String", desc: "Region's name." }
