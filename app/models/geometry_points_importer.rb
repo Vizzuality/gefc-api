@@ -14,7 +14,8 @@ class GeometryPointsImporter
         name_cn: properties['region_cn'],
         region_type: properties['region_type']&.downcase&.split(' ')&.join('_')&.to_sym
       )
-      GeometryPoint.create(region: region, geometry: RGeo::GeoJSON.decode(row_data).geometry)
+      new_geometry = GeometryPoint.create(region: region, geometry: RGeo::GeoJSON.decode(row_data).geometry)
+      puts "new geometry created with id: #{new_geometry.id} for #{region.name}"
     end
     puts "points count >> #{GeometryPoint.count}"
   end

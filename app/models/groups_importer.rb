@@ -12,7 +12,7 @@ class GroupsImporter
   #
   def import_from_csv(file_path)
     clear_all
-    puts "indicators count >> #{Indicator.count}"
+    puts "starting with #{Indicator.count} indicators."
 
     # Widgets:
     #
