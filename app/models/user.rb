@@ -9,3 +9,18 @@ class User < ApplicationRecord
     JsonWebToken.encode(sub: id, role: role)
   end
 end
+
+class AdminUser  
+  # Returns a JWT with the id.
+  def jwt_token
+    JsonWebToken.encode(sub: id, role: role)
+  end
+
+  def username
+    email
+  end
+
+  def role
+    "admin"
+  end
+end

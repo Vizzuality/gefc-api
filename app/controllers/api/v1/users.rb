@@ -44,6 +44,10 @@ module API
 				post '/login' do
 					if api_authenticate! == true
 						user = User.find_by(email: params["email"].downcase)
+						if user.nil?
+							user = AdminUser.find_by(email: params["email"].downcase)
+						end
+						
 						unless user&.valid_password?(params["password"])
 							error!({:error_code => 401, :error_message => "Invalid email or password."}, 401)
 						else
