@@ -33,6 +33,7 @@ class Indicator < ApplicationRecord
     # Returns an Array with records category_2 for each category_1.
     #
     def category_filters
+        byebug
         category_filters = {}
         category_1.each do |category_1|
             category_filters[category_1] = records.
