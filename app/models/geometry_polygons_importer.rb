@@ -14,7 +14,8 @@ class GeometryPolygonsImporter
         name_cn: properties['region_cn'],
         region_type: properties['region_type']&.downcase&.split(' ')&.join('_')&.to_sym
       )
-      GeometryPolygon.create(region: region, geometry: RGeo::GeoJSON.decode(row_data).geometry)
+      new_geometry = GeometryPolygon.create(region: region, geometry: RGeo::GeoJSON.decode(row_data).geometry)
+      puts "new geometry created with id: #{new_geometry.id} for #{region.name}"
     end
     puts "polygons count >> #{GeometryPolygon.count}"
   end
