@@ -20,8 +20,7 @@ module API
       def authorized_user?
         token = @request.headers.fetch('Authentication', '').split(' ').last
         payload = JsonWebToken.decode(token)
-        return true unless AdminUser.find(payload['sub']).nil?
-        # User.find(payload['sub']).allow_download?
+        User.find(payload['sub']).admin?
       end
     end
   end

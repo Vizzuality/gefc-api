@@ -20,13 +20,9 @@ module API
       end
 
       def current_user
-        byebug
         token = @request.headers.fetch('Authentication', '').split(' ').last
         payload = JsonWebToken.decode(token)
-        user = AdminUser.find(payload['sub'])
-        user = User.find(payload['sub']) if user.nil?
-
-        return user
+        User.find(payload['sub'])
       end
     end
   end
