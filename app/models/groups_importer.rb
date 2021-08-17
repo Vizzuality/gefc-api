@@ -12,7 +12,7 @@ class GroupsImporter
   #
   def import_from_csv(file_path)
     clear_all
-    puts "indicators count >> #{Indicator.count}"
+    puts "starting with #{Indicator.count} indicators."
 
     # Widgets:
     #
@@ -33,7 +33,6 @@ class GroupsImporter
       subgroup_attributes = {name_en: row_data['subgroup_en'], name_cn: row_data['subgroup_cn']}
       current_subgroup = API::V1::FindOrUpsertSubgroup.call(subgroup_attributes, current_group)
       indicator_attributes = {name_en: row_data['indicator_en'], name_cn: row_data['indicator_cn']}
-      # byebug
       current_indicator = API::V1::FindOrUpsertIndicator.call(indicator_attributes, current_subgroup)
       current_unit = API::V1::FindOrUpsertUnit.call({name_en: row_data['units_en']})
       region_attributes = {
