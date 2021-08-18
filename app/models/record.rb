@@ -2,6 +2,7 @@ class Record < ApplicationRecord
     belongs_to :indicator
     belongs_to :unit
     belongs_to :region
+    belongs_to :scenario, optional: true
     has_many :record_widgets
     has_many :widgets, through: :record_widgets
 

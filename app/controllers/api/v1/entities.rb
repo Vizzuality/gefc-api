@@ -15,6 +15,9 @@ module API
             expose :name, documentation: { type: "String", desc: "Region's name." }
             expose :region_type, documentation: { type: "String", desc: "Region type." }
         end
+        class Scenario < Grape::Entity
+            expose :name, documentation: { type: "String", desc: "Region's name." }
+        end
         class Unit < Grape::Entity
             expose :id, documentation: { type: "String", desc: "Unit's unique id" }
             expose :name, documentation: { type: "String", desc: "Unit's name." }
@@ -27,6 +30,7 @@ module API
             expose :category_2, documentation: { type: "String", desc: "Record's category." }
             expose :unit, using: API::V1::Entities::Unit
             expose :region, using: API::V1::Entities::Region
+            expose :scenario, using: API::V1::Entities::Scenario
             expose :widgets_list, as: :visualizationTypes
         end
         class Indicator < Grape::Entity
