@@ -9,7 +9,7 @@ module API
 
 			resource :indicators do
 				desc "Return all indicators"
-				get :indicators do
+				get "" do
 					indicators = Indicator.includes(records: [:unit, :region, :widgets]).all
 					present indicators, with: API::V1::Entities::FullIndicator
 				end
