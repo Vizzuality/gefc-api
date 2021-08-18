@@ -41,6 +41,12 @@ class GroupsImporter
         region_type: row_data['region_type']&.downcase&.split(' ')&.join('_')&.to_sym
       }
       current_region = API::V1::FindOrUpsertRegion.call(region_attributes)
+      scenario_name = row_data['scenario']
+      if scenario_name.blank?
+        current_scenario = nil
+      else
+        current_scenario = API::V1::FindOrUpsertScenario.call({name: scenario_name})
+      end
       # Bulk is better.
       #
       current_record = Record.create(
@@ -54,7 +60,8 @@ class GroupsImporter
         region: current_region,
         unit: current_unit,
         value: row_data['value'],
-        year: row_data['year']
+        year: row_data['year'],
+        scenario: current_scenario
       )
       puts "Records count >> #{Record.all.count}"
       puts "Records indicator >> #{current_indicator.slug}"
@@ -75,6 +82,7 @@ class GroupsImporter
     Indicator.delete_all
     Unit.delete_all
     Region.delete_all
+    Scenario.delete_all
     Widget.delete_all
     reset_dictionaries
   end
