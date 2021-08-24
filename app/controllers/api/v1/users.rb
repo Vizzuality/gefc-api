@@ -95,6 +95,21 @@ module API
 						error!({ :error_code => 401, :error_message => authenticate! }, 401)
 					end
 				end
+				
+				desc "Sends and email with restore password link"
+				params do
+					requires :email, type: String, desc: "email of the user"
+				end
+				get "/recover_password_token" do
+					user = User.find_by(email: params["email"].downcase)
+					if user
+						recover_password_token = user.recover_password_token
+						UsermailerMailer.restore_password_email(user, recover_password_token).deliver_later
+						{status: "ok"}
+					else
+						error!({ :error_code => 406, :error_message => "Invalid email" }, 406)
+					end
+				end
 			end
 		end
 	end
