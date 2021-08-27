@@ -46,7 +46,7 @@ RSpec.describe Indicator, type: :model do
     it "returns an array with the names of the scenarios" do
       indicator = create(:indicator)
       scenario_1 = create(:scenario)
-      scenario_2 = create(:scenario, name:"scenario 2")
+      scenario_2 = create(:scenario)
       record_1 = create(:record, indicator: indicator, scenario: scenario_1)
       record_2 = create(:record, indicator: indicator, scenario: scenario_2)
       record_3 = create(:record, indicator: indicator)
