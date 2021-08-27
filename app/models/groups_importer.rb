@@ -41,11 +41,11 @@ class GroupsImporter
         region_type: row_data['region_type']&.downcase&.split(' ')&.join('_')&.to_sym
       }
       current_region = API::V1::FindOrUpsertRegion.call(region_attributes)
-      scenario_name = row_data['scenario']
+      scenario_name = row_data['scenario_en']
       if scenario_name.blank?
         current_scenario = nil
       else
-        current_scenario = API::V1::FindOrUpsertScenario.call({name: scenario_name})
+        current_scenario = API::V1::FindOrUpsertScenario.call({name_en: scenario_name, name_cn: row_data['scenario_cn']})
       end
       # Bulk is better.
       #

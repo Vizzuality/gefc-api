@@ -45,6 +45,7 @@ module API
             expose :category_filters, as: :category_filters
             expose :start_date, as: :start_date
             expose :end_date, as: :end_date
+            expose :scenarios, as: :scenarios
         end
         class FullIndicator < Grape::Entity
             expose :id, documentation: { type: "String", desc: "Indicator's unique id" }
@@ -60,6 +61,7 @@ module API
             expose :end_date, as: :end_date
             expose :subgroup, using: 'API::V1::Entities::MinimumSubgroup'
             expose :group, using: 'API::V1::Entities::MinimumGroup'
+            expose :scenarios, as: :scenarios
         end
 
         class FullSubgroup < Grape::Entity
