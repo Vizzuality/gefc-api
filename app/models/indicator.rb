@@ -65,12 +65,19 @@ class Indicator < ApplicationRecord
         rel.first!
     end
 
-    # Returns unique Regions for all indicator's records without.
+    # Returns unique Regions for all indicator's records.
     # Raises exception if there are no Regions.
     #
     def regions
       regions = Region.where(id: records.pluck(:region_id).uniq)
       raise IndicatorRegionException.new("an error has ocurred:there are no regions for the indicator with id:#{id}") unless regions.any?
       regions
+    end
+
+    # Returns unique Scenarios for all indicator's records.
+    # Raises exception if there are no Regions.
+    #
+    def scenarios
+      Scenario.where(id: records.pluck(:scenario_id).uniq).pluck(:name_en)
     end 
 end
