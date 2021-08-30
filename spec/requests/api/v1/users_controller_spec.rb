@@ -5,7 +5,7 @@ RSpec.describe API::V1::Users do
   include Rack::Test::Methods
   
   describe 'POST user' do
-    context 'When posting a user with invalid api token' do
+    context 'when posting a user with invalid api token' do
       it 'returns 401' do
         header "Api-Auth", '12345'
         params = { 'email': "valid@example.com", "password": "password", 'password_confirmation':  "password" }
@@ -14,7 +14,7 @@ RSpec.describe API::V1::Users do
         expect(last_response.status).to eq 401
       end
     end
-    context 'When posting a user with valid params and valid Api-Auth' do
+    context 'when posting a user with valid params and valid Api-Auth' do
       it 'returns 200 and status ok' do
         header "Api-Auth", Rails.application.credentials.api_valid_jwt
         params = { 'email': "valid@example.com", "password": "password", 'password_confirmation':  "password" }
@@ -42,7 +42,7 @@ RSpec.describe API::V1::Users do
   describe 'POST users login' do
     let!(:user) { FactoryBot.create(:user, email: "valid@example.com", password: "password", password_confirmation: "password" ) }
 
-    context 'When posting a users login with invalid api token' do
+    context 'when posting a users login with invalid api token' do
       it 'returns 401' do
         header "Api-Auth", '12345'
         params = { 'email': user.email, "password": "password" }
@@ -52,7 +52,7 @@ RSpec.describe API::V1::Users do
       end
     end
 
-    context 'When login a user with valid params' do
+    context 'when login a user with valid params' do
       it 'returns 200 and status ok' do
         header "Api-Auth", Rails.application.credentials.api_valid_jwt
         params = { 'email': user.email, "password": "password" }
@@ -79,7 +79,7 @@ RSpec.describe API::V1::Users do
   describe 'GET users info' do
     let!(:user) { FactoryBot.create(:user, email: "valid@example.com", password: "password", password_confirmation: "password" ) }
     
-    context 'When logged in as a user with valid auth' do
+    context 'when logged in as a user with valid auth' do
       it 'returns 200 and status ok' do
         header "Authentication", login_and_get_jwt(user)
         get "/api/v1/users/me"
@@ -96,7 +96,7 @@ RSpec.describe API::V1::Users do
       end
     end
 
-    context 'When not logged in' do
+    context 'when not logged in' do
       it 'returns 401' do
         header "Authentication", ''
         get "/api/v1/users/me"
@@ -107,9 +107,9 @@ RSpec.describe API::V1::Users do
   end
 
   describe 'UPDATE users info' do
-    let!(:user) { FactoryBot.create(:user, email: "valid@example.com", password: "password", password_confirmation: "password" ) }
+    let!(:user) { create(:user) }
 
-    context 'When logged in as a user with valid auth' do
+    context 'when logged in as a user with valid auth' do
       it 'returns 201' do
         header "Authentication", login_and_get_jwt(user)
         params = { 'email': "new_email@example.com" }
@@ -125,6 +125,44 @@ RSpec.describe API::V1::Users do
         parsed_body = JSON.parse(last_response.body)
 
         expect(parsed_body["email"]).to eq("new_email@example.com")
+      end
+    end
+  end
+
+  describe 'GET recover password' do
+    let!(:user) { create(:user) }
+
+    context 'whit the email of an existing user' do
+      it 'returns 201' do
+        params = { 'email': user.email }
+        get "/api/v1/users/recover_password_token", params, as: :json
+
+        expect(last_response.status).to eq 200        
+      end
+
+      it 'calls the mailer' do
+        params = { 'email': user.email }
+
+        expect {
+          get "/api/v1/users/recover_password_token", params, as: :json 
+        }.to have_enqueued_job(ActionMailer::MailDeliveryJob)     
+      end
+    end
+
+    context 'whit an invalid email' do
+      it 'returns 406' do
+        params = { 'email': 'invalid@email.com' }
+        get "/api/v1/users/recover_password_token", params, as: :json
+
+        expect(last_response.status).to eq 406        
+      end
+
+      it 'does not call the mailer' do
+        params = { 'email': 'invalid@email.com' }
+
+        expect {
+          get "/api/v1/users/recover_password_token", params, as: :json 
+        }.not_to have_enqueued_job(ActionMailer::MailDeliveryJob)     
       end
     end
   end
