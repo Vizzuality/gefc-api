@@ -1,5 +1,5 @@
 FactoryBot.define do
   factory :scenario do
-    name { "MyString" }
+    name { Faker::Name.unique.name }
   end
 end

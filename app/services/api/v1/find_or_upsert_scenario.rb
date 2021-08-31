@@ -2,13 +2,13 @@ module API
   module V1
     class FindOrUpsertScenario < FindOrUpsertEntity
       def reload
-        @dict = Hash[Scenario.all.map { |g| [g.name, g] }]
+        @dict = Hash[Scenario.all.map { |g| [g.name_en, g] }]
       end
 
       private
 
       def lookup_attributes
-        [:name]
+        [:name_en]
       end
 
       def create(attributes)

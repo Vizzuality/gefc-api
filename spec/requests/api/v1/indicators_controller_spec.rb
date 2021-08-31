@@ -5,15 +5,51 @@ RSpec.describe API::V1::Indicators do
   include Rack::Test::Methods
 
   let(:indicator) { create(:indicator) }
-  let!(:record1) { create(:record, indicator: indicator, year: 2020) }
+  let!(:record) { create(:record, indicator: indicator, year: 2020) }
   let!(:record2) { create(:record, indicator: indicator, year: 2021) }
 
+  describe 'GET indicator' do
+    context 'when requesting an indicator' do      
+      it 'returns 200 and status ok' do
+
+        header 'Content-Type', 'application/json'
+        get "/api/v1/indicators/#{indicator.id}"
+
+        expect(last_response.status).to eq(200)
+      end
+
+      it 'display the scenarios' do
+        scenario = create(:scenario)      
+        record2.scenario = scenario
+        record2.save!
+
+        header 'Content-Type', 'application/json'
+        get "/api/v1/indicators/#{indicator.id}"
+
+        expect(parsed_body["scenarios"]).to eq([scenario.name])
+      end
+    end
+  end
+
   describe 'GET records' do
-    context 'when requesting list of indicator records' do
+    context 'when requesting list of indicator records' do      
       it 'returns 200 and status ok' do
         header 'Content-Type', 'application/json'
         get "/api/v1/indicators/#{indicator.id}/records"
+
         expect(last_response.status).to eq(200)
+      end
+
+      it 'display the scenario name for the records that have one' do
+        scenario = create(:scenario)      
+        record2.scenario = scenario
+        record2.save!
+
+        header 'Content-Type', 'application/json'
+        get "/api/v1/indicators/#{indicator.id}/records"
+
+        expect(find_by_id(record.id)["scenario"]).to eq(nil)
+        expect(find_by_id(record2.id)["scenario"]).to eq({"name"=>scenario.name})
       end
     end
   end
@@ -23,11 +59,12 @@ RSpec.describe API::V1::Indicators do
       let!(:indicator_with_region) { create(:indicator) }
       let!(:region) { create(:region) }
       let!(:geometry) { create(:geometry_polygon, region: region) }
-      let!(:record1) { create(:record, indicator: indicator_with_region, year: 2020, region: region) }
+      let!(:record_with_region) { create(:record, indicator: indicator_with_region, year: 2020, region: region) }
 
       it 'returns 200 and status ok' do
         header 'Content-Type', 'application/json'
         get "/api/v1/indicators/#{indicator_with_region.id}/regions"
+
         expect(last_response.status).to eq(200)
       end
 
@@ -38,8 +75,10 @@ RSpec.describe API::V1::Indicators do
           "region_type"=> region.region_type,
           "geometry"=> RGeo::GeoJSON.encode(region.geometry.geometry)
         }
+
         header 'Content-Type', 'application/json'
         get "/api/v1/indicators/#{indicator_with_region.id}/regions"
+
         expect(parsed_body.include?(region_data)).to eq(true)
       end
 
@@ -48,6 +87,7 @@ RSpec.describe API::V1::Indicators do
 
         header 'Content-Type', 'application/json'
         get "/api/v1/indicators/#{indicator_without_records_or_region.id}/regions"
+
         expect(parsed_body["error"].nil?).to eq(false)
         expect(last_response.status).to eq(404)
       end

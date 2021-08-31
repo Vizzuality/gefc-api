@@ -9,11 +9,12 @@ RSpec.describe API::V1::Downloads do
   let!(:record2) { create(:record, indicator: indicator, year: 2021) }
   
   describe 'GET downloads' do
-    let!(:user) { FactoryBot.create(:user, email: "valid@example.com", password: "password", password_confirmation: "password", role: 1 ) }
+    let!(:admin) { create(:user, :admin) }
     
     context 'When logged in as a user with valid role' do
       it 'returns 200 and status ok' do
-        header "Authentication", login_and_get_jwt(user)
+        
+        header "Authentication", login_and_get_jwt(admin)
         params = { 'id': indicator.id, "file_format": 'csv' }
         get "/api/v1/downloads", params, as: :json
 

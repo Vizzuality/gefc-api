@@ -41,4 +41,20 @@ RSpec.describe Indicator, type: :model do
       expect { indicator.regions }.to raise_error(IndicatorRegionException)
     end
   end
+
+  describe :scenario do
+    it "returns an array with the names of the scenarios" do
+      indicator = create(:indicator)
+      scenario_1 = create(:scenario)
+      scenario_2 = create(:scenario)
+      record_1 = create(:record, indicator: indicator, scenario: scenario_1)
+      record_2 = create(:record, indicator: indicator, scenario: scenario_2)
+      record_3 = create(:record, indicator: indicator)
+      
+      expect(indicator.scenarios.include?(scenario_1.name)).to eq(true)
+      expect(indicator.scenarios.include?(scenario_2.name)).to eq(true)
+      expect(indicator.scenarios.count).to eq(2)
+            
+    end
+  end
 end
