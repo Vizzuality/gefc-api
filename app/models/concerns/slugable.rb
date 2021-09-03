@@ -8,6 +8,10 @@ module Slugable
   end
 
   def set_slug
-    self.slug = name_en.downcase.gsub(/[[:space:]]/, '-')
+    if self.class == Indicator
+      self.slug = "#{subgroup.name_en.downcase.gsub(/[[:space:]]/, '-')}-#{name_en.downcase.gsub(/[[:space:]]/, '-')}"
+    else
+      self.slug = name_en.downcase.gsub(/[[:space:]]/, '-')
+    end
   end
 end
