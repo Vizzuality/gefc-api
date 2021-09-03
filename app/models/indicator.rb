@@ -4,7 +4,7 @@ class Indicator < ApplicationRecord
     include Slugable
 
     validates_uniqueness_of :by_default, scope: :subgroup_id, if: :by_default?
-    validates_uniqueness_of :name_en
+    validates_uniqueness_of :name_en, scope: :subgroup_id
     validates_presence_of :name_en
 
     belongs_to :subgroup
