@@ -100,7 +100,7 @@ module API
 				params do
 					requires :email, type: String, desc: "email of the user"
 				end
-				get "/recover_password_token" do
+				get "/recover-password-token" do
 					user = User.find_by(email: params["email"].downcase)
 					if user
 						UsermailerMailer.restore_password_email(user, user.recover_password_token).deliver_later

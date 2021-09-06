@@ -135,7 +135,7 @@ RSpec.describe API::V1::Users do
     context 'whit the email of an existing user' do
       it 'returns 201' do
         params = { 'email': user.email }
-        get "/api/v1/users/recover_password_token", params, as: :json
+        get "/api/v1/users/recover-password-token", params, as: :json
 
         expect(last_response.status).to eq 200        
       end
@@ -144,7 +144,7 @@ RSpec.describe API::V1::Users do
         params = { 'email': user.email }
 
         expect {
-          get "/api/v1/users/recover_password_token", params, as: :json 
+          get "/api/v1/users/recover-password-token", params, as: :json 
         }.to have_enqueued_job(ActionMailer::MailDeliveryJob)     
       end
     end
@@ -152,7 +152,7 @@ RSpec.describe API::V1::Users do
     context 'whit an invalid email' do
       it 'returns 406' do
         params = { 'email': 'invalid@email.com' }
-        get "/api/v1/users/recover_password_token", params, as: :json
+        get "/api/v1/users/recover-password-token", params, as: :json
 
         expect(last_response.status).to eq 406        
       end
@@ -161,7 +161,7 @@ RSpec.describe API::V1::Users do
         params = { 'email': 'invalid@email.com' }
 
         expect {
-          get "/api/v1/users/recover_password_token", params, as: :json 
+          get "/api/v1/users/recover-password-token", params, as: :json 
         }.not_to have_enqueued_job(ActionMailer::MailDeliveryJob)     
       end
     end
