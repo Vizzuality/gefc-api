@@ -133,7 +133,7 @@ RSpec.describe API::V1::Users do
     let!(:user) { create(:user) }
 
     context 'whit the email of an existing user' do
-      it 'returns 201' do
+      it 'returns 200' do
         params = { 'email': user.email }
         get "/api/v1/users/recover-password-token", params, as: :json
 
@@ -164,6 +164,18 @@ RSpec.describe API::V1::Users do
           get "/api/v1/users/recover-password-token", params, as: :json 
         }.not_to have_enqueued_job(ActionMailer::MailDeliveryJob)     
       end
+    end
+  end
+
+  describe 'DELETE user' do
+    let!(:user) { create(:user) }
+
+    it 'returns 200' do
+      header "Authentication", login_and_get_jwt(user)
+      delete "api/v1/users/me", as: :json
+
+      expect(last_response.status).to eq 200
+      expect{ User.find(user.id) }.to raise_exception(ActiveRecord::RecordNotFound)
     end
   end
 end
