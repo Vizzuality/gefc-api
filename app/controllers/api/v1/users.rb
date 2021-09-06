@@ -95,6 +95,26 @@ module API
 						error!({ :error_code => 401, :error_message => authenticate! }, 401)
 					end
 				end
+
+				desc "Deletes the current user", {
+					headers: {
+						"Authentication" => {
+							description: "JWT that Validates the user",
+							required: true
+						}
+					}
+				}
+				delete "/me" do
+					if authenticate! == true
+						user = user_authenticated
+						user.destroy!
+
+						{status: "ok"}
+					else
+						error!({ :error_code => 401, :error_message => authenticate! }, 401)
+					end
+				end
+
 				
 				desc "Sends and email with restore password link"
 				params do
