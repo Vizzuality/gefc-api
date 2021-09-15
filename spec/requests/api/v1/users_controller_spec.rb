@@ -126,6 +126,43 @@ RSpec.describe API::V1::Users do
 
         expect(parsed_body["email"]).to eq("new_email@example.com")
       end
+      context 'update password' do
+        it 'updates password if current password is present and valid in params' do
+          header "Authentication", login_and_get_jwt(user)
+          params = {
+            'password': user.password,
+            'new_password': "new password",
+            'password_confirmation': "new password"
+          }
+          put "/api/v1/users/me", params, as: :json
+  
+          user.reload
+          expect(user.valid_password?(params[:new_password])).to eq(true)
+          expect(last_response.status).to eq 200 
+        end
+        it 'returns 406 if current password is present but invalid in params' do
+          header "Authentication", login_and_get_jwt(user)
+          params = {
+            'password': "wrong password",
+            'new_password': "new password",
+            'password_confirmation': "new password"
+          }
+          put "/api/v1/users/me", params, as: :json
+  
+          expect(last_response.status).to eq 406
+        end
+        it 'returns 422 if new password does not match password confirmation' do
+          header "Authentication", login_and_get_jwt(user)
+          params = {
+            'password': user.password,
+            'new_password': "new password",
+            'password_confirmation': "old password"
+          }
+          put "/api/v1/users/me", params, as: :json
+  
+          expect(last_response.status).to eq 422
+        end
+      end
     end
   end
 

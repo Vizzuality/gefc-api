@@ -81,14 +81,27 @@ module API
 				}
 				params do
 					optional :email, type: String, desc: "email of the user"
-					optional :password, type: String, desc: "password"
+					optional :password, type: String, desc: "current password"
+					optional :new_password, type: String, desc: "new password"
 					optional :password_confirmation, type: String, desc: "password confirmation"
 					optional :username, type: String, desc: "username of the user"
 				end
 				put "/me" do
 					if authenticate! == true
 						user = user_authenticated
-						user.update(params)
+						if params["new_password"].present?
+							if params["password"].nil?
+								error!({ :error_code => 406, :error_message => "Invalid current password" }, 406)
+							end
+							if user&.valid_password?(params["password"])
+								params["password"] = params["new_password"]
+								params.delete("new_password")
+							else
+								error!({ :error_code => 406, :error_message => "Invalid current password" }, 406)
+							end
+						end
+
+						user.update!(params)
 
 						present user, with: API::V1::Entities::UserInfo
 					else
