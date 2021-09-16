@@ -96,6 +96,7 @@ module API
             expose :published, documentation: { type: "Boolean", desc: "Group's published status." }, as: :status
             expose :default_subgroup_slug, as: :default_subgroup
             expose :subgroups, using: API::V1::Entities::BasicSubgroup
+            expose :header_image_url, as: :header_image
         end
 
         class MinimumGroup < Grape::Entity
