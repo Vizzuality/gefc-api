@@ -91,9 +91,9 @@ module API
           subgroup = Subgroup.find_by_id_or_slug!(permitted_params[:subgroup_id], group_id: group.id)
           indicator = Indicator.find_by_id_or_slug!(permitted_params[:indicator_id], {subgroup_id: subgroup.id}, [])
 					if params[:category_1]
-						records = Record.where(indicator_id: indicator.id).where(category_1: params[:category_1]).page(params[:page]).per(params[:per_page]).order(year: :desc)
+						records = Record.includes(:widgets, :unit, :region, :scenario).where(indicator_id: indicator.id).where(category_1: params[:category_1]).page(params[:page]).per(params[:per_page]).order(year: :desc)
 					else
-						records = Record.where(indicator_id: indicator.id).page(params[:page]).per(params[:per_page]).order(year: :desc)
+						records = Record.includes(:widgets, :unit, :region, :scenario).where(indicator_id: indicator.id).page(params[:page]).per(params[:per_page]).order(year: :desc)
 					end
 					present records, with: API::V1::Entities::Record
 				end
