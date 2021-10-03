@@ -18,7 +18,7 @@ class Indicator < ApplicationRecord
 
     scope :by_default, -> { where(by_default: true) }
 
-    translates :name, :description
+    translates :name, :description, :data_source
 
     def default_visualization
         default_widget&.name

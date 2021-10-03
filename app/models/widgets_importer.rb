@@ -12,7 +12,7 @@ class WidgetsImporter
     clear_all
 
     file = File.read(file_path)
-    data_hash = JSON.parse(file)
+    data_hash = JSON.parse!(file)
     puts "we are going to import #{data_hash.count} indicators if everything works fine"
 
     data_hash.each do |indicator_data|
@@ -25,9 +25,20 @@ class WidgetsImporter
       subgroup_attributes = {name_en: indicator_data['classification']['subgroup_en']}
       subgroup_attributes['by_default'] = indicator_data['classification']['subgroup_default'] unless indicator_data['default'].nil?
       current_subgroup = API::V1::FindOrUpsertSubgroup.call(subgroup_attributes, current_group)
-      indicator_attributes = {name_en: indicator_data['indicator_en']}
+      indicator_attributes = {
+        name_en: indicator_data['indicator_en'],
+        data_source_en: indicator_data['data_source_en'],
+        data_source_cn: indicator_data['data_source_cn'],
+        description_en: indicator_data['description_en'],
+        description_cn: indicator_data['description_cn'],
+        download_privilege: indicator_data['download_privilege'],
+      }
       indicator_attributes['by_default'] = indicator_data['default'] unless indicator_data['default'].nil?
       current_indicator = API::V1::FindOrUpsertIndicator.call(indicator_attributes, current_subgroup)
+
+      puts current_indicator.data_source_en
+      puts current_indicator.data_source_cn
+      puts current_indicator.download_privilege
 
       #Widgets
       #
