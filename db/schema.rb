@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_03_084830) do
+ActiveRecord::Schema.define(version: 2021_10_03_095820) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -148,6 +148,7 @@ ActiveRecord::Schema.define(version: 2021_10_03_084830) do
     t.string "slug"
     t.string "data_source_en"
     t.string "data_source_cn"
+    t.boolean "download_privilege"
     t.index ["subgroup_id", "by_default"], name: "index_indicators_on_subgroup_id_and_by_default", unique: true, where: "by_default"
     t.index ["subgroup_id"], name: "index_indicators_on_subgroup_id"
     t.index ["widget_id"], name: "index_indicators_on_widget_id"

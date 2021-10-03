@@ -28,10 +28,15 @@ class WidgetsImporter
       indicator_attributes = {
         name_en: indicator_data['indicator_en'],
         data_source_en: indicator_data['data_source_en'],
-        data_source_cn: indicator_data['data_source_cn']
+        data_source_cn: indicator_data['data_source_cn'],
+        download_privilege: indicator_data['download_privilege'],
       }
       indicator_attributes['by_default'] = indicator_data['default'] unless indicator_data['default'].nil?
       current_indicator = API::V1::FindOrUpsertIndicator.call(indicator_attributes, current_subgroup)
+
+      puts current_indicator.data_source_en
+      puts current_indicator.data_source_cn
+      puts current_indicator.download_privilege
 
       #Widgets
       #
