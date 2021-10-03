@@ -29,6 +29,8 @@ class WidgetsImporter
         name_en: indicator_data['indicator_en'],
         data_source_en: indicator_data['data_source_en'],
         data_source_cn: indicator_data['data_source_cn'],
+        description_en: indicator_data['description_en'],
+        description_cn: indicator_data['description_cn'],
         download_privilege: indicator_data['download_privilege'],
       }
       indicator_attributes['by_default'] = indicator_data['default'] unless indicator_data['default'].nil?
