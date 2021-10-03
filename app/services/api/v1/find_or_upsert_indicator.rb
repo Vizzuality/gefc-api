@@ -20,6 +20,7 @@ module API
       end
 
       def create(attributes)
+        #set as by_default for a subgroup
         if attributes[:by_default] && attributes[:subgroup_id]
           current_default = Indicator.by_default.where(subgroup_id: attributes[:subgroup_id]).first
         end
