@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_03_095820) do
+ActiveRecord::Schema.define(version: 2021_10_06_121500) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -72,11 +72,10 @@ ActiveRecord::Schema.define(version: 2021_10_03_095820) do
   end
 
   create_table "geometry_points", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.bigint "region_id"
-    t.geography "geometry", limit: {:srid=>4326, :type=>"geometry", :geographic=>true}
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["region_id"], name: "index_geometry_points_on_region_id"
+    t.geometry "geometry", limit: {:srid=>0, :type=>"geometry"}
+    t.uuid "region_id"
   end
 
   create_table "geometry_points_import_attempts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -90,11 +89,10 @@ ActiveRecord::Schema.define(version: 2021_10_03_095820) do
   end
 
   create_table "geometry_polygons", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.bigint "region_id"
-    t.geography "geometry", limit: {:srid=>4326, :type=>"geometry", :geographic=>true}
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["region_id"], name: "index_geometry_polygons_on_region_id"
+    t.geometry "geometry", limit: {:srid=>0, :type=>"geometry"}
+    t.uuid "region_id"
   end
 
   create_table "geometry_polygons_import_attempts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
