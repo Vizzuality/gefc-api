@@ -42,5 +42,12 @@ module GefcApi
 
     # Permitted locales available for the application
     config.i18n.available_locales = [:en, :cn]
+
+    if ENV['RAILS_ENV'] == 'develop'
+      config.after_initialize do
+        Bullet.enable = true
+        Bullet.rails_logger = true
+      end  
+    end  
   end
 end

@@ -2,6 +2,7 @@ module API
 	module V1
 		class Groups < Grape::API
 			include API::V1::Defaults
+			include Grape::Rails::Cache
 
 			resource :groups do
 				desc "Return all groups"
@@ -9,7 +10,13 @@ module API
 					use :pagination
 				end
 				get "", root: :groups do
-					present Group.page(params[:page]).per(params[:per_page]).order(:name_en), with: API::V1::Entities::Group
+					groups = Rails.cache.read('groups')
+					if(groups == nil)
+						groups = Group.includes([:subgroups]).all.order(:name_en)
+						Rails.cache.write('groups', groups, expires_in: 1.day) if groups.present?
+					end
+
+					present groups.page(params[:page]).per(params[:per_page]), with: API::V1::Entities::Group
 				end
 
 				desc "Return a group"
