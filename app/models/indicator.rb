@@ -146,7 +146,7 @@ class Indicator < ApplicationRecord
     # Raises exception if there are no Regions.
     #
     def regions
-      regions = cached_regions
+      regions = self.cached_regions
       raise IndicatorRegionException.new("an error has ocurred:there are no regions for the indicator with id:#{id}") unless regions.any?
       regions
     end
