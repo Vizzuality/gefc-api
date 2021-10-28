@@ -83,19 +83,22 @@ module API
 					requires :subgroup_id, type: String, desc: "ID / slug of the subgroup"
 					requires :indicator_id, type: String, desc: "ID / slug of the indicator"
 					optional :category_1, type: String, desc: "Name of the category"
-					# optional :category_2, type: String, desc: "Name of the category"
+					optional :scenario, type: String, desc: "UUID of the scenario"
+					optional :region, type: String, desc: "UUID of the region"
+					optional :unit, type: String, desc: "UUID of the region"
+					optional :year, type: Integer, desc: "Year"
+					optional :start_year, type: Integer, desc: "Start year"
+					optional :end_year, type: Integer, desc: "End year"
 					use :pagination
 				end
 				get ":id/subgroups/:subgroup_id/indicators/:indicator_id/records" do
           group = Group.find_by_id_or_slug!(permitted_params[:id])
           subgroup = Subgroup.find_by_id_or_slug!(permitted_params[:subgroup_id], group_id: group.id)
           indicator = Indicator.find_by_id_or_slug!(permitted_params[:indicator_id], {subgroup_id: subgroup.id}, [])
-					if params[:category_1]
-						records = Record.includes(:widgets, :unit, :region, :scenario).where(indicator_id: indicator.id).where(category_1: params[:category_1]).page(params[:page]).per(params[:per_page]).order(year: :desc)
-					else
-						records = Record.includes(:widgets, :unit, :region, :scenario).where(indicator_id: indicator.id).page(params[:page]).per(params[:per_page]).order(year: :desc)
-					end
-					present records, with: API::V1::Entities::Record
+					filter = FilterIndicatorRecords.new(indicator, params.slice(:category_1, :scenario, :region, :unit, :year, :start_year, :end_year))
+					records = filter.call.includes(:widgets, :unit, :region, :scenario).order(year: :desc)
+					#no need to order by year if there is only one year
+					present records.page(params[:page]).per(params[:per_page]), with: API::V1::Entities::Record
 				end
 			end
 		end
