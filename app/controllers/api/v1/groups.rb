@@ -12,7 +12,7 @@ module API
 				get "", root: :groups do
 					groups = FetchGroup.new.all
 
-					present groups.page(params[:page]).per(params[:per_page]), with: API::V1::Entities::Group
+					present groups, with: API::V1::Entities::Group
 				end
 
 				desc "Return a group"
@@ -31,11 +31,7 @@ module API
 				end
 				get ":id/subgroups" do
           group = Group.find_by_id_or_slug!(permitted_params[:id])
-					subgroups = Subgroup.
-            where(group_id: group.id).
-            order(:name_en).
-            page(params[:page]).
-            per(params[:per_page])
+					subgroups = FetchSubgroup.new.by_group(group)
 					present subgroups, with: API::V1::Entities::BasicSubgroup
 				end
 
@@ -59,11 +55,7 @@ module API
 				get ":id/subgroups/:subgroup_id/indicators" do
           group = Group.find_by_id_or_slug!(permitted_params[:id])
           subgroup = Subgroup.find_by_id_or_slug!(permitted_params[:subgroup_id], group_id: group.id)
-					indicators = Indicator.
-            where(subgroup_id: subgroup.id).
-            order(:name_en).
-            page(params[:page]).
-            per(params[:per_page])
+					indicators = FetchIndicator.new.by_subgroup(subgroup)
 					present indicators, with: API::V1::Entities::FullIndicator
 				end
 				
