@@ -10,11 +10,7 @@ module API
 					use :pagination
 				end
 				get "", root: :groups do
-					groups = Rails.cache.read('groups')
-					if(groups == nil)
-						groups = Group.includes([:subgroups]).all.order(:name_en)
-						Rails.cache.write('groups', groups, expires_in: 1.day) if groups.present?
-					end
+					groups = FetchGroup.new.all
 
 					present groups.page(params[:page]).per(params[:per_page]), with: API::V1::Entities::Group
 				end
