@@ -115,4 +115,191 @@ RSpec.describe API::V1::Groups do
       end
     end
   end
+
+  describe 'GET records' do
+    let!(:subgroup) { FactoryBot.create(:subgroup, group: group) }
+    let!(:indicator) { FactoryBot.create(:indicator, subgroup: subgroup) }
+    let!(:record) { create(:record, indicator: indicator, year: 2020) }
+    let!(:record2) { create(:record, indicator: indicator, year: 2021) }
+
+    context 'when requesting list of indicator records' do      
+      it 'returns 200 and status ok' do
+        header 'Content-Type', 'application/json'
+        get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators/#{indicator.id}/records"
+
+        expect(last_response.status).to eq(200)
+      end
+
+      it 'display the scenario name for the records that have one' do
+        scenario = create(:scenario)      
+        record2.scenario = scenario
+        record2.save!
+
+        header 'Content-Type', 'application/json'
+        get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators/#{indicator.id}/records"
+
+        expect(find_by_id(record.id)["scenario"]).to eq(nil)
+        expect(find_by_id(record2.id)["scenario"]).to eq({"name"=>scenario.name})
+      end
+    end
+  end
+
+  describe 'GET records with filters' do
+    let!(:subgroup) { FactoryBot.create(:subgroup, group: group) }
+    let!(:indicator) { FactoryBot.create(:indicator, subgroup: subgroup) }
+    let!(:record) { create(:record, indicator: indicator, year: 2020, category_1: 'Total') }
+    let!(:record2) { create(:record, indicator: indicator, year: 2021, category_1: 'Others') }
+    let!(:scenario) { create(:scenario) }
+    let!(:region) { create(:region) }
+    let!(:unit) { create(:unit) }
+
+    context 'with category_1 filter' do      
+      it 'returns 200 and status ok' do
+        header 'Content-Type', 'application/json'
+        get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators/#{indicator.id}/records?category_1=Total"
+
+        expect(last_response.status).to eq(200)
+      end
+
+      it 'display only the records with the category' do
+        header 'Content-Type', 'application/json'
+        get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators/#{indicator.id}/records?category_1=Total"
+        expect(find_by_id(record.id).present?).to eq(true)
+        expect(find_by_id(record2.id).present?).to eq(false)
+      end
+    end
+
+    context 'with year filter' do      
+      it 'returns 200 and status ok' do
+        header 'Content-Type', 'application/json'
+        get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators/#{indicator.id}/records?year=2020"
+
+        expect(last_response.status).to eq(200)
+      end
+
+      it 'display only the records for that year' do
+        header 'Content-Type', 'application/json'
+        get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators/#{indicator.id}/records?year=2020"
+
+        expect(find_by_id(record.id).present?).to eq(true)
+        expect(find_by_id(record2.id).present?).to eq(false)
+      end
+    end
+
+    context 'with start_year filter' do      
+      it 'returns 200 and status ok' do
+        header 'Content-Type', 'application/json'
+        get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators/#{indicator.id}/records?start_year=2021"
+
+        expect(last_response.status).to eq(200)
+      end
+
+      it 'display only the records starting from that year' do
+        header 'Content-Type', 'application/json'
+        get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators/#{indicator.id}/records?start_year=2021"
+
+        expect(find_by_id(record.id).present?).to eq(false)
+        expect(find_by_id(record2.id).present?).to eq(true)
+      end
+    end
+
+    context 'with end_year filter' do      
+      it 'returns 200 and status ok' do
+        header 'Content-Type', 'application/json'
+        get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators/#{indicator.id}/records?end_year=2020"
+
+        expect(last_response.status).to eq(200)
+      end
+
+      it 'display only the records until that year' do
+        header 'Content-Type', 'application/json'
+        get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators/#{indicator.id}/records?end_year=2020"
+
+        expect(find_by_id(record.id).present?).to eq(true)
+        expect(find_by_id(record2.id).present?).to eq(false)
+      end
+    end
+
+    context 'with years range filter' do      
+      it 'returns 200 and status ok' do
+        header 'Content-Type', 'application/json'
+        get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators/#{indicator.id}/records?start_year=2020&end_year=2021"
+
+        expect(last_response.status).to eq(200)
+      end
+
+      it 'display only the records within the years range' do
+        header 'Content-Type', 'application/json'
+        get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators/#{indicator.id}/records?start_year=2020&end_year=2021"
+
+        expect(find_by_id(record.id).present?).to eq(true)
+        expect(find_by_id(record2.id).present?).to eq(true)
+      end
+
+      it 'does not apply if year filter is present' do
+        header 'Content-Type', 'application/json'
+        get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators/#{indicator.id}/records?year=2020&start_year=2020&end_year=2021"
+
+        expect(find_by_id(record.id).present?).to eq(true)
+        expect(find_by_id(record2.id).present?).to eq(false)
+      end
+    end
+
+    context 'with scenario filter' do      
+      it 'returns 200 and status ok' do
+        header 'Content-Type', 'application/json'
+        get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators/#{indicator.id}/records?scenario=#{scenario.id}"
+
+        expect(last_response.status).to eq(200)
+      end
+
+      it 'display only the records with the given scenario' do    
+        record2.scenario = scenario
+        record2.save!
+
+        header 'Content-Type', 'application/json'
+        get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators/#{indicator.id}/records?scenario=#{scenario.id}"
+        expect(find_by_id(record.id).present?).to eq(false)
+        expect(find_by_id(record2.id).present?).to eq(true)
+      end
+    end
+    
+    context 'with region filter' do      
+      it 'returns 200 and status ok' do
+        header 'Content-Type', 'application/json'
+        get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators/#{indicator.id}/records?region=#{region.id}"
+
+        expect(last_response.status).to eq(200)
+      end
+
+      it 'display only the records for the given region' do     
+        record2.region = region
+        record2.save!
+
+        header 'Content-Type', 'application/json'
+        get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators/#{indicator.id}/records?region=#{region.id}"
+        expect(find_by_id(record.id).present?).to eq(false)
+        expect(find_by_id(record2.id).present?).to eq(true)
+      end
+    end
+    
+    context 'with unit filter' do      
+      it 'returns 200 and status ok' do
+        header 'Content-Type', 'application/json'
+        get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators/#{indicator.id}/records?unit=#{unit.id}"
+
+        expect(last_response.status).to eq(200)
+      end
+
+      it 'display only the records for the given unit' do     
+        record2.unit = unit
+        record2.save!
+
+        header 'Content-Type', 'application/json'
+        get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators/#{indicator.id}/records?unit=#{unit.id}"
+        expect(find_by_id(record.id).present?).to eq(false)
+        expect(find_by_id(record2.id).present?).to eq(true)
+      end
+    end
+  end
 end
