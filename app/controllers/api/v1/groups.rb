@@ -90,8 +90,9 @@ module API
           group = Group.find_by_id_or_slug!(permitted_params[:id])
           subgroup = Subgroup.find_by_id_or_slug!(permitted_params[:subgroup_id], group_id: group.id)
           indicator = Indicator.find_by_id_or_slug!(permitted_params[:indicator_id], {subgroup_id: subgroup.id}, [])
-					filter = FilterIndicatorRecords.new(indicator, params.slice(:category_1, :scenario, :region, :unit, :year, :start_year, :end_year))
-					records = filter.call.includes(:widgets, :unit, :region, :scenario).order(year: :desc)
+					records = FetchIndicator.new.records(indicator, params.slice(:category_1, :scenario, :region, :unit, :year, :start_year, :end_year))
+					# filter = FilterIndicatorRecords.new(indicator, params.slice(:category_1, :scenario, :region, :unit, :year, :start_year, :end_year))
+					# records = filter.call.includes(:widgets, :unit, :region, :scenario).order(year: :desc)
 					#no need to order by year if there is only one year
 					present records.page(params[:page]).per(params[:per_page]), with: API::V1::Entities::Record
 				end

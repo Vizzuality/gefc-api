@@ -28,9 +28,9 @@ module API
             expose :year, documentation: { type: "String", desc: "Record's year." }
             expose :category_1, documentation: { type: "String", desc: "Record's category." }
             expose :category_2, documentation: { type: "String", desc: "Record's category." }
-            expose :unit, using: API::V1::Entities::Unit
-            expose :region, using: API::V1::Entities::Region
-            expose :scenario, using: API::V1::Entities::Scenario
+            expose :cached_unit, as: :unit, using: API::V1::Entities::Unit
+            expose :cached_region, as: :region, using: API::V1::Entities::Region
+            expose :cached_scenario, as: :scenario, using: API::V1::Entities::Scenario
             expose :widgets_list, as: :visualizationTypes
         end
         class Indicator < Grape::Entity
@@ -72,7 +72,7 @@ module API
             expose :name, documentation: { type: "String", desc: "Subgroup's name." }
             expose :description, documentation: { type: "String", desc: "Subgroup's description." }
             expose :published, documentation: { type: "Boolean", desc: "Subgroup's published status." }
-            expose :cached_indicators, using: API::V1::Entities::Indicator
+            expose :cached_indicators, as: :indicators, using: API::V1::Entities::Indicator
             expose :cached_default_indicator, as: :default_indicator, using: API::V1::Entities::Indicator
         end
 
@@ -98,7 +98,7 @@ module API
             expose :published, documentation: { type: "Boolean", desc: "Group's published status." }, as: :status
             expose :default_subgroup_slug, as: :default_subgroup
             expose :cached_subgroups, as: :subgroups, using: API::V1::Entities::BasicSubgroup
-            # expose :header_image_url, as: :header_image
+            expose :cached_header_image_url, as: :header_image
         end
 
         class MinimumGroup < Grape::Entity

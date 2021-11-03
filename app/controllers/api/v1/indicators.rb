@@ -31,8 +31,7 @@ module API
 				end
 				get ":id/records" do
 					indicator = Indicator.find_by_id_or_slug!(permitted_params[:id], {}, [])
-					filter = FilterIndicatorRecords.new(indicator, params.slice(:category_1, :start_year, :end_year))
-					records = filter.call.includes(:unit, :region)
+					records = FetchIndicator.new.records(indicator, params.slice(:category_1, :scenario, :region, :unit, :year, :start_year, :end_year))
 
 					present records, with: API::V1::Entities::Record
 				end
@@ -43,7 +42,7 @@ module API
 				end
 				get ":id/regions" do
 					indicator = Indicator.find_by_id_or_slug!(permitted_params[:id], {}, [])
-					regions = indicator.regions
+					regions = FetchIndicator.new.regions(indicator)
 
 					present regions, with: API::V1::Entities::RegionWithGeometries
 				end

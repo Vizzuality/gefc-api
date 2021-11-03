@@ -27,14 +27,10 @@ class Region < ApplicationRecord
   #
   def geometry_encoded
     begin
-      cached_geometry_encoded = Rails.cache.read("#{self.id}_cached_geometry_encoded")
-      unless cached_geometry_encoded.present?
-          cached_geometry_encoded = RGeo::GeoJSON.encode(geometry.geometry)
-          Rails.cache.write("#{self.id}_cached_geometry_encoded", cached_geometry_encoded, expires_in: 1.day) if cached_geometry_encoded.present?
+      #Rails.logger.info("Fetching region geometry_encoded here!")
+      Rails.cache.fetch([self, 'geometry_encoded']) do
+        RGeo::GeoJSON.encode(geometry.geometry)
       end
-
-      return cached_geometry_encoded
-      
     rescue GeometryException => e
       return nil
     end
