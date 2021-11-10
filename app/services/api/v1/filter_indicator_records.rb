@@ -2,12 +2,12 @@ module API
   module V1
     class FilterIndicatorRecords
       def initialize(indicator, params = {})
-        @query = Record.where(indicator_id: indicator.id)
+        init_query(indicator, params)
         filter_by_scenario(params['scenario'])
         filter_by_region(params['region'])
         filter_by_unit(params['unit'])
         filter_by_category(params['category_1'])
-        filter_by_year_or_range(params[:year],params[:start_year], params[:end_year])
+        filter_by_year_or_range(params['year'],params['start_year'], params['end_year'])
       end
 
       def call
@@ -15,6 +15,14 @@ module API
       end
 
       private
+
+      def init_query(indicator, params)
+        unless params['visualization'].nil?
+          @query = Widget.where(name: params['visualization']).first.records.where(indicator_id: indicator.id)
+        else
+          @query = Record.where(indicator_id: indicator.id)
+        end
+      end
 
       def filter_by_scenario(scenario)
         return unless scenario.present?

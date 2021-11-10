@@ -152,6 +152,8 @@ RSpec.describe API::V1::Groups do
     let!(:scenario) { create(:scenario) }
     let!(:region) { create(:region) }
     let!(:unit) { create(:unit) }
+    let!(:widget) { FactoryBot.create(:widget, name: 'line') }
+    let!(:record_widget) { FactoryBot.create(:record_widget, widget: widget, record: record) }
 
     context 'with category_1 filter' do      
       it 'returns 200 and status ok' do
@@ -299,6 +301,25 @@ RSpec.describe API::V1::Groups do
         get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators/#{indicator.id}/records?unit=#{unit.id}"
         expect(find_by_id(record.id).present?).to eq(false)
         expect(find_by_id(record2.id).present?).to eq(true)
+      end
+    end
+
+    context 'with visualization filter' do      
+      it 'returns 200 and status ok' do
+        header 'Content-Type', 'application/json'
+        get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators/#{indicator.id}/records?visualization=#{widget.name}"
+
+        expect(last_response.status).to eq(200)
+      end
+
+      it 'display only the records for the given visualization' do     
+        record2.unit = unit
+        record2.save!
+
+        header 'Content-Type', 'application/json'
+        get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators/#{indicator.id}/records?visualization=#{widget.name}"
+        expect(find_by_id(record.id).present?).to eq(true)
+        expect(find_by_id(record2.id).present?).to eq(false)
       end
     end
   end
