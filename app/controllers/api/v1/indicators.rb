@@ -52,7 +52,7 @@ module API
 				get ":id/regions" do
 					regions = Rails.cache.fetch(['response', request.url]) do
 						indicator = Indicator.find_by_id_or_slug!(permitted_params[:id], {}, [])
-						regions = FetchIndicator.new.regions(indicator).page(1).per(10)
+						regions = FetchIndicator.new.regions(indicator)
 					end
 
 					present regions, with: API::V1::Entities::RegionWithGeometries
