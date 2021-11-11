@@ -5,5 +5,14 @@ class IndicatorWidget < ApplicationRecord
   belongs_to :indicator
   belongs_to :widget
 
+  after_create :update_visualization_types
+
   scope :by_default, -> { where(by_default: true) }
+
+  private
+  def update_visualization_types
+      self.indicator.visualization_types = self.indicator.widgets_list
+      self.indicator.default_visualization_name = self.widget.name if self.by_default?
+      self.indicator.save!
+  end
 end
