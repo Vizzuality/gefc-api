@@ -26,24 +26,13 @@ class Indicator < ApplicationRecord
     translates :name, :description, :data_source
 
     def default_visualization
-        cached_default_visualization
+        default_widget&.name
     end
-
-    def cached_default_visualization
-        API::V1::FetchIndicator.new.default_visualization(self)
-    end
-
-
 
     # Returns an Array with records category_1.
     #
     def category_1
-        # cached_category_1
         records.pluck(Record.current_locale_column(:category_1)).uniq
-    end
-
-    def cached_category_1
-        API::V1::FetchIndicator.new.category_1(self)
     end
 
     # Returns an Array with records category_2 for each category_1.
@@ -71,11 +60,7 @@ class Indicator < ApplicationRecord
     # Looks like Widgetable class is needed around...
     # 
     def widgets_list
-        cached_widgets_list
-    end
-
-    def cached_widgets_list
-        API::V1::FetchIndicator.new.widgets_list(self)
+        widgets.pluck(:name)
     end
 
     def self.find_by_id_or_slug!(slug_or_id, filters, includes)

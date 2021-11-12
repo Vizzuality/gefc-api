@@ -19,25 +19,25 @@ namespace :memcached do
  
     socket.close
   end
-  desc 'Populates cached groups'
-  task :populate_groups => :environment do
-    groups = Group.includes([:subgroups]).all.order(:name_en)
-    Rails.cache.write('groups', groups, expires_in: 1.day) if groups.present?
-  end
+  # desc 'Populates cached groups'
+  # task :populate_groups => :environment do
+  #   groups = Group.includes([:subgroups]).all.order(:name_en)
+  #   Rails.cache.write('groups', groups, expires_in: 1.day) if groups.present?
+  # end
 
-  desc 'Checks if groups and cached groups match'
-  task :check_cached_groups_match => :environment do
-    groups = Group.includes([:subgroups]).all.order(:name_en)
-    cached_groups = Rails.cache.read('groups')
-    puts 'wrong number' unless cached_groups.present? and cached_groups.count == groups.count
-    puts 'OK' if cached_groups.present? and cached_groups.count == groups.count
-  end
+  # desc 'Checks if groups and cached groups match'
+  # task :check_cached_groups_match => :environment do
+  #   groups = Group.includes([:subgroups]).all.order(:name_en)
+  #   cached_groups = Rails.cache.read('groups')
+  #   puts 'wrong number' unless cached_groups.present? and cached_groups.count == groups.count
+  #   puts 'OK' if cached_groups.present? and cached_groups.count == groups.count
+  # end
   
-  desc 'Delete groups from cache'
-  task :delete_all_groups => :environment do
-    Rails.cache.delete('groups')
-    puts 'ok' if Rails.cache.read('groups') == nil
-  end
+  # desc 'Delete groups from cache'
+  # task :delete_all_groups => :environment do
+  #   Rails.cache.delete('groups')
+  #   puts 'ok' if Rails.cache.read('groups') == nil
+  # end
 
   desc 'Populate Groups and Subgroups cache'
   task :populate_groups_and_subgroups => :environment do
@@ -63,31 +63,12 @@ namespace :memcached do
     API::V1::FetchIndicator.new.all
     Indicator.all.each do |indicator|
       puts indicator.id
-      API::V1::FetchIndicator.new.default_visualization(indicator)
-      API::V1::FetchIndicator.new.default_widget(indicator)
-      API::V1::FetchIndicator.new.widgets(indicator)
-      API::V1::FetchIndicator.new.widgets_list(indicator)
       API::V1::FetchIndicator.new.records(indicator)
-      API::V1::FetchIndicator.new.scenarios(indicator)
-      API::V1::FetchIndicator.new.regions(indicator)
-      API::V1::FetchIndicator.new.category_1(indicator)
-      API::V1::FetchIndicator.new.category_filters(indicator)
-      API::V1::FetchIndicator.new.start_date(indicator)
-      API::V1::FetchIndicator.new.end_date(indicator)
-      API::V1::FetchIndicator.new.group(indicator)
-      API::V1::FetchIndicator.new.subgroup(indicator)
     end
   end
 
-  desc 'Populate records cache'
-  task :populate_records => :environment do
-    Record.all.each do |record|
-      puts record.id
-      API::V1::FetchRecord.new.unit(record)
-      API::V1::FetchRecord.new.region(record)
-      API::V1::FetchRecord.new.scenario(record)
-      API::V1::FetchRecord.new.widgets(record)
-      API::V1::FetchRecord.new.widgets_list(record)
-    end
+  desc 'Populate regions cache'
+  task :populate_regions => :environment do
+    API::V1::FetchRegion.new.all
   end
 end

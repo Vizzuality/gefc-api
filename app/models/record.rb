@@ -16,23 +16,7 @@ class Record < ApplicationRecord
     after_save :update_indicator_region_ids
 
     def widgets_list
-        cached_widgets_list
-    end
-
-    def cached_widgets_list
-        API::V1::FetchRecord.new.widgets_list(self)
-    end
-
-    def cached_scenario
-        API::V1::FetchRecord.new.scenario(self)
-    end
-
-    def cached_region
-        API::V1::FetchRecord.new.region(self)
-    end
-
-    def cached_unit
-        API::V1::FetchRecord.new.unit(self)
+        widgets.pluck(:name).uniq
     end
 
     private
