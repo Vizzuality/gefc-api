@@ -5,8 +5,12 @@ RSpec.describe API::V1::Indicators do
   include Rack::Test::Methods
 
   let(:indicator) { create(:indicator) }
-  let!(:record) { create(:record, indicator: indicator, year: 2020) }
-  let!(:record2) { create(:record, indicator: indicator, year: 2021) }
+  let!(:region1) { create(:region) }
+  let!(:geometry1) { create(:geometry_polygon, region: region1) }    
+  let!(:region2) { create(:region) }
+  let!(:geometry2) { create(:geometry_polygon, region: region2) }
+  let!(:record) { create(:record, indicator: indicator, year: 2020, region: region1) }
+  let!(:record2) { create(:record, indicator: indicator, year: 2021, region: region2) }
 
   describe 'GET indicator' do
     context 'when requesting an indicator' do      
@@ -22,11 +26,21 @@ RSpec.describe API::V1::Indicators do
         scenario = create(:scenario)      
         record2.scenario = scenario
         record2.save!
+        # TO DO: this should be updated when a record has scenario. Not here...
+        indicator.scenarios = indicator.get_scenarios
+        indicator.save!
 
         header 'Content-Type', 'application/json'
         get "/api/v1/indicators/#{indicator.id}"
 
         expect(parsed_body["scenarios"]).to eq([scenario.name])
+      end
+
+      it 'display the region_ids' do
+        header 'Content-Type', 'application/json'
+        get "/api/v1/indicators/#{indicator.id}"
+        expect(parsed_body["region_ids"].include?(region2.id)).to eq(true)
+        expect(parsed_body["region_ids"].include?(region1.id)).to eq(true)
       end
     end
   end
@@ -50,46 +64,6 @@ RSpec.describe API::V1::Indicators do
 
         expect(find_by_id(record.id)["scenario"]).to eq(nil)
         expect(find_by_id(record2.id)["scenario"]).to eq({"name"=>scenario.name})
-      end
-    end
-  end
-
-  describe 'GET regions' do
-    context 'when requesting list of indicator regions' do
-      let!(:indicator_with_region) { create(:indicator) }
-      let!(:region) { create(:region) }
-      let!(:geometry) { create(:geometry_polygon, region: region) }
-      let!(:record_with_region) { create(:record, indicator: indicator_with_region, year: 2020, region: region) }
-
-      it 'returns 200 and status ok' do
-        header 'Content-Type', 'application/json'
-        get "/api/v1/indicators/#{indicator_with_region.id}/regions"
-
-        expect(last_response.status).to eq(200)
-      end
-
-      it 'returns a collection of regions with geometries' do
-        region_data = {
-          "id"=> region.id,
-          "name"=> region.name,
-          "region_type"=> region.region_type,
-          "geometry"=> RGeo::GeoJSON.encode(region.geometry.geometry)
-        }
-
-        header 'Content-Type', 'application/json'
-        get "/api/v1/indicators/#{indicator_with_region.id}/regions"
-
-        expect(parsed_body.include?(region_data)).to eq(true)
-      end
-
-      it 'returns an error message if there are no regions for this indicator' do
-        indicator_without_records_or_region = create(:indicator)
-
-        header 'Content-Type', 'application/json'
-        get "/api/v1/indicators/#{indicator_without_records_or_region.id}/regions"
-
-        expect(parsed_body["error"].nil?).to eq(false)
-        expect(last_response.status).to eq(404)
       end
     end
   end

@@ -6,5 +6,6 @@ FactoryBot.define do
     name_en { Faker::Name.unique.name }
     name_cn { "社会经济" }
     by_default { false }
+    region_ids { [] }
   end
 end

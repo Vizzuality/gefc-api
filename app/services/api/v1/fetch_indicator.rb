@@ -77,7 +77,7 @@ module API
       def records(indicator, params = {})
         if params.any?
           #Rails.logger.info("DB>>>>>>>>>>>>Fetching indicator records here!")
-          filter = FilterIndicatorRecords.new(indicator, params.slice(:category_1, :scenario, :region, :unit, :year, :start_year, :end_year))
+          filter = FilterIndicatorRecords.new(indicator, params.slice(:category_1, :scenario, :region, :unit, :year, :start_year, :end_year, :visualization))
 					records = filter.call.includes(:widgets, :unit, :region, :scenario).order(year: :desc)
         else
           #Rails.logger.info("Fetching indicator records here!")

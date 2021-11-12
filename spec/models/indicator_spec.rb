@@ -18,7 +18,7 @@ RSpec.describe Indicator, type: :model do
     record_2 = create(:record, indicator: indicator, category_1: category_one, category_2: "another filter")
     record_3 = create(:record, indicator: indicator, category_1: category_two, category_2: "filter two")
   
-    expect(indicator.category_filters).to eq({ category_one => [record_1.category_2, record_2.category_2], category_two => [record_3.category_2] })
+    expect(indicator.get_category_filters).to eq({ category_one => [record_1.category_2, record_2.category_2], category_two => [record_3.category_2] })
   end
 
   describe :regions do
@@ -42,7 +42,7 @@ RSpec.describe Indicator, type: :model do
     end
   end
 
-  describe :scenario do
+  describe :get_scenario do
     it "returns an array with the names of the scenarios" do
       indicator = create(:indicator)
       scenario_1 = create(:scenario)
@@ -51,9 +51,9 @@ RSpec.describe Indicator, type: :model do
       record_2 = create(:record, indicator: indicator, scenario: scenario_2)
       record_3 = create(:record, indicator: indicator)
       
-      expect(indicator.scenarios.include?(scenario_1.name)).to eq(true)
-      expect(indicator.scenarios.include?(scenario_2.name)).to eq(true)
-      expect(indicator.scenarios.count).to eq(2)
+      expect(indicator.get_scenarios.include?(scenario_1.name)).to eq(true)
+      expect(indicator.get_scenarios.include?(scenario_2.name)).to eq(true)
+      expect(indicator.get_scenarios.count).to eq(2)
             
     end
   end

@@ -107,11 +107,31 @@ RSpec.describe API::V1::Groups do
   describe 'GET indicator' do
     let!(:subgroup) { FactoryBot.create(:subgroup, group: group) }
     let!(:indicator) { FactoryBot.create(:indicator, subgroup: subgroup) }
+    let!(:region1) { create(:region) }
+    let!(:geometry1) { create(:geometry_polygon, region: region1) }    
+    let!(:region2) { create(:region) }
+    let!(:geometry2) { create(:geometry_polygon, region: region2) }
+    let!(:widget1) { create(:widget, name: 'line') }
+    let!(:widget2) { create(:widget, name: 'choropleth') }
+    let!(:unit) { create(:unit) }
+    let!(:record) { create(:record, indicator: indicator, year: 2020, region: region1, unit: unit) }
+    let!(:record2) { create(:record, indicator: indicator, year: 2021, region: region2, unit: unit) }
+    let!(:record_widget1) { create(:record_widget, record: record, widget: widget1) }
+    let!(:record_widget2) { create(:record_widget, record: record, widget: widget2) }
+    let!(:indicator_widget1) { create(:indicator_widget, indicator: indicator, widget: widget1) }
+    let!(:indicator_widget2) { create(:indicator_widget, indicator: indicator, widget: widget2) }
+
     context 'when requesting indicator' do
       it 'returns 200 and status ok' do
         header 'Content-Type', 'application/json'
         get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators/#{indicator.id}"
         expect(last_response.status).to eq 200
+      end
+      it 'display the visualization_type for the indicator' do
+        header 'Content-Type', 'application/json'
+        get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators/#{indicator.id}"
+        expect(parsed_body["visualization_types"].include?(widget1.name)).to eq(true)
+        expect(parsed_body["visualization_types"].include?(widget2.name)).to eq(true)
       end
     end
   end
@@ -119,8 +139,17 @@ RSpec.describe API::V1::Groups do
   describe 'GET records' do
     let!(:subgroup) { FactoryBot.create(:subgroup, group: group) }
     let!(:indicator) { FactoryBot.create(:indicator, subgroup: subgroup) }
-    let!(:record) { create(:record, indicator: indicator, year: 2020) }
-    let!(:record2) { create(:record, indicator: indicator, year: 2021) }
+    let!(:region1) { create(:region) }
+    let!(:geometry1) { create(:geometry_polygon, region: region1) }    
+    let!(:region2) { create(:region) }
+    let!(:geometry2) { create(:geometry_polygon, region: region2) }
+    let!(:widget1) { create(:widget, name: 'line') }
+    let!(:widget2) { create(:widget, name: 'choropleth') }
+    let!(:unit) { create(:unit) }
+    let!(:record) { create(:record, indicator: indicator, year: 2020, region: region1, unit: unit) }
+    let!(:record2) { create(:record, indicator: indicator, year: 2021, region: region2, unit: unit) }
+    let!(:record_widget1) { create(:record_widget, record: record, widget: widget1) }
+    let!(:record_widget2) { create(:record_widget, record: record, widget: widget2) }
 
     context 'when requesting list of indicator records' do      
       it 'returns 200 and status ok' do
@@ -141,6 +170,26 @@ RSpec.describe API::V1::Groups do
         expect(find_by_id(record.id)["scenario"]).to eq(nil)
         expect(find_by_id(record2.id)["scenario"]).to eq({"name"=>scenario.name})
       end
+      it 'display the unit_info for the records' do
+
+        header 'Content-Type', 'application/json'
+        get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators/#{indicator.id}/records"
+
+        expect(find_by_id(record2.id)["unit"]).to eq({"id"=>unit.id, "name"=>unit.name})
+      end
+      it 'display the region_id for the records' do
+        header 'Content-Type', 'application/json'
+        get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators/#{indicator.id}/records"
+
+        expect(find_by_id(record.id)["region_id"]).to eq(region1.id)
+        expect(find_by_id(record2.id)["region_id"]).to eq(region2.id)
+      end
+      it 'display the visualization_type for the records' do
+        header 'Content-Type', 'application/json'
+        get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators/#{indicator.id}/records"
+        expect(find_by_id(record.id)["visualization_types"].include?(widget1.name)).to eq(true)
+        expect(find_by_id(record.id)["visualization_types"].include?(widget2.name)).to eq(true)
+      end
     end
   end
 
@@ -152,6 +201,8 @@ RSpec.describe API::V1::Groups do
     let!(:scenario) { create(:scenario) }
     let!(:region) { create(:region) }
     let!(:unit) { create(:unit) }
+    let!(:widget) { FactoryBot.create(:widget, name: 'line') }
+    let!(:record_widget) { FactoryBot.create(:record_widget, widget: widget, record: record) }
 
     context 'with category_1 filter' do      
       it 'returns 200 and status ok' do
@@ -299,6 +350,23 @@ RSpec.describe API::V1::Groups do
         get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators/#{indicator.id}/records?unit=#{unit.id}"
         expect(find_by_id(record.id).present?).to eq(false)
         expect(find_by_id(record2.id).present?).to eq(true)
+      end
+    end
+
+    context 'with visualization filter' do      
+      it 'returns 200 and status ok' do
+        header 'Content-Type', 'application/json'
+        get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators/#{indicator.id}/records?visualization=#{widget.name}"
+
+        expect(last_response.status).to eq(200)
+      end
+
+      it 'display only the records for the given visualization' do     
+
+        header 'Content-Type', 'application/json'
+        get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators/#{indicator.id}/records?visualization=#{widget.name}"
+        expect(find_by_id(record.id).present?).to eq(true)
+        expect(find_by_id(record2.id).present?).to eq(false)
       end
     end
   end

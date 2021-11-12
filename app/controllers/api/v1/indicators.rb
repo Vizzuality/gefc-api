@@ -23,7 +23,7 @@ module API
 				end
 				get ":id", root: "indicator" do
 					indicator = Rails.cache.fetch(['response', request.url]) do
-							indicator = Indicator.find_by_id_or_slug!(permitted_params[:id], {}, [{records: [:unit, :region, :widgets]}])
+							indicator = Indicator.find_by_id_or_slug!(permitted_params[:id], {}, [])
 					end
 
 					present indicator, with: API::V1::Entities::FullIndicator
@@ -43,19 +43,6 @@ module API
 					end
 
 					present records, with: API::V1::Entities::Record
-				end
-
-				desc "Return an indicator's regions"
-				params do
-					requires :id, type: String, desc: "ID / slug of the indicator"
-				end
-				get ":id/regions" do
-					regions = Rails.cache.fetch(['response', request.url]) do
-						indicator = Indicator.find_by_id_or_slug!(permitted_params[:id], {}, [])
-						regions = FetchIndicator.new.regions(indicator)
-					end
-
-					present regions, with: API::V1::Entities::RegionWithGeometries
 				end
 			end
 		end

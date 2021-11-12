@@ -101,6 +101,7 @@ module API
 					optional :year, type: Integer, desc: "Year"
 					optional :start_year, type: Integer, desc: "Start year"
 					optional :end_year, type: Integer, desc: "End year"
+					optional :visualization, type: String, desc: "Name of the widget"
 					use :pagination
 				end
 				get ":id/subgroups/:subgroup_id/indicators/:indicator_id/records" do
@@ -108,7 +109,7 @@ module API
 						group = Group.find_by_id_or_slug!(permitted_params[:id])
 						subgroup = Subgroup.find_by_id_or_slug!(permitted_params[:subgroup_id], group_id: group.id)
 						indicator = Indicator.find_by_id_or_slug!(permitted_params[:indicator_id], {subgroup_id: subgroup.id}, [])
-						records = FetchIndicator.new.records(indicator, params.slice(:category_1, :scenario, :region, :unit, :year, :start_year, :end_year))
+						records = FetchIndicator.new.records(indicator, params.slice(:category_1, :scenario, :region, :unit, :year, :start_year, :end_year, :visualization))
 						#no need to order by year if there is only one year
 					end
 

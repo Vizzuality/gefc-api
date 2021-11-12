@@ -2,6 +2,11 @@ class IndicatorRegionException < StandardError; end
 
 class Indicator < ApplicationRecord
     include Slugable
+    serialize :region_ids, Array
+    serialize :visualization_types, Array
+    serialize :categories, Array
+    serialize :scenarios, Array
+    serialize :category_filters, Hash
 
     validates_uniqueness_of :by_default, scope: :subgroup_id, if: :by_default?
     validates_uniqueness_of :name_en, scope: :subgroup_id
@@ -33,7 +38,8 @@ class Indicator < ApplicationRecord
     # Returns an Array with records category_1.
     #
     def category_1
-        cached_category_1
+        # cached_category_1
+        records.pluck(Record.current_locale_column(:category_1)).uniq
     end
 
     def cached_category_1
@@ -42,38 +48,23 @@ class Indicator < ApplicationRecord
 
     # Returns an Array with records category_2 for each category_1.
     #
-    def category_filters
-        cached_category_filters
-    end
-
-    def cached_category_filters
-        API::V1::FetchIndicator.new.category_1(self)
-    end
-
-    def cached_records
-        cached_records = Rails.cache.read("#{self.id}_cached_records")
-        unless cached_records.present?
-            cached_records = records
-            Rails.cache.write("#{self.id}_cached_records", cached_records, expires_in: 1.day) if cached_records.present?
+    def get_category_filters
+        category_filters = {}
+        category_1.each do |category_1|
+            category_filters[category_1] = records.
+                where(Record.current_locale_column(:category_1) => category_1).
+                pluck(Record.current_locale_column(:category_2)).
+                uniq
         end
-
-        return cached_records
+        category_filters
     end
 
-    def start_date
-        cached_start_date
+    def get_start_date
+        records.where("year > ?", 1900).order(year: :asc).pluck(:year).first
     end
 
-    def cached_start_date
-        API::V1::FetchIndicator.new.start_date(self)
-    end
-
-    def end_date
-        cached_end_date
-    end
-
-    def cached_end_date
-        API::V1::FetchIndicator.new.end_date(self)
+    def get_end_date
+        records.where("year > ?", 1900).order(year: :desc).pluck(:year).first
     end
 
 
@@ -113,19 +104,7 @@ class Indicator < ApplicationRecord
     # Returns an Array of unique Scenarios names for all indicator's records.
     # Raises exception if there are no Regions.
     #
-    def scenarios
-        cached_scenarios        
-    end
-    
-    def cached_scenarios
-        API::V1::FetchIndicator.new.scenarios(self)
-    end
-
-    def cached_group
-        API::V1::FetchIndicator.new.group(self)
-    end
-
-    def cached_subgroup
-        API::V1::FetchIndicator.new.subgroup(self)
-    end
+    def get_scenarios
+        Scenario.where(id: records.select(:scenario_id).distinct).pluck(Scenario.current_locale_column(:name))
+    end 
 end
