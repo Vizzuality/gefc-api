@@ -10,7 +10,10 @@ module API
 			resource :regions do
 				desc "Return all regions"
 				get "" do
-					regions = Region.all
+					regions = Rails.cache.fetch(['response', request.url]) do
+						regions = FetchRegion.new.all
+					end
+
 					present regions, with: API::V1::Entities::RegionWithGeometries
 				end
 				desc "Return a region"
@@ -18,7 +21,10 @@ module API
 					requires :id, type: String, desc: "ID of the region"
 				end
 				get ":id", root: "region" do
-					region = Region.find(permitted_params[:id])
+					region = Rails.cache.fetch(['response', request.url]) do
+          	region = FetchRegion.new.by_id(permitted_params[:id])
+					end
+
 					present region, with: API::V1::Entities::RegionWithGeometries
 				end
 			end
