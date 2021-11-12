@@ -2,7 +2,6 @@ module API
 	module V1
 		class Groups < Grape::API
 			include API::V1::Defaults
-			include Grape::Rails::Cache
 
 			resource :groups do
 				desc "Return all groups"
@@ -11,7 +10,7 @@ module API
 				end
 				get "", root: :groups do
 					groups = Rails.cache.fetch(['response', request.url]) do
-						groups = FetchGroup.new.all
+						FetchGroup.new.all
 					end
 
 					present groups, with: API::V1::Entities::Group
@@ -23,7 +22,7 @@ module API
 				end
 				get ":id", root: "group" do
 					group = Rails.cache.fetch(['response', request.url]) do
-          	group = Group.find_by_id_or_slug!(permitted_params[:id])
+          	FetchGroup.new.by_id_or_slug(permitted_params[:id])
 					end
 
 					present group, with: API::V1::Entities::Group
@@ -36,8 +35,8 @@ module API
 				end
 				get ":id/subgroups" do
 					subgroups = Rails.cache.fetch(['response', request.url]) do
-						group = Group.find_by_id_or_slug!(permitted_params[:id])
-						subgroups = FetchSubgroup.new.by_group(group)
+						group = FetchGroup.new.by_id_or_slug(permitted_params[:id])
+						FetchSubgroup.new.by_group(group)
 					end
 
 					present subgroups, with: API::V1::Entities::BasicSubgroup
@@ -50,8 +49,8 @@ module API
 				end
 				get ":id/subgroups/:subgroup_id" do
 					subgroup = Rails.cache.fetch(['response', request.url]) do
-	          group = Group.find_by_id_or_slug!(permitted_params[:id])
-						subgroup = Subgroup.find_by_id_or_slug!(permitted_params[:subgroup_id], group_id: group.id)
+	          group = FetchGroup.new.by_id_or_slug(permitted_params[:id])
+						FetchSubgroup.new.by_id_or_slug(permitted_params[:subgroup_id], group_id: group.id)
 					end
 
 					present subgroup, with: API::V1::Entities::FullSubgroup
@@ -65,9 +64,9 @@ module API
 				end
 				get ":id/subgroups/:subgroup_id/indicators" do
 					indicators = Rails.cache.fetch(['response', request.url]) do
-						group = Group.find_by_id_or_slug!(permitted_params[:id])
-						subgroup = Subgroup.find_by_id_or_slug!(permitted_params[:subgroup_id], group_id: group.id)
-						indicators = FetchIndicator.new.by_subgroup(subgroup)
+						group = FetchGroup.new.by_id_or_slug(permitted_params[:id])
+						subgroup = FetchSubgroup.new.by_id_or_slug(permitted_params[:subgroup_id], group_id: group.id)
+						FetchIndicator.new.by_subgroup(subgroup)
 					end
 
 					present indicators, with: API::V1::Entities::FullIndicator
@@ -81,9 +80,9 @@ module API
 				end
 				get ":id/subgroups/:subgroup_id/indicators/:indicator_id" do
 					indicator = Rails.cache.fetch(['response', request.url]) do
-						group = Group.find_by_id_or_slug!(permitted_params[:id])
-						subgroup = Subgroup.find_by_id_or_slug!(permitted_params[:subgroup_id], group_id: group.id)
-						indicator = Indicator.find_by_id_or_slug!(permitted_params[:indicator_id], {subgroup_id: subgroup.id}, [])
+						group = FetchGroup.new.by_id_or_slug(permitted_params[:id])
+						subgroup = FetchSubgroup.new.by_id_or_slug(permitted_params[:subgroup_id], group_id: group.id)
+						FetchIndicator.new.by_id_or_slug(permitted_params[:indicator_id], {subgroup_id: subgroup.id}, [])
 					end
 
 					present indicator, with: API::V1::Entities::FullIndicator
@@ -106,10 +105,10 @@ module API
 				end
 				get ":id/subgroups/:subgroup_id/indicators/:indicator_id/records" do
 					records = Rails.cache.fetch(['response', request.url]) do
-						group = Group.find_by_id_or_slug!(permitted_params[:id])
-						subgroup = Subgroup.find_by_id_or_slug!(permitted_params[:subgroup_id], group_id: group.id)
-						indicator = Indicator.find_by_id_or_slug!(permitted_params[:indicator_id], {subgroup_id: subgroup.id}, [])
-						records = FetchIndicator.new.records(indicator, params.slice(:category_1, :scenario, :region, :unit, :year, :start_year, :end_year, :visualization))
+						group = FetchGroup.new.by_id_or_slug(permitted_params[:id])
+						subgroup = FetchSubgroup.new.by_id_or_slug(permitted_params[:subgroup_id], group_id: group.id)
+						indicator = FetchIndicator.new.by_id_or_slug(permitted_params[:indicator_id], {subgroup_id: subgroup.id}, [])
+						FetchIndicator.new.records(indicator, params.slice(:category_1, :scenario, :region, :unit, :year, :start_year, :end_year, :visualization))
 						#no need to order by year if there is only one year
 					end
 
