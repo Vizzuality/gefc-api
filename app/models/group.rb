@@ -9,16 +9,24 @@ class Group < ApplicationRecord
     translates :name, :description, :subtitle
 
     def default_subgroup_slug
-        default_subgroup&.slug
+        API::V1::FetchSubgroup.new.default_slug_by_group(self)
     end
 
     def self.find_by_id_or_slug!(slug_or_id)
-        Group.where('id::TEXT = :id OR slug = :id', id: slug_or_id).first!
+        API::V1::FetchGroup.new.by_id_or_slug(slug_or_id)        
     end
 
     def header_image_url
         if self.header_image.attachment
             self.header_image.attachment.service_url
         end
+    end
+
+    def cached_subgroups
+        API::V1::FetchSubgroup.new.by_group(self)
+    end
+     
+    def cached_header_image_url
+        API::V1::FetchGroup.new.header_image_url(self)
     end
 end

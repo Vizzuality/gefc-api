@@ -2,7 +2,7 @@
 default: &default
   adapter: postgis
   encoding: unicode
-  pool: <%= ENV['RAILS_MAX_THREADS'] { 5 } %>
+  pool: <%= ENV['RAILS_MAX_THREADS'] { 20 } %>
 
 development:
   <<: *default

@@ -14,10 +14,14 @@ class Subgroup < ApplicationRecord
     translates :name, :description
 
     def self.find_by_id_or_slug!(slug_or_id, filters)
-        Subgroup.
-            where('id::TEXT = :id OR slug = :id', id: slug_or_id).
-            where(filters).
-            first!
+        API::V1::FetchSubgroup.new.by_id_or_slug(slug_or_id, filters)
     end
 
+    def cached_default_indicator
+        API::V1::FetchIndicator.new.default_by_subgroup(self)
+    end
+    
+    def cached_indicators
+        API::V1::FetchIndicator.new.by_subgroup(self)
+    end
 end

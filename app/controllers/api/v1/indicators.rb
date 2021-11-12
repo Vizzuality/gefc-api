@@ -10,15 +10,22 @@ module API
 			resource :indicators do
 				desc "Return all indicators"
 				get "" do
-					indicators = Indicator.includes(records: [:unit, :region, :widgets]).all
+					indicators = Rails.cache.fetch(['response', request.url]) do
+							indicators = Indicator.includes(records: [:unit, :region, :widgets]).all
+					end
+
 					present indicators, with: API::V1::Entities::FullIndicator
 				end
+
 				desc "Return an indicator"
 				params do
 					requires :id, type: String, desc: "ID / slug of the indicator"
 				end
 				get ":id", root: "indicator" do
-					indicator = Indicator.find_by_id_or_slug!(permitted_params[:id], {}, [])
+					indicator = Rails.cache.fetch(['response', request.url]) do
+							indicator = Indicator.find_by_id_or_slug!(permitted_params[:id], {}, [])
+					end
+
 					present indicator, with: API::V1::Entities::FullIndicator
 				end
 
@@ -30,9 +37,10 @@ module API
 					optional :end_year, type: Integer, desc: "End year"
 				end
 				get ":id/records" do
-					indicator = Indicator.find_by_id_or_slug!(permitted_params[:id], {}, [])
-					filter = FilterIndicatorRecords.new(indicator, params.slice(:category_1, :start_year, :end_year))
-					records = filter.call.includes(:unit, :region)
+					records = Rails.cache.fetch(['response', request.url]) do
+						indicator = Indicator.find_by_id_or_slug!(permitted_params[:id], {}, [])
+						records = FetchIndicator.new.records(indicator, params.slice(:category_1, :scenario, :region, :unit, :year, :start_year, :end_year))
+					end
 
 					present records, with: API::V1::Entities::Record
 				end

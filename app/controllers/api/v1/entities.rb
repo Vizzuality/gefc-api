@@ -74,8 +74,8 @@ module API
             expose :name, documentation: { type: "String", desc: "Subgroup's name." }
             expose :description, documentation: { type: "String", desc: "Subgroup's description." }
             expose :published, documentation: { type: "Boolean", desc: "Subgroup's published status." }
-            expose :indicators, using: API::V1::Entities::Indicator
-            expose :default_indicator, using: API::V1::Entities::Indicator
+            expose :cached_indicators, as: :indicators, using: API::V1::Entities::Indicator
+            expose :cached_default_indicator, as: :default_indicator, using: API::V1::Entities::Indicator
         end
 
         class MinimumSubgroup < Grape::Entity
@@ -88,7 +88,7 @@ module API
             expose :id, documentation: { type: "String", desc: "Subgroup's unique id." }
             expose :slug, documentation: { type: "String", desc: "Subgroup's slug." }
             expose :name, documentation: { type: "String", desc: "Subgroup's name." }
-            expose :default_indicator, using: API::V1::Entities::Indicator
+            expose :cached_default_indicator, as: :default_indicator, using: API::V1::Entities::Indicator
         end
 
         class Group < Grape::Entity
@@ -99,8 +99,8 @@ module API
             expose :description, documentation: { type: "String", desc: "Group's description." }
             expose :published, documentation: { type: "Boolean", desc: "Group's published status." }, as: :status
             expose :default_subgroup_slug, as: :default_subgroup
-            expose :subgroups, using: API::V1::Entities::BasicSubgroup
-            expose :header_image_url, as: :header_image
+            expose :cached_subgroups, as: :subgroups, using: API::V1::Entities::BasicSubgroup
+            expose :cached_header_image_url, as: :header_image
         end
 
         class MinimumGroup < Grape::Entity

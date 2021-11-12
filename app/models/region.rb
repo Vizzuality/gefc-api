@@ -27,7 +27,10 @@ class Region < ApplicationRecord
   #
   def get_geometry_encoded
     begin
-      RGeo::GeoJSON.encode(geometry.geometry)
+      #Rails.logger.info("Fetching region geometry_encoded here!")
+      Rails.cache.fetch([self, 'geometry_encoded']) do
+        RGeo::GeoJSON.encode(geometry.geometry)
+      end
     rescue GeometryException => e
       return nil
     end

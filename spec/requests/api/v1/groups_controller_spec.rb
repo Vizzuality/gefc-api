@@ -362,8 +362,6 @@ RSpec.describe API::V1::Groups do
       end
 
       it 'display only the records for the given visualization' do     
-        record2.unit = unit
-        record2.save!
 
         header 'Content-Type', 'application/json'
         get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators/#{indicator.id}/records?visualization=#{widget.name}"

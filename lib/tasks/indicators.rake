@@ -1,14 +1,9 @@
 namespace :indicators do
-  desc "Populate indicator.region_ids"
-  task populate_region_ids: :environment do
+  desc "populate_extra_info"
+  task populate_extra_info: :environment do
     Indicator.all.each do |indicator|
+      puts indicator.id
       indicator.region_ids = indicator.regions.pluck(:id)
-      indicator.save!
-    end
-  end
-  desc "update_visualization_types"
-  task update_visualization_types: :environment do
-    Indicator.all.each do |indicator|
       indicator.visualization_types = indicator.widgets_list
       indicator.default_visualization_name = indicator.default_visualization
       indicator.categories = indicator.category_1
