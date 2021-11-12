@@ -29,11 +29,11 @@ RSpec.describe Region, type: :model do
     it "returns the encoded version of the geometry" do
       geometry_encoded = RGeo::GeoJSON.encode(province.geometry.geometry)
 
-      expect(province.geometry_encoded).to eq(geometry_encoded)
+      expect(province.get_geometry_encoded).to eq(geometry_encoded)
     end
     it "returns nil if there is no geometry" do
 
-      expect(region_without_geometry.geometry_encoded).to eq(nil)
+      expect(region_without_geometry.get_geometry_encoded).to eq(nil)
     end
   end
 end

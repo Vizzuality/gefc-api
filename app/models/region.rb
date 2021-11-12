@@ -25,7 +25,7 @@ class Region < ApplicationRecord
   # Returns Geometry encoded.
   # Raises exception if there is no geometry.
   #
-  def geometry_encoded
+  def get_geometry_encoded
     begin
       RGeo::GeoJSON.encode(geometry.geometry)
     rescue GeometryException => e

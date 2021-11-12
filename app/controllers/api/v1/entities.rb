@@ -28,10 +28,10 @@ module API
             expose :year, documentation: { type: "String", desc: "Record's year." }
             expose :category_1, documentation: { type: "String", desc: "Record's category." }
             expose :category_2, documentation: { type: "String", desc: "Record's category." }
-            expose :unit, using: API::V1::Entities::Unit
-            expose :region, using: API::V1::Entities::Region
-            expose :scenario, using: API::V1::Entities::Scenario
-            expose :widgets_list, as: :visualizationTypes
+            expose :unit_info, as: :unit
+            expose :region_id
+            expose :scenario_info, as: :scenario
+            expose :visualization_types, as: :visualization_types
         end
         class Indicator < Grape::Entity
             expose :id, documentation: { type: "String", desc: "Indicator's unique id" }
@@ -39,14 +39,15 @@ module API
             expose :name, documentation: { type: "String", desc: "Indicator's name." }
             expose :description, documentation: { type: "String", desc: "Indicator's description." }
             expose :published, documentation: { type: "Boolean", desc: "Indicator's published status." }
-            expose :default_visualization, as: :default_visualization
-            expose :widgets_list, as: :visualizationTypes
+            expose :default_visualization_name, as: :default_visualization
+            expose :visualization_types, as: :visualization_types
             expose :category_1, as: :categories
             expose :category_filters, as: :category_filters
             expose :start_date, as: :start_date
             expose :end_date, as: :end_date
             expose :scenarios, as: :scenarios
             expose :data_source, as: :data_source
+            expose :region_ids, as: :region_ids
         end
         class FullIndicator < Grape::Entity
             expose :id, documentation: { type: "String", desc: "Indicator's unique id" }
@@ -54,9 +55,9 @@ module API
             expose :name, documentation: { type: "String", desc: "Indicator's name." }
             expose :description, documentation: { type: "String", desc: "Indicator's description." }
             expose :published, documentation: { type: "Boolean", desc: "Indicator's published status." }
-            expose :default_visualization, as: :default_visualization
-            expose :widgets_list, as: :visualizationTypes
-            expose :category_1, as: :categories
+            expose :default_visualization_name, as: :default_visualization
+            expose :visualization_types, as: :visualization_types
+            expose :categories, as: :categories
             expose :category_filters, as: :category_filters
             expose :start_date, as: :start_date
             expose :end_date, as: :end_date
@@ -64,6 +65,7 @@ module API
             expose :group, using: 'API::V1::Entities::MinimumGroup'
             expose :scenarios, as: :scenarios
             expose :data_source, as: :data_source
+            expose :region_ids, as: :region_ids
         end
 
         class FullSubgroup < Grape::Entity

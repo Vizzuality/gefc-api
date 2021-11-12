@@ -2,6 +2,11 @@ class IndicatorRegionException < StandardError; end
 
 class Indicator < ApplicationRecord
     include Slugable
+    serialize :region_ids, Array
+    serialize :visualization_types, Array
+    serialize :categories, Array
+    serialize :scenarios, Array
+    serialize :category_filters, Hash
 
     validates_uniqueness_of :by_default, scope: :subgroup_id, if: :by_default?
     validates_uniqueness_of :name_en, scope: :subgroup_id
@@ -32,7 +37,7 @@ class Indicator < ApplicationRecord
 
     # Returns an Array with records category_2 for each category_1.
     #
-    def category_filters
+    def get_category_filters
         category_filters = {}
         category_1.each do |category_1|
             category_filters[category_1] = records.
@@ -43,11 +48,11 @@ class Indicator < ApplicationRecord
         category_filters
     end
 
-    def start_date
+    def get_start_date
         records.where("year > ?", 1900).order(year: :asc).pluck(:year).first
     end
 
-    def end_date
+    def get_end_date
         records.where("year > ?", 1900).order(year: :desc).pluck(:year).first
     end
 
@@ -77,7 +82,7 @@ class Indicator < ApplicationRecord
     # Returns an Array of unique Scenarios names for all indicator's records.
     # Raises exception if there are no Regions.
     #
-    def scenarios
+    def get_scenarios
         Scenario.where(id: records.select(:scenario_id).distinct).pluck(Scenario.current_locale_column(:name))
     end 
 end

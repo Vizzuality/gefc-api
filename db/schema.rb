@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_06_121500) do
+ActiveRecord::Schema.define(version: 2021_11_11_184849) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -147,6 +147,14 @@ ActiveRecord::Schema.define(version: 2021_10_06_121500) do
     t.string "data_source_en"
     t.string "data_source_cn"
     t.boolean "download_privilege"
+    t.text "region_ids"
+    t.text "visualization_types"
+    t.text "default_visualization_name"
+    t.text "categories"
+    t.text "category_filters"
+    t.integer "start_date"
+    t.integer "end_date"
+    t.text "scenarios"
     t.index ["subgroup_id", "by_default"], name: "index_indicators_on_subgroup_id_and_by_default", unique: true, where: "by_default"
     t.index ["subgroup_id"], name: "index_indicators_on_subgroup_id"
     t.index ["widget_id"], name: "index_indicators_on_widget_id"
@@ -175,6 +183,9 @@ ActiveRecord::Schema.define(version: 2021_10_06_121500) do
     t.string "category_3_en"
     t.string "category_3_cn"
     t.uuid "scenario_id"
+    t.text "visualization_types"
+    t.text "scenario_info"
+    t.text "unit_info"
     t.index ["indicator_id"], name: "index_records_on_indicator_id"
     t.index ["region_id"], name: "index_records_on_region_id"
     t.index ["scenario_id"], name: "index_records_on_scenario_id"
@@ -187,6 +198,7 @@ ActiveRecord::Schema.define(version: 2021_10_06_121500) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "name_cn"
+    t.json "geometry_encoded"
   end
 
   create_table "scenarios", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
