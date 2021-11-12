@@ -71,4 +71,30 @@ namespace :memcached do
   task :populate_regions => :environment do
     API::V1::FetchRegion.new.all
   end
+  desc 'Populate all cache'
+  task :populate_all => :environment do
+    API::V1::FetchGroup.new.all
+    API::V1::FetchSubgroup.new.all
+    Group.all.each do |group|
+      puts group.id
+      API::V1::FetchSubgroup.new.by_group(group)
+      API::V1::FetchSubgroup.new.default_by_group(group)
+      API::V1::FetchSubgroup.new.default_slug_by_group(group)
+      API::V1::FetchGroup.new.header_image_url(group)   
+    end
+
+    Subgroup.all.each do |subgroup|
+      puts subgroup.id
+      API::V1::FetchIndicator.new.by_subgroup(subgroup)
+      API::V1::FetchIndicator.new.default_by_subgroup(subgroup)
+    end
+
+    API::V1::FetchIndicator.new.all
+    Indicator.all.each do |indicator|
+      puts indicator.id
+      API::V1::FetchIndicator.new.records(indicator)
+    end
+
+    API::V1::FetchRegion.new.all
+  end
 end
