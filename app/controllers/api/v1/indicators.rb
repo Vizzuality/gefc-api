@@ -44,6 +44,18 @@ module API
 
 					present records, with: API::V1::Entities::Record
 				end
+
+				desc "Return an indicator's meta"
+				params do
+					requires :id, type: String, desc: "ID / slug of the indicator"
+				end
+				get ":id/meta" do
+				indicator = Rails.cache.fetch(['response', request.url]) do
+					indicator = Indicator.find_by_id_or_slug!(permitted_params[:id], {}, [])
+					end
+
+					present indicator, with: API::V1::Entities::IndicatorMeta
+				end
 			end
 		end
 	end
