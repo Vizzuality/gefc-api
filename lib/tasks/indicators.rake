@@ -14,4 +14,12 @@ namespace :indicators do
       indicator.save!
     end
   end
+  desc "populate_meta"
+  task populate_meta: :environment do
+    Indicator.all.each do |indicator|
+      puts indicator.id
+      indicator.meta = indicator.get_meta_object
+      indicator.save!
+    end
+  end
 end

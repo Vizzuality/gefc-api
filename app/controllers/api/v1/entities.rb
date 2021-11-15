@@ -120,6 +120,10 @@ module API
             expose :username, documentation: { type: "String", desc: "User's username."}
             expose :role, documentation: { type: "String", desc: "User's role" }
         end
+
+        class IndicatorMeta < Grape::Entity
+            expose :meta, as: :meta
+        end
     end
   end
 end
