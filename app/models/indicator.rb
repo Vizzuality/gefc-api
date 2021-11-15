@@ -125,6 +125,7 @@ class Indicator < ApplicationRecord
             end
             meta_object[visualization_type]['scenarios'] = scenarios
         end
+        
         meta_object
     end
 end
