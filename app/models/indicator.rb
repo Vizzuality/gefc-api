@@ -91,5 +91,40 @@ class Indicator < ApplicationRecord
     #
     def get_scenarios
         Scenario.where(id: records.select(:scenario_id).distinct).pluck(Scenario.current_locale_column(:name))
-    end 
+    end
+
+    def get_meta_object
+        meta_object = {}
+        visualization_types.each do |visualization_type|
+            meta_object[visualization_type]= {}
+            widget = Widget.where(name:visualization_type).first
+            records = widget.records.where(indicator_id:self.id)
+            years = records.pluck(:year).uniq
+            meta_object[visualization_type]['year'] = years
+            regions = []
+            regions_ids_by_visualization = records.pluck(:region_id).uniq
+            regions_ids_by_visualization.each do |region_id|
+                region = {}
+                region['id'] = region_id
+                region['name'] = Region.find(region_id).name
+                regions.push(region)
+            end
+            meta_object[visualization_type]['regions'] = regions
+            units = []
+            units_ids_by_visualization = records.pluck(:unit_id).uniq
+            units_ids_by_visualization.each do |unit_id|
+                unit = {}
+                unit['id'] = unit_id
+                unit['name'] = Unit.find(unit_id).name
+                units.push(unit)
+            end
+            meta_object[visualization_type]['units'] = units
+            scenarios = []
+            records.where.not(scenario:nil).each do |record|
+                scenarios.push(record.scenario_info["name"])
+            end
+            meta_object[visualization_type]['scenarios'] = scenarios
+        end
+        meta_object
+    end
 end
