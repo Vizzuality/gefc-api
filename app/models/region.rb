@@ -29,7 +29,9 @@ class Region < ApplicationRecord
     begin
       #Rails.logger.info("Fetching region geometry_encoded here!")
       Rails.cache.fetch([self, 'geometry_encoded']) do
-        RGeo::GeoJSON.encode(geometry.geometry)
+        encoded = RGeo::GeoJSON.encode(geometry.geometry)
+        encoded["tooltip_properties"] = geometry.tooltip_properties if geometry.class == GeometryPoint
+        encoded
       end
     rescue GeometryException => e
       return nil

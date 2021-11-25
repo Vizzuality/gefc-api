@@ -2,7 +2,7 @@ class GeometryPointsImporter
   # @param file_path [String] absolute or relative to root
   def import_from_json(file_path)
     file = File.read(file_path)
-    data_hash = JSON.parse(file)['features']
+    data_hash = JSON.parse!(file)['features']
     GeometryPoint.delete_all
     puts "we are going to import #{data_hash.count} geometries if everything works fine"
     puts "points count >> #{GeometryPoint.count}"
