@@ -7,6 +7,8 @@ class Indicator < ApplicationRecord
     serialize :categories, Array
     serialize :scenarios, Array
     serialize :category_filters, Hash
+    serialize :meta, Hash
+    serialize :sandkey, Hash
 
     validates_uniqueness_of :by_default, scope: :subgroup_id, if: :by_default?
     validates_uniqueness_of :name_en, scope: :subgroup_id
