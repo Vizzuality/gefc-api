@@ -123,7 +123,12 @@ class Indicator < ApplicationRecord
             units_ids_by_visualization.each do |unit_id|
                 unit = {}
                 unit['id'] = unit_id
-                unit['name'] = Unit.find(unit_id).name
+                unit['name'] = 
+                if unit_id.nil?
+                    unit_id
+                else
+                    Unit.find(unit_id).name
+                end
                 units.push(unit)
             end
             meta_object[visualization_type]['units'] = units
