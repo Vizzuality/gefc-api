@@ -4,7 +4,7 @@ class Record < ApplicationRecord
     serialize :unit_info
 
     belongs_to :indicator
-    belongs_to :unit
+    belongs_to :unit, optional: true
     belongs_to :region
     belongs_to :scenario, optional: true
     has_many :record_widgets
@@ -35,8 +35,8 @@ class Record < ApplicationRecord
 
     def set_unit_info
         self.unit_info = {
-            'id' => unit.id,
-            'name' => unit.name
+            'id' => unit&.id,
+            'name' => unit&.name
         }
     end
 end
