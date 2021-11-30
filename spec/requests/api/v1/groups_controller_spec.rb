@@ -168,7 +168,7 @@ RSpec.describe API::V1::Groups do
         get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators/#{indicator.id}/records"
 
         expect(find_by_id(record.id)["scenario"]).to eq(nil)
-        expect(find_by_id(record2.id)["scenario"]).to eq({"name"=>scenario.name})
+        expect(find_by_id(record2.id)["scenario"]).to eq({"id"=>scenario.id, "name"=>scenario.name})
       end
       it 'display the unit_info for the records' do
 

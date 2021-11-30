@@ -50,9 +50,8 @@ RSpec.describe Indicator, type: :model do
       record_1 = create(:record, indicator: indicator, scenario: scenario_1)
       record_2 = create(:record, indicator: indicator, scenario: scenario_2)
       record_3 = create(:record, indicator: indicator)
-      
-      expect(indicator.get_scenarios.include?(scenario_1.name)).to eq(true)
-      expect(indicator.get_scenarios.include?(scenario_2.name)).to eq(true)
+      expect(indicator.get_scenarios.include?({"id" => scenario_1.id, "name" => scenario_1.name})).to eq(true)
+      expect(indicator.get_scenarios.include?({"id" => scenario_2.id, "name" => scenario_2.name})).to eq(true)
       expect(indicator.get_scenarios.count).to eq(2)
             
     end
