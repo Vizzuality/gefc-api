@@ -33,7 +33,7 @@ RSpec.describe API::V1::Indicators do
         header 'Content-Type', 'application/json'
         get "/api/v1/indicators/#{indicator.id}"
 
-        expect(parsed_body["scenarios"]).to eq([scenario.name])
+        expect(parsed_body["scenarios"]).to eq([{"id"=>scenario.id, "name"=>scenario.name}])
       end
 
       it 'display the region_ids' do
@@ -63,7 +63,7 @@ RSpec.describe API::V1::Indicators do
         get "/api/v1/indicators/#{indicator.id}/records"
 
         expect(find_by_id(record.id)["scenario"]).to eq(nil)
-        expect(find_by_id(record2.id)["scenario"]).to eq({"name"=>scenario.name})
+        expect(find_by_id(record2.id)["scenario"]).to eq({"id"=>scenario.id, "name"=>scenario.name})
       end
     end
   end

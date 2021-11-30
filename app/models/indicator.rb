@@ -90,7 +90,15 @@ class Indicator < ApplicationRecord
     # Raises exception if there are no Regions.
     #
     def get_scenarios
-        Scenario.where(id: records.select(:scenario_id).distinct).pluck(Scenario.current_locale_column(:name))
+        scenarios_array = []
+        Scenario.where(id: records.select(:scenario_id).distinct).pluck(:id, Scenario.current_locale_column(:name)).each do |scenario|
+            scenario_hash = {
+                "id" => scenario[0],
+                'name' => scenario[1]
+            }
+            scenarios_array.push(scenario_hash)
+        end
+        scenarios_array
     end
 
     def get_meta_object

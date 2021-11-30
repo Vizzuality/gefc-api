@@ -29,6 +29,7 @@ class Record < ApplicationRecord
     def set_scenario_info
         return if scenario.nil?
         self.scenario_info = {
+            'id' => scenario.id,
             'name' => scenario.name
         }
     end
