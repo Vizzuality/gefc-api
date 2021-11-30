@@ -34,7 +34,13 @@ class GroupsImporter
       current_subgroup = API::V1::FindOrUpsertSubgroup.call(subgroup_attributes, current_group)
       indicator_attributes = {name_en: row_data['indicator_en'], name_cn: row_data['indicator_cn']}
       current_indicator = API::V1::FindOrUpsertIndicator.call(indicator_attributes, current_subgroup)
-      current_unit = API::V1::FindOrUpsertUnit.call({name_en: row_data['units_en']})
+      unit_name = row_data['units_en']
+      if unit_name.blank?
+        current_unit = nil
+      else
+        current_unit = API::V1::FindOrUpsertUnit.call({name_en: unit_name})
+      end
+      
       region_attributes = {
         name_en: row_data['region_en']&.strip,
         name_cn: row_data['region_cn'],
@@ -49,26 +55,28 @@ class GroupsImporter
       end
       # Bulk is better.
       #
-      current_record = Record.create(
-        indicator: current_indicator,
-        category_1_en: row_data['category_1_en'],
-        category_2_en: row_data['category_2_en'],
-        category_3_en: row_data['category_3_en'],
-        category_1_cn: row_data['category_1_cn'],
-        category_2_cn: row_data['category_2_cn'],
-        category_3_cn: row_data['category_3_cn'],
-        region: current_region,
-        unit: current_unit,
-        value: row_data['value'],
-        year: row_data['year'],
-        scenario: current_scenario
-      )
-      puts "Records count >> #{Record.all.count}"
-      puts "Records indicator >> #{current_indicator.slug}"
+      unless row_data['value'].nil? or row_data['value'].blank?
+        current_record = Record.create(
+          indicator: current_indicator,
+          category_1_en: row_data['category_1_en'],
+          category_2_en: row_data['category_2_en'],
+          category_3_en: row_data['category_3_en'],
+          category_1_cn: row_data['category_1_cn'],
+          category_2_cn: row_data['category_2_cn'],
+          category_3_cn: row_data['category_3_cn'],
+          region: current_region,
+          unit: current_unit,
+          value: row_data['value'],
+          year: row_data['year'],
+          scenario: current_scenario
+        )
+        puts "Records count >> #{Record.all.count}"
+        puts "Records indicator >> #{current_indicator.slug}"
 
-      widgets.keys.select{ |k| row_data[k]&.upcase == 'TRUE' }.each do |k|
-        RecordWidget.create!(widget: widgets[k], record: current_record)
-        # TO DO Shall be uniq
+        widgets.keys.select{ |k| row_data[k]&.upcase == 'TRUE' }.each do |k|
+          RecordWidget.create!(widget: widgets[k], record: current_record)
+          # TO DO Shall be uniq
+        end
       end
     end
     puts "Records count >> #{Record.all.count}"
