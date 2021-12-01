@@ -12,8 +12,8 @@ class Record < ApplicationRecord
 
     translates :category_1, :category_2, :category_3
 
-    before_save :set_scenario_info, :set_unit_info
-    after_save :update_indicator_region_ids
+    before_save :set_scenario_info, :set_unit_info, :set_visualization_types
+    #after_save :update_indicator_region_ids
 
     def widgets_list
         widgets.pluck(:name).uniq
@@ -21,10 +21,10 @@ class Record < ApplicationRecord
 
     private
 
-    def update_indicator_region_ids
-        self.indicator.region_ids.push(region.id) unless self.indicator.region_ids.include?(region.id)
-        self.indicator.save!
-    end
+    # def update_indicator_region_ids
+    #     self.indicator.region_ids.push(region.id) unless self.indicator.region_ids.include?(region.id)
+    #     self.indicator.save!
+    # end
 
     def set_scenario_info
         return if scenario.nil?
@@ -39,5 +39,9 @@ class Record < ApplicationRecord
             'id' => unit&.id,
             'name' => unit&.name
         }
+    end
+
+    def set_visualization_types
+        self.visualization_types = self.widgets_list
     end
 end

@@ -124,6 +124,10 @@ module API
         class IndicatorMeta < Grape::Entity
             expose :meta, as: :meta
         end
+
+        class IndicatorSandkey < Grape::Entity
+            expose :sandkey, as: :sandkey
+        end
     end
   end
 end
