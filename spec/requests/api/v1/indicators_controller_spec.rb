@@ -37,6 +37,13 @@ RSpec.describe API::V1::Indicators do
       end
 
       it 'display the region_ids' do
+        #this is performed in a rake task manually to speed up the import
+        #instead of relying in a callback after_Save
+        indicator.region_ids = indicator.regions.pluck(:id)
+        indicator.save!
+        indicator.reload
+        #dirty but works
+        
         header 'Content-Type', 'application/json'
         get "/api/v1/indicators/#{indicator.id}"
         expect(parsed_body["region_ids"].include?(region2.id)).to eq(true)

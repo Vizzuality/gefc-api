@@ -36,6 +36,7 @@ class GroupsImporter
       current_indicator = API::V1::FindOrUpsertIndicator.call(indicator_attributes, current_subgroup)
       unit_name = row_data['units_en']
       if unit_name.blank?
+        puts "no unit here"
         current_unit = nil
       else
         current_unit = API::V1::FindOrUpsertUnit.call({name_en: unit_name})
@@ -73,10 +74,12 @@ class GroupsImporter
         puts "Records count >> #{Record.all.count}"
         puts "Records indicator >> #{current_indicator.slug}"
 
-        widgets.keys.select{ |k| row_data[k]&.upcase == 'TRUE' }.each do |k|
+        widgets.keys.select{ |k| row_data[k] == 1 }.each do |k|
           RecordWidget.create!(widget: widgets[k], record: current_record)
           # TO DO Shall be uniq
         end
+      else
+        puts "current group >> #{current_group.name_en}"
       end
     end
     puts "Records count >> #{Record.all.count}"
