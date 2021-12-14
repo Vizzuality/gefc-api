@@ -27,6 +27,8 @@ class GroupsImporter
 
       row_data = row.to_hash.transform_keys! { |key| key.to_s.downcase }
       next unless valid_row?(row_data, index)
+      
+      puts "row >> #{index + 2}"
 
       group_attributes = {name_en: row_data['group_en'], name_cn: row_data['group_cn']}
       current_group = API::V1::FindOrUpsertGroup.call(group_attributes)
@@ -78,6 +80,10 @@ class GroupsImporter
           RecordWidget.create!(widget: widgets[k], record: current_record)
           # TO DO Shall be uniq
         end
+        
+        current_record.visualization_types = current_record.widgets_list
+        current_record.save!
+
       else
         puts "current group >> #{current_group.name_en}"
       end

@@ -12,7 +12,7 @@ class Record < ApplicationRecord
 
     translates :category_1, :category_2, :category_3
 
-    before_save :set_scenario_info, :set_unit_info, :set_visualization_types
+    before_save :set_scenario_info, :set_unit_info
     #after_save :update_indicator_region_ids
 
     def widgets_list
