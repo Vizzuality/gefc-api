@@ -12,6 +12,7 @@ class SandkeysImporter
       # Indicator
       #
       current_indicator = Indicator.where(name_en: indicator_data['indicator_en']).first
+      puts current_indicator.id
 
       current_sandkey = {
         "nodes" => indicator_data["nodes"],

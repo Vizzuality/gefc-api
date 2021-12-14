@@ -3,7 +3,7 @@ namespace :indicators do
   task populate_extra_info: :environment do
     Indicator.all.each do |indicator|
       puts indicator.id
-      indicator.region_ids = indicator.regions.pluck(:id)
+      indicator.region_ids = Region.where(id: indicator.records.select(:region_id)).pluck(:id)
       indicator.visualization_types = indicator.widgets_list
       indicator.default_visualization_name = indicator.default_visualization
       indicator.categories = indicator.category_1
