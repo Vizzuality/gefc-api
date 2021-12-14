@@ -13,7 +13,7 @@ RSpec.describe API::V1::FileGenerator do
       dir_path = "#{Rails.root}#{ENV['DOWNLOADS_PATH']}"
       Dir.foreach(dir_path) do |f|
         fn = File.join(dir_path, f)
-        File.delete(fn) if f != '.' && f != '..'
+        File.delete(fn) if f != '.' && f != '..' && f != '.keep'
       end
       ENV['DOWNLOADS_PATH'] = nil
     end
