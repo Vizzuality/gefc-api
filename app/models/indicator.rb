@@ -110,7 +110,7 @@ class Indicator < ApplicationRecord
             widget = Widget.where(name:visualization_type).first
             records = widget.records.where(indicator_id:self.id)
             years = records.pluck(:year).uniq
-            meta_object[visualization_type]['year'] = years
+            meta_object[visualization_type]['year'] = years.sort
             regions = []
             regions_ids_by_visualization = records.pluck(:region_id).uniq
             regions_ids_by_visualization.each do |region_id|
@@ -120,6 +120,7 @@ class Indicator < ApplicationRecord
                 regions.push(region)
             end
             meta_object[visualization_type]['regions'] = regions
+
             units = []
             units_ids_by_visualization = records.pluck(:unit_id).uniq
             units_ids_by_visualization.each do |unit_id|
@@ -134,11 +135,12 @@ class Indicator < ApplicationRecord
                 units.push(unit)
             end
             meta_object[visualization_type]['units'] = units
+
             scenarios = []
             records.where.not(scenario:nil).each do |record|
-                scenarios.push(record.scenario_info["name"])
+                scenarios.push(record.scenario_info)
             end
-            meta_object[visualization_type]['scenarios'] = scenarios
+            meta_object[visualization_type]['scenarios'] = scenarios.uniq
         end
         
         meta_object
