@@ -12,6 +12,7 @@ module API
       end
 
       def create(attributes)
+        #TODO name should be downcased before create
         Group.create(attributes)
       end
     end
