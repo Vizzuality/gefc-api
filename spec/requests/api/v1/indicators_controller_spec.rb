@@ -4,7 +4,7 @@ RSpec.describe API::V1::Indicators do
   # Rack-Test helper methods like get, post, etc
   include Rack::Test::Methods
 
-  let(:indicator) { create(:indicator) }
+  let!(:indicator) { create(:indicator) }
   let!(:region1) { create(:region) }
   let!(:geometry1) { create(:geometry_polygon, region: region1) }    
   let!(:region2) { create(:region) }

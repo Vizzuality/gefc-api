@@ -12,10 +12,12 @@ module API
 				desc "Return all regions"
 				get "" do
 					regions = Rails.cache.fetch(['response', request.url]) do
-						regions = FetchRegion.new.all
+						regions_collection = FetchRegion.new.all
+						regions_presenter = present regions_collection, with: API::V1::Entities::RegionWithGeometries
+						regions_presenter.to_json
 					end
 
-					present regions, with: API::V1::Entities::RegionWithGeometries
+					JSON.parse regions
 				end
 				desc "Return a region"
 				params do
@@ -23,10 +25,12 @@ module API
 				end
 				get ":id", root: "region" do
 					region = Rails.cache.fetch(['response', request.url]) do
-          	region = FetchRegion.new.by_id(permitted_params[:id])
+          	region_collection = FetchRegion.new.by_id(permitted_params[:id])
+						region_presenter = present region_collection, with: API::V1::Entities::RegionWithGeometries
+						region_presenter.to_json
 					end
 
-					present region, with: API::V1::Entities::RegionWithGeometries
+					JSON.parse region
 				end
 			end
 		end

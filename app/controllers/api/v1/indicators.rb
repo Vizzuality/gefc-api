@@ -12,10 +12,12 @@ module API
 				desc "Return all indicators"
 				get "" do
 					indicators = Rails.cache.fetch(['response', request.url]) do
-							indicators = Indicator.includes(records: [:unit, :region, :widgets]).all
+						indicators_collection = Indicator.includes(records: [:unit, :region, :widgets]).all
+						indicator_presenter = present indicators_collection, with: API::V1::Entities::FullIndicator
+						indicator_presenter.to_json
 					end
 
-					present indicators, with: API::V1::Entities::FullIndicator
+					JSON.parse indicators
 				end
 
 				desc "Return an indicator"
@@ -24,10 +26,12 @@ module API
 				end
 				get ":id", root: "indicator" do
 					indicator = Rails.cache.fetch(['response', request.url]) do
-							indicator = Indicator.find_by_id_or_slug!(permitted_params[:id], {}, [])
+							indicator_object = Indicator.find_by_id_or_slug!(permitted_params[:id], {}, [])
+							indicator_presenter = present indicator_object, with: API::V1::Entities::FullIndicator
+							indicator_presenter.to_json
 					end
 
-					present indicator, with: API::V1::Entities::FullIndicator
+					JSON.parse indicator
 				end
 
 				desc "Return an indicator's records"
@@ -39,11 +43,14 @@ module API
 				end
 				get ":id/records" do
 					records = Rails.cache.fetch(['response', request.url]) do
-						indicator = Indicator.find_by_id_or_slug!(permitted_params[:id], {}, [])
-						records = FetchIndicator.new.records(indicator, params.slice(:category_1, :scenario, :region, :unit, :year, :start_year, :end_year))
+						fetch_indicator = FetchIndicator.new
+						indicator = fetch_indicator.by_id_or_slug(permitted_params[:id], {}, [])
+						records = fetch_indicator.records(indicator, params.slice(:category_1, :scenario, :region, :unit, :year, :start_year, :end_year, :visualization))
+						records_presenter = present records.page(params[:page]).per(params[:per_page]), with: API::V1::Entities::Record
+						records_presenter.to_json
 					end
 
-					present records, with: API::V1::Entities::Record
+					JSON.parse records
 				end
 
 				desc "Return an indicator's meta"
@@ -51,11 +58,13 @@ module API
 					requires :id, type: String, desc: "ID / slug of the indicator"
 				end
 				get ":id/meta" do
-				indicator = Rails.cache.fetch(['response', request.url]) do
-					indicator = Indicator.find_by_id_or_slug!(permitted_params[:id], {}, [])
+					indicator = Rails.cache.fetch(['response', request.url]) do
+						indicator_object = Indicator.find_by_id_or_slug!(permitted_params[:id], {}, [])
+						indicator_presenter = present indicator_object, with: API::V1::Entities::IndicatorMeta
+						indicator_presenter.to_json
 					end
 
-					present indicator, with: API::V1::Entities::IndicatorMeta
+					JSON.parse indicator
 				end
 
 				desc "Return an indicator's sandkey"
@@ -63,11 +72,13 @@ module API
 					requires :id, type: String, desc: "ID / slug of the indicator"
 				end
 				get ":id/sandkey" do
-				indicator = Rails.cache.fetch(['response', request.url]) do
-					indicator = Indicator.find_by_id_or_slug!(permitted_params[:id], {}, [])
+					indicator = Rails.cache.fetch(['response', request.url]) do
+						indicator_object = Indicator.find_by_id_or_slug!(permitted_params[:id], {}, [])
+						indicator_presenter = present indicator_object, with: API::V1::Entities::IndicatorSandkey
+						indicator_presenter.to_json
 					end
 
-					present indicator, with: API::V1::Entities::IndicatorSandkey
+					JSON.parse indicator
 				end
 			end
 		end
