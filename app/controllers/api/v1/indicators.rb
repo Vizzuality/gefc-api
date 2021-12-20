@@ -1,6 +1,7 @@
 module API
 	module V1
 		class Indicators < Grape::API
+			use API::V1::APICacheBuster
 			include API::V1::Defaults
 
 			rescue_from IndicatorRegionException do |e|
