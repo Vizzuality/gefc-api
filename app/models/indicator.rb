@@ -116,7 +116,8 @@ class Indicator < ApplicationRecord
             regions_ids_by_visualization.each do |region_id|
                 region = {}
                 region['id'] = region_id
-                region['name'] = Region.find(region_id).name
+                region['name_en'] = Region.find(region_id).name_en
+                region['name_cn'] = Region.find(region_id).name_cn
                 regions.push(region)
             end
             meta_object[visualization_type]['regions'] = regions
@@ -124,14 +125,11 @@ class Indicator < ApplicationRecord
             units = []
             units_ids_by_visualization = records.pluck(:unit_id).uniq
             units_ids_by_visualization.each do |unit_id|
+                next if unit_id.nil?
                 unit = {}
                 unit['id'] = unit_id
-                unit['name'] = 
-                if unit_id.nil?
-                    unit_id
-                else
-                    Unit.find(unit_id).name
-                end
+                unit['name_en'] = Unit.find(unit_id).name_en
+                unit['name_cn'] = Unit.find(unit_id).name_cn
                 units.push(unit)
             end
             meta_object[visualization_type]['units'] = units
@@ -144,5 +142,46 @@ class Indicator < ApplicationRecord
         end
         
         meta_object
+    end
+
+    def meta_by_locale(locale)
+        meta_by_locale = meta
+        meta_by_locale.keys.each do |key|
+            meta_by_locale[key]['regions'].each do |region|
+                if locale == 'cn' and region['name_cn'].present?
+                    region['name'] = region['name_cn']
+                else
+                    region['name'] = region['name_en']
+                end
+                region.delete('name_en')
+                region.delete('name_cn')
+            end
+            meta_by_locale[key]['units'].each do |unit|
+                if locale == 'cn' and unit['name_cn'].present?
+                    unit['name'] = unit['name_cn']
+                else
+                    unit['name'] = unit['name_en']
+                end
+                unit.delete('name_en')
+                unit.delete('name_cn')
+            end
+        end
+        meta_by_locale
+    end
+
+    def sandkey_by_locale(locale)
+        sandkey_by_locale = sandkey
+        sandkey_by_locale["nodes"].each do |node|
+            if locale == 'cn' and node['name_cn'].present?
+                node['name'] = node['name_cn']
+            else
+                node['name'] = node['name_en']
+            end
+            node.delete('name_en')
+            node.delete('name_cn')
+        end
+
+
+        sandkey_by_locale
     end
 end
