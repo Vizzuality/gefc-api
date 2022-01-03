@@ -144,6 +144,7 @@ class Indicator < ApplicationRecord
         meta_object
     end
 
+    # TODO: Grappe is calling this method twice every time that is exposed
     def meta_by_locale(locale)
         meta_by_locale = meta
         meta_by_locale.keys.each do |key|
@@ -151,7 +152,7 @@ class Indicator < ApplicationRecord
                 if locale == 'cn' and region['name_cn'].present?
                     region['name'] = region['name_cn']
                 else
-                    region['name'] = region['name_en']
+                    region['name'] = region['name_en'] if region['name_en'].present?
                 end
                 region.delete('name_en')
                 region.delete('name_cn')
@@ -160,7 +161,7 @@ class Indicator < ApplicationRecord
                 if locale == 'cn' and unit['name_cn'].present?
                     unit['name'] = unit['name_cn']
                 else
-                    unit['name'] = unit['name_en']
+                    unit['name'] = unit['name_en'] if unit['name_en'].present?
                 end
                 unit.delete('name_en')
                 unit.delete('name_cn')
@@ -169,18 +170,46 @@ class Indicator < ApplicationRecord
         meta_by_locale
     end
 
+    # TODO: Grappe is calling this method twice every time that is exposed
     def sandkey_by_locale(locale)
         sandkey_by_locale = sandkey
         sandkey_by_locale["nodes"].each do |node|
             if locale == 'cn' and node['name_cn'].present?
                 node['name'] = node['name_cn']
             else
-                node['name'] = node['name_en']
+                node['name'] = node['name_en'] if node['name_en'].present?
             end
             node.delete('name_en')
             node.delete('name_cn')
         end
 
+        sandkey_by_locale["data"].each do |data|
+            if locale == 'cn' and data['region_cn'].present?
+                data['region'] = data['region_cn']
+            else
+                data['region'] = data['region_en'] if data['region_en'].present?
+            end
+            data.delete('region_en')
+            data.delete('region_cn')
+
+            if locale == 'cn' and data['units_cn'].present?
+                data['units'] = data['units_cn']
+            else
+                data['units'] = data['units_en'] if data['units_en'].present?
+            end
+            data.delete('units_en')
+            data.delete('units_cn')
+
+            data['links'].each do |link|
+                if locale == 'cn' and link['class_cn'].present?
+                    link['class'] = link['class_cn']
+                else
+                    link['class'] = link['class_en'] if link['class_en'].present?
+                end
+                link.delete('class_en')
+                link.delete('class_cn')
+            end
+        end
 
         sandkey_by_locale
     end

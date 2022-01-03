@@ -58,12 +58,13 @@ module API
 					requires :id, type: String, desc: "ID / slug of the indicator"
 				end
 				get ":id/meta" do
-					meta = Rails.cache.fetch(['response', request.url]) do
+					indicator = Rails.cache.fetch(['response', request.url]) do
 						indicator_object = Indicator.find_by_id_or_slug!(permitted_params[:id], {}, [])
-						indicator_object.meta_by_locale(permitted_params[:locale]).to_json
+						indicator_presenter = present indicator_object, with: API::V1::Entities::IndicatorMeta, :locale => permitted_params[:locale]
+						indicator_presenter.to_json
 					end
 
-					JSON.parse meta
+					JSON.parse indicator
 				end
 
 				desc "Return an indicator's sandkey"
@@ -71,12 +72,13 @@ module API
 					requires :id, type: String, desc: "ID / slug of the indicator"
 				end
 				get ":id/sandkey" do
-					sandkey = Rails.cache.fetch(['response', request.url]) do
+					indicator = Rails.cache.fetch(['response', request.url]) do
 						indicator_object = Indicator.find_by_id_or_slug!(permitted_params[:id], {}, [])
-						indicator_object.sandkey_by_locale(permitted_params[:locale]).to_json
+						indicator_presenter = present indicator_object, with: API::V1::Entities::IndicatorSandkey, :locale => permitted_params[:locale]
+						indicator_presenter.to_json
 					end
 
-					JSON.parse sandkey
+					JSON.parse indicator
 				end
 			end
 		end

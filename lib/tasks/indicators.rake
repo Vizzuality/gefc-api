@@ -17,7 +17,7 @@ namespace :indicators do
   desc "populate_meta"
   task populate_meta: :environment do
     Indicator.all.each do |indicator|
-      next if visualization_types.include?('sankey')
+      next if indicator.visualization_types.include?('sankey')
       puts indicator.id
       indicator.meta = indicator.get_meta_object
       indicator.save!
