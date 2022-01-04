@@ -12,7 +12,7 @@ module API
 				desc "Return all indicators"
 				get "" do
 					indicators = Rails.cache.fetch(['response', request.url]) do
-						indicators_collection = Indicator.includes(records: [:unit, :region, :widgets]).all
+						indicators_collection = Indicator.all
 						indicator_presenter = present indicators_collection, with: API::V1::Entities::FullIndicator
 						indicator_presenter.to_json
 					end
@@ -60,7 +60,7 @@ module API
 				get ":id/meta" do
 					indicator = Rails.cache.fetch(['response', request.url]) do
 						indicator_object = Indicator.find_by_id_or_slug!(permitted_params[:id], {}, [])
-						indicator_presenter = present indicator_object, with: API::V1::Entities::IndicatorMeta
+						indicator_presenter = present indicator_object, with: API::V1::Entities::IndicatorMeta, :locale => permitted_params[:locale]
 						indicator_presenter.to_json
 					end
 
@@ -74,7 +74,7 @@ module API
 				get ":id/sandkey" do
 					indicator = Rails.cache.fetch(['response', request.url]) do
 						indicator_object = Indicator.find_by_id_or_slug!(permitted_params[:id], {}, [])
-						indicator_presenter = present indicator_object, with: API::V1::Entities::IndicatorSandkey
+						indicator_presenter = present indicator_object, with: API::V1::Entities::IndicatorSandkey, :locale => permitted_params[:locale]
 						indicator_presenter.to_json
 					end
 

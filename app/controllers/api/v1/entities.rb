@@ -122,11 +122,11 @@ module API
         end
 
         class IndicatorMeta < Grape::Entity
-            expose :meta, as: :meta
+            expose(:meta) { |item, options| item.meta_by_locale(options[:locale]) }
         end
 
         class IndicatorSandkey < Grape::Entity
-            expose :sandkey, as: :sandkey
+            expose(:sandkey) { |item, options| item.sandkey_by_locale(options[:locale]) }
         end
     end
   end
