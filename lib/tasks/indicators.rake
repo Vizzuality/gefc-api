@@ -27,6 +27,7 @@ namespace :indicators do
   desc "populate meta for sankey"
   task populate_sankey_meta: :environment do
     meta_object = {}
+    meta_object['default_visualization'] = 'sankey'
     energy_flows  = Indicator.find_by_id_or_slug!('energy-flows-energy-flows', {}, [])
     years = []
     energy_flows.sandkey['data'].each { |data_item| years.push(data_item['year']) }
@@ -35,7 +36,8 @@ namespace :indicators do
     regions = []
     region = {}
     region['id'] = china.id
-    region['name'] = china.name
+    region['name_en'] = china.name_en
+    region['name_cn'] = china.name_cn
     regions.push(region)
 
     current_unit = API::V1::FindOrUpsertUnit.call({name_en: '10000t'})
@@ -43,7 +45,8 @@ namespace :indicators do
     units = []
     unit = {}
     unit['id'] = current_unit.id
-    unit['name'] = current_unit.name
+    unit['name_en'] = current_unit.name_en
+    unit['name_cn'] = current_unit.name_cn
     units.push(unit)
 
     meta_object['sankey'] = {
@@ -56,6 +59,7 @@ namespace :indicators do
     energy_flows.save!
 
     meta_object = {}
+    meta_object['default_visualization'] = 'sankey'
     emission_flows  = Indicator.find_by_id_or_slug!('energy-flows-emission-flows', {}, [])
     years = []
     emission_flows.sandkey['data'].each { |data_item| years.push(data_item['year']) }
@@ -66,7 +70,8 @@ namespace :indicators do
     units = []
     unit = {}
     unit['id'] = current_unit.id
-    unit['name'] = current_unit.name
+    unit['name_en'] = current_unit.name_en
+    unit['name_cn'] = current_unit.name_cn
     units.push(unit)
 
     meta_object['sankey'] = {
