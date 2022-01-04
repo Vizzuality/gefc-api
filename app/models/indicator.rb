@@ -105,6 +105,12 @@ class Indicator < ApplicationRecord
 
     def get_meta_object
         meta_object = {}
+        meta_object['default_visualization'] = if default_visualization_name.present?
+            default_visualization_name
+        else
+            visualization_types.first
+        end
+
         visualization_types.each do |visualization_type|
             meta_object[visualization_type]= {}
             widget = Widget.where(name:visualization_type).first
@@ -148,6 +154,7 @@ class Indicator < ApplicationRecord
     def meta_by_locale(locale)
         meta_by_locale = meta
         meta_by_locale.keys.each do |key|
+            next if key == 'default_visualization'
             meta_by_locale[key]['regions'].each do |region|
                 if locale == 'cn' and region['name_cn'].present?
                     region['name'] = region['name_cn']
