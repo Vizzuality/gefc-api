@@ -1,4 +1,5 @@
 class IndicatorRegionException < StandardError; end
+class SankeyException < StandardError; end
 
 class Indicator < ApplicationRecord
     include Slugable
@@ -177,9 +178,19 @@ class Indicator < ApplicationRecord
         meta_by_locale
     end
 
+    def has_sankey?
+        raise SankeyException.new("an error has ocurred:there is no sankey for the indicator with id:#{id}") unless sandkey.present?
+        sandkey.present?
+    end
+
     # TODO: Grappe is calling this method twice every time that is exposed
-    def sandkey_by_locale(locale)
-        sandkey_by_locale = sandkey
+    def sandkey_by_locale(locale, year, unit, region)
+        if [year, unit, region].any?
+            sandkey_by_locale = sandkey_filter(year, unit, region)
+        else
+            sandkey_by_locale = sandkey
+        end
+        
         sandkey_by_locale["nodes"].each do |node|
             if locale == 'cn' and node['name_cn'].present?
                 node['name'] = node['name_cn']
@@ -219,5 +230,17 @@ class Indicator < ApplicationRecord
         end
 
         sandkey_by_locale
+    end
+
+    def sandkey_filter(year, unit, region)
+        filtered_sandkey = {}
+        filtered_sandkey["nodes"] = sandkey["nodes"]
+        filtered_sandkey["data"] = []
+        sandkey["data"].each do |data| 
+            filtered_sandkey["data"].push(data) if year.present? and data['year'] == year
+            filtered_sandkey["data"].push(data) if unit.present? and (data['units_en'] == unit or data['units'] == unit)
+            filtered_sandkey["data"].push(data) if region.present? and (data['region_en'] == region or data['region'] == region)
+        end
+        filtered_sandkey
     end
 end

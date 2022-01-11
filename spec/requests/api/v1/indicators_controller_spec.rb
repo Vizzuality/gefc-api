@@ -11,6 +11,67 @@ RSpec.describe API::V1::Indicators do
   let!(:geometry2) { create(:geometry_polygon, region: region2) }
   let!(:record) { create(:record, indicator: indicator, year: 2020, region: region1) }
   let!(:record2) { create(:record, indicator: indicator, year: 2021, region: region2) }
+  sankey_test = {
+    "nodes" => [
+
+      {
+        "name_en" => "Coal",
+        "name_cn" => "煤炭"
+      },
+      {
+        "name_en" => "Industry",
+        "name_cn" => "工业"
+      }
+    ],
+    "data" => [
+      {
+        "region_en" => "China",
+        "region_cn" => "中國",
+        "year" => 2005,
+        "units_en" => "10000t",
+        "units_cn" => "10000t",
+        "links" => [
+          {
+            "source" => 0,
+            "target" => 5,
+            "value" => 185197.352607447,
+            "class_en" => "Coal",
+            "class_cn" => "煤炭"
+          },
+          {
+            "source" => 0,
+            "target" => 6,
+            "value" => 26017.9715351816,
+            "class_en" => "Coal",
+            "class_cn" => "煤炭"
+          }
+        ]
+      },
+      {
+        "region_en" => "Kenya",
+        "region_cn" => "中國",
+        "year" => 2006,
+        "units_en" => "10000km",
+        "units_cn" => "10000km",
+        "links" => [
+          {
+            "source" => 0,
+            "target" => 5,
+            "value" => 212778.680352916,
+            "class_en" => "Coal",
+            "class_cn" => "煤炭"
+          },
+          {
+            "source" => 0,
+            "target" => 6,
+            "value" => 28151.323772367,
+            "class_en" => "Coal",
+            "class_cn" => "煤炭"
+          }
+        ]
+      }
+    ]
+  }
 
   describe 'GET indicator' do
     context 'when requesting an indicator' do      
@@ -71,6 +132,90 @@ RSpec.describe API::V1::Indicators do
 
         expect(find_by_id(record.id)["scenario"]).to eq(nil)
         expect(find_by_id(record2.id)["scenario"]).to eq({"id"=>scenario.id, "name"=>scenario.name})
+      end
+    end
+  end
+
+  describe 'GET sankey' do
+    context 'when requesting list of indicator records' do      
+      it 'returns 404 if sankey does not exists' do
+        header 'Content-Type', 'application/json'
+        get "/api/v1/indicators/#{indicator.id}/sandkey"
+
+        expect(last_response.status).to eq(404)
+      end
+
+      it 'returns 200 if sankey exists' do
+        indicator.sandkey = sankey_test
+        indicator.save!
+
+        header 'Content-Type', 'application/json'
+        get "/api/v1/indicators/#{indicator.id}/sandkey"
+
+        expect(last_response.status).to eq(200)
+      end
+    end
+    context 'filters by year' do
+      it 'returns 200 and status ok' do
+        indicator.sandkey = sankey_test
+        indicator.save!
+
+        header 'Content-Type', 'application/json'
+        get "/api/v1/indicators/#{indicator.id}/sandkey?year=2005"
+
+        expect(last_response.status).to eq(200)
+      end
+      it 'returns only data for that year' do
+        indicator.sandkey = sankey_test
+        indicator.save!
+
+        header 'Content-Type', 'application/json'
+        get "/api/v1/indicators/#{indicator.id}/sandkey?year=2005"
+
+        expect(JSON.parse(last_response.body)['sandkey']['data'].count).to eq(1)
+        expect(JSON.parse(last_response.body)['sandkey']['data'].first['year']).to eq(2005)
+      end
+    end
+    context 'filters by unit' do
+      it 'returns 200 and status ok' do
+        indicator.sandkey = sankey_test
+        indicator.save!
+
+        header 'Content-Type', 'application/json'
+        get "/api/v1/indicators/#{indicator.id}/sandkey?unit=10000t"
+
+        expect(last_response.status).to eq(200)
+      end
+      it 'returns only data for that unit' do
+        indicator.sandkey = sankey_test
+        indicator.save!
+
+        header 'Content-Type', 'application/json'
+        get "/api/v1/indicators/#{indicator.id}/sandkey?unit=10000t"
+
+        expect(JSON.parse(last_response.body)['sandkey']['data'].count).to eq(1)
+        expect(JSON.parse(last_response.body)['sandkey']['data'].first['units']).to eq('10000t')
+      end
+    end
+    context 'filters by region name' do
+      it 'returns 200 and status ok' do
+        indicator.sandkey = sankey_test
+        indicator.save!
+
+        header 'Content-Type', 'application/json'
+        get "/api/v1/indicators/#{indicator.id}/sandkey?region=China"
+
+        expect(last_response.status).to eq(200)
+      end
+      it 'returns only data for that region' do
+        indicator.sandkey = sankey_test
+        indicator.save!
+
+        header 'Content-Type', 'application/json'
+        get "/api/v1/indicators/#{indicator.id}/sandkey?region=China"
+
+        expect(JSON.parse(last_response.body)['sandkey']['data'].count).to eq(1)
+        expect(JSON.parse(last_response.body)['sandkey']['data'].first['region']).to eq('China')
       end
     end
   end

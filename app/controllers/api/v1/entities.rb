@@ -126,7 +126,7 @@ module API
         end
 
         class IndicatorSandkey < Grape::Entity
-            expose(:sandkey) { |item, options| item.sandkey_by_locale(options[:locale]) }
+            expose(:sandkey) { |item, options| item.sandkey_by_locale(options[:locale],options[:year],options[:unit],options[:region]) }
         end
     end
   end
