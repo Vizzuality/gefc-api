@@ -8,6 +8,10 @@ module API
 				error!("#{e.message}", 404)
 			end
 
+			rescue_from SankeyException do |e|
+				error!("#{e.message}", 404)
+			end
+
 			resource :indicators do
 				desc "Return all indicators"
 				get "" do
@@ -70,11 +74,20 @@ module API
 				desc "Return an indicator's sandkey"
 				params do
 					requires :id, type: String, desc: "ID / slug of the indicator"
+					optional :region, type: String, desc: "UUID of the region"
+					optional :unit, type: String, desc: "UUID of the region"
+					optional :year, type: Integer, desc: "Year"
 				end
 				get ":id/sandkey" do
 					indicator = Rails.cache.fetch(['response', request.url]) do
 						indicator_object = Indicator.find_by_id_or_slug!(permitted_params[:id], {}, [])
-						indicator_presenter = present indicator_object, with: API::V1::Entities::IndicatorSandkey, :locale => permitted_params[:locale]
+						indicator_object.has_sankey?
+						indicator_presenter = present indicator_object,
+							with: API::V1::Entities::IndicatorSandkey,
+							:locale => permitted_params[:locale],
+							:year => permitted_params[:year],
+							:unit => permitted_params[:unit],
+							:region => permitted_params[:region]
 						indicator_presenter.to_json
 					end
 
