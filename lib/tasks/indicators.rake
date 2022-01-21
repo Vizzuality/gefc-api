@@ -40,7 +40,7 @@ namespace :indicators do
     region['name_cn'] = china.name_cn
     regions.push(region)
 
-    current_unit = API::V1::FindOrUpsertUnit.call({name_en: '10000t'})
+    current_unit = API::V1::FindOrUpsertUnit.call({name_en: '10000tce'})
 
     units = []
     unit = {}
@@ -65,7 +65,7 @@ namespace :indicators do
     emission_flows.sandkey['data'].each { |data_item| years.push(data_item['year']) }
     years = years.uniq.sort
 
-    current_unit = API::V1::FindOrUpsertUnit.call({name_en: '10000tce'})
+    current_unit = API::V1::FindOrUpsertUnit.call({name_en: '10000t'})
 
     units = []
     unit = {}
