@@ -132,6 +132,7 @@ GEM
       capistrano-bundler
       puma (>= 4.0, < 6.0)
     concurrent-ruby (1.1.8)
+    connection_pool (2.2.5)
     crass (1.0.6)
     dalli (3.0.3)
     devise (4.8.0)
@@ -306,6 +307,7 @@ GEM
     rb-fsevent (0.10.4)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
+    redis (4.2.5)
     regexp_parser (2.1.1)
     responders (3.0.1)
       actionpack (>= 5.0)
@@ -365,6 +367,10 @@ GEM
       sprockets-rails
       tilt
     semantic_range (3.0.0)
+    sidekiq (6.2.1)
+      connection_pool (>= 2.2.2)
+      rack (~> 2.0)
+      redis (>= 4.2.0)
     simplecov (0.21.2)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
@@ -454,6 +460,7 @@ DEPENDENCIES
   rubocop-performance
   rubocop-rails
   sass-rails (>= 6)
+  sidekiq
   simplecov
   spring
   traco

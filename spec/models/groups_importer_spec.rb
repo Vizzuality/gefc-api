@@ -3,7 +3,7 @@ require 'integration_helper'
 require 'csv'
 
 RSpec.describe GroupsImporter, type: :model do
-  let(:file_path) { "spec/files/local_csv/groups_import_test_copy.csv" }
+  let(:file_path) { "spec/files/local_csv/140000.csv" }
   # Happy path with a valid CSV.
   #
   it "creates exact number of records for a valid csv" do

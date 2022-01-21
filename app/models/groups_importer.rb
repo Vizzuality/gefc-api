@@ -11,8 +11,10 @@ class GroupsImporter
   # params: file_path, String.
   #
   def import_from_csv(file_path)
+    starting_time = Time.now
     clear_all
     puts "starting with #{Indicator.count} indicators."
+    # puts "starting with #{Group.count} Group."
 
     # Widgets:
     #
@@ -28,7 +30,7 @@ class GroupsImporter
       row_data = row.to_hash.transform_keys! { |key| key.to_s.downcase }
       next unless valid_row?(row_data, index)
       
-      puts "row >> #{index + 2}"
+      # puts "row >> #{index + 2}"
 
       group_attributes = {name_en: row_data['group_en'], name_cn: row_data['group_cn']}
       current_group = API::V1::FindOrUpsertGroup.call(group_attributes)
@@ -38,7 +40,7 @@ class GroupsImporter
       current_indicator = API::V1::FindOrUpsertIndicator.call(indicator_attributes, current_subgroup)
       unit_name = row_data['units_en']
       if unit_name.blank?
-        puts "no unit here"
+        # puts "no unit here"
         current_unit = nil
       else
         current_unit = API::V1::FindOrUpsertUnit.call({name_en: unit_name})
@@ -73,8 +75,8 @@ class GroupsImporter
           year: row_data['year'],
           scenario: current_scenario
         )
-        puts "Records count >> #{Record.all.count}"
-        puts "Records indicator >> #{current_indicator.slug}"
+        # puts "Records count >> #{Record.all.count}"
+        # puts "Records indicator >> #{current_indicator.slug}"
 
         widgets.keys.select{ |k| row_data[k] == 1 }.each do |k|
           RecordWidget.create!(widget: widgets[k], record: current_record)
@@ -85,10 +87,11 @@ class GroupsImporter
         current_record.save!
 
       else
-        puts "current group >> #{current_group.name_en}"
+        # puts "current group >> #{current_group.name_en}"
       end
     end
-    puts "Records count >> #{Record.all.count}"
+    # puts "Records count >> #{Record.all.count}"
+    puts "it toke >> #{Time.now - starting_time}"
   end
 
   def clear_all

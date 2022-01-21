@@ -43,6 +43,8 @@ module GefcApi
     # Permitted locales available for the application
     config.i18n.available_locales = [:en, :cn]
 
+    config.active_job.queue_adapter = :sidekiq
+
     if ENV['RAILS_ENV'] == 'develop'
       config.after_initialize do
         Bullet.enable = true

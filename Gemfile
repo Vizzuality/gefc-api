@@ -65,7 +65,8 @@ gem 'traco'
 gem 'ox'
 # AWS SDK for Ruby. Read more: https://github.com/aws/aws-sdk-ruby
 gem "aws-sdk-s3", require: false
-
+#
+gem 'sidekiq'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]

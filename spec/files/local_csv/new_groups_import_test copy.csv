@@ -1,0 +1,13 @@
+,group_en,group_cn,subgroup_en,subgroup_cn,indicator_en,indicator_cn,category_1_en,category_1_cn,category_2_en,category_2_cn,category_3_en,category_3_cn,region_en,region_cn,region_type,year,value,units_en,units_cn,line,pie,bar,choropleth
+0,Socioeconomic,社会经济,Agriculture,农业,Total Power of Agricultural Machinery,农业机械总能力,,,,,,,China,哈萨克斯坦,Country,1978,11749.9067,10 000 kw, 10 000 kW,1,0,0,0
+1,Socioeconomic,社会经济,Agriculture,农业,Total Power of Agricultural Machinery,农业机械总能力,,,,,,,China,哈萨克斯坦,Country,1980,14745.7453,10 000 kw, 10 000 kW,1,0,0,0
+2,Socioeconomic,社会经济,Agriculture,农业,Total Power of Agricultural Machinery,农业机械总能力,,,,,,,China,哈萨克斯坦,Country,1985,20912.54505,10 000 kw, 10 000 kW,1,0,0,0
+3,Socioeconomic,社会经济,Agriculture,农业,Total Power of Agricultural Machinery,农业机械总能力,,,,,,,China,哈萨克斯坦,Country,1990,28707.7,10 000 kw, 10 000 kW,1,0,0,0
+4,Socioeconomic,社会经济,Agriculture,农业,Total Power of Agricultural Machinery,农业机械总能力,,,,,,,China,哈萨克斯坦,Country,1995,36118.05,10 000 kw, 10 000 kW,1,0,0,0
+5,Socioeconomic,社会经济,Agriculture,农业,Total Power of Agricultural Machinery,农业机械总能力,,,,,,,China,哈萨克斯坦,Country,2000,52573.6063,10 000 kw, 10 000 kW,1,0,0,0
+6,Socioeconomic,社会经济,Agriculture,农业,Total Power of Agricultural Machinery,农业机械总能力,,,,,,,China,哈萨克斯坦,Country,2005,68397.8486,10 000 kw, 10 000 kW,1,0,0,0
+7,Socioeconomic,社会经济,Agriculture,农业,Total Power of Agricultural Machinery,农业机械总能力,,,,,,,China,哈萨克斯坦,Country,2006,72522.1234,10 000 kw, 10 000 kW,1,0,0,0
+8,Socioeconomic,社会经济,Agriculture,农业,Total Power of Agricultural Machinery,农业机械总能力,,,,,,,China,哈萨克斯坦,Country,2007,76589.563462,10 000 kw, 10 000 kW,1,0,0,0
+9,Model Intercomparison,Model Intercomparison,Carbon,Carbon,Emissions,Emissions,IPAC-AIM/technology V1.0,IPAC-AIM/technology V1.0,CO2,CO2,Energy and Industrial Processes,Energy and Industrial Processes,China,China,Country,2010.0,9088.34688,Mt CO2/yr,Mt CO2/yr,1.0,0.0,1.0,0.0,,,,,,,1.5C,1.5C
+10,Model Intercomparison,Model Intercomparison,Carbon,Carbon,Emissions,Emissions,IPAC-AIM/technology V1.0,IPAC-AIM/technology V1.0,CO2,CO2,Energy and Industrial Processes,Energy and Industrial Processes,China,China,Country,2015.0,11482.6842,Mt CO2/yr,Mt CO2/yr,1.0,0.0,1.0,0.0,,,,,,,1.5C,1.5C
+11,Model Intercomparison,Model Intercomparison,Carbon,Carbon,Emissions,Emissions,IPAC-AIM/technology V1.0,IPAC-AIM/technology V1.0,CO2,CO2,Energy and Industrial Processes,Energy and Industrial Processes,China,China,Country,2020.0,12241.22417,Mt CO2/yr,Mt CO2/yr,1.0,0.0,1.0,0.0,,,,,,,1.5C,1.5C
