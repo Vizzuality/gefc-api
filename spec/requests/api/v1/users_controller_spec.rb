@@ -27,7 +27,6 @@ RSpec.describe API::V1::Users do
         params = { 'email': "valid@example.com", "password": "password", 'password_confirmation':  "password" }
         post "/api/v1/users/signup", params, as: :json
 
-        parsed_body = JSON.parse(last_response.body)
         new_user = User.find_by(email: params[:email])
 
         payload = JsonWebToken.decode(parsed_body["jwt_token"])
@@ -65,7 +64,6 @@ RSpec.describe API::V1::Users do
         params = { 'email': user.email, "password": "password" }
         post "/api/v1/users/login", params, as: :json
 
-        parsed_body = JSON.parse(last_response.body)
         new_user = User.find_by(email: params[:email])
         payload = JsonWebToken.decode(parsed_body["jwt_token"])
         payload_user_id = payload['sub']
@@ -89,8 +87,6 @@ RSpec.describe API::V1::Users do
       it 'returns the email of the logged in user' do
         header "Authentication", login_and_get_jwt(user)
         get "/api/v1/users/me"
-
-        parsed_body = JSON.parse(last_response.body)
 
         expect(parsed_body["email"]).to eq(user.email)
       end
@@ -121,8 +117,6 @@ RSpec.describe API::V1::Users do
         header "Authentication", login_and_get_jwt(user)
         params = { 'email': "new_email@example.com" }
         put "/api/v1/users/me", params, as: :json
-
-        parsed_body = JSON.parse(last_response.body)
 
         expect(parsed_body["email"]).to eq("new_email@example.com")
       end
