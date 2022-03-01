@@ -17,4 +17,12 @@ module IntegrationHelper
 
     parsed_body["jwt_token"]
   end
+
+  def body_as_json
+    json_str_to_hash(last_response.body)
+  end
+  
+  def json_str_to_hash(str)
+    JSON.parse(str).with_indifferent_access
+  end
 end

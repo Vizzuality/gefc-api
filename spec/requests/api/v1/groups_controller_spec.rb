@@ -17,7 +17,6 @@ RSpec.describe API::V1::Groups do
       it 'returns a list of groups ordered by english name' do
         header 'Content-Type', 'application/json'
         get '/api/v1/groups'
-        parsed_body = JSON.parse(last_response.body)
 
         expect(parsed_body.first["id"]).to eq Group.all.order(:name_en).first.id
         expect(parsed_body.count).to eq Group.all.order(:name_en).count
@@ -65,7 +64,7 @@ RSpec.describe API::V1::Groups do
       it 'returns a list of subgroups ordered by english name' do
         header 'Content-Type', 'application/json'
         get "/api/v1/groups/#{group.id}/subgroups"
-        parsed_body = JSON.parse(last_response.body)
+
         expect(parsed_body.first["id"]).to eq Subgroup.all.order(:name_en).first.id
         expect(parsed_body.count).to eq Subgroup.all.order(:name_en).count
         expect(parsed_body.last["id"]).to eq Subgroup.all.order(:name_en).last.id
@@ -96,7 +95,7 @@ RSpec.describe API::V1::Groups do
       it 'returns a list of indicators ordered by english name' do
         header 'Content-Type', 'application/json'
         get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators"
-        parsed_body = JSON.parse(last_response.body)
+
         expect(parsed_body.first["id"]).to eq Indicator.all.order(:name_en).first.id
         expect(parsed_body.count).to eq Indicator.all.order(:name_en).count
         expect(parsed_body.last["id"]).to eq Indicator.all.order(:name_en).last.id
