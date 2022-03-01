@@ -13,40 +13,12 @@ RSpec.describe API::V1::Indicators do
   let!(:record2) { create(:record, indicator: indicator, year: 2021, region: region2) }
   sankey_test = {
     "nodes" => [
-
-      {
-        "name_en" => "Coal",
-        "name_cn" => "煤炭"
-      },
       {
         "name_en" => "Industry",
         "name_cn" => "工业"
       }
     ],
     "data" => [
-      {
-        "region_en" => "China",
-        "region_cn" => "中國",
-        "year" => 2005,
-        "units_en" => "10000t",
-        "units_cn" => "10000t",
-        "links" => [
-          {
-            "source" => 0,
-            "target" => 5,
-            "value" => 185197.352607447,
-            "class_en" => "Coal",
-            "class_cn" => "煤炭"
-          },
-          {
-            "source" => 0,
-            "target" => 6,
-            "value" => 26017.9715351816,
-            "class_en" => "Coal",
-            "class_cn" => "煤炭"
-          }
-        ]
-      },
       {
         "region_en" => "Kenya",
         "region_cn" => "中國",
@@ -65,6 +37,52 @@ RSpec.describe API::V1::Indicators do
             "source" => 0,
             "target" => 6,
             "value" => 28151.323772367,
+            "class_en" => "Coal",
+            "class_cn" => "煤炭"
+          }
+        ]
+      },
+      {
+        "region_en" => "China",
+        "region_cn" => "中國",
+        "year" => 2007,
+        "units_en" => "10000t",
+        "units_cn" => "10000t",
+        "links" => [
+          {
+            "source" => 0,
+            "target" => 5,
+            "value" => 238262.925413562,
+            "class_en" => "Coal",
+            "class_cn" => "煤炭"
+          },
+          {
+            "source" => 0,
+            "target" => 6,
+            "value" => 28981.5535809133,
+            "class_en" => "Coal",
+            "class_cn" => "煤炭"
+          }
+        ]
+      },
+      {
+        "region_en" => "China",
+        "region_cn" => "中國",
+        "year" => 2009,
+        "units_en" => "10000t",
+        "units_cn" => "10000t",
+        "links" => [
+          {
+            "source" => 0,
+            "target" => 5,
+            "value" => 248335.422931628,
+            "class_en" => "Coal",
+            "class_cn" => "煤炭"
+          },
+          {
+            "source" => 0,
+            "target" => 6,
+            "value" => 30300.9813790703,
             "class_en" => "Coal",
             "class_cn" => "煤炭"
           }
@@ -154,6 +172,37 @@ RSpec.describe API::V1::Indicators do
 
         expect(last_response.status).to eq(200)
       end
+      it 'returns 200 if sankey exists' do
+        indicator.sandkey = sankey_test
+        indicator.save!
+
+        header 'Content-Type', 'application/json'
+        get "/api/v1/indicators/#{indicator.id}/sandkey"
+
+        expect(last_response.status).to eq(200)
+      end
+      it "response with JSON body containing expected sankey JSON structure" do
+        indicator.sandkey = sankey_test
+        indicator.save!
+
+        header 'Content-Type', 'application/json'
+        get "/api/v1/indicators/#{indicator.id}/sandkey"
+
+        expect(last_response.status).to eq(200)
+
+        expect(last_response.body).to look_like_json
+        expect(body_as_json.keys).to match_array(["sandkey"])
+        expect(body_as_json[:sandkey].keys).to match_array(["nodes", "data"])
+        body_as_json[:sandkey][:nodes].each do |node|
+          expect(node.keys).to match_array(["name"])
+        end
+        body_as_json[:sandkey][:data].each do |data_item|
+          expect(data_item.keys).to match_array(["region", "year", "units", "links"])
+          data_item[:links].each do |link|
+            expect(link.keys).to match_array(["source", "target", "value", "class"])
+          end
+        end
+      end
     end
     context 'filters by year' do
       it 'returns 200 and status ok' do
@@ -161,19 +210,41 @@ RSpec.describe API::V1::Indicators do
         indicator.save!
 
         header 'Content-Type', 'application/json'
-        get "/api/v1/indicators/#{indicator.id}/sandkey?year=2005"
+        get "/api/v1/indicators/#{indicator.id}/sandkey?year=2009"
 
         expect(last_response.status).to eq(200)
+      end
+      it "response with JSON body containing expected sankey JSON structure" do
+        indicator.sandkey = sankey_test
+        indicator.save!
+
+        header 'Content-Type', 'application/json'
+        get "/api/v1/indicators/#{indicator.id}/sandkey?year=2009"
+
+        expect(last_response.status).to eq(200)
+
+        expect(last_response.body).to look_like_json
+        expect(body_as_json.keys).to match_array(["sandkey"])
+        expect(body_as_json[:sandkey].keys).to match_array(["nodes", "data"])
+        body_as_json[:sandkey][:nodes].each do |node|
+          expect(node.keys).to match_array(["name"])
+        end
+        body_as_json[:sandkey][:data].each do |data_item|
+          expect(data_item.keys).to match_array(["region", "year", "units", "links"])
+          data_item[:links].each do |link|
+            expect(link.keys).to match_array(["source", "target", "value", "class"])
+          end
+        end
       end
       it 'returns only data for that year' do
         indicator.sandkey = sankey_test
         indicator.save!
 
         header 'Content-Type', 'application/json'
-        get "/api/v1/indicators/#{indicator.id}/sandkey?year=2005"
+        get "/api/v1/indicators/#{indicator.id}/sandkey?year=2009"
 
         expect(JSON.parse(last_response.body)['sandkey']['data'].count).to eq(1)
-        expect(JSON.parse(last_response.body)['sandkey']['data'].first['year']).to eq(2005)
+        expect(JSON.parse(last_response.body)['sandkey']['data'].first['year']).to eq(2009)
       end
     end
     context 'filters by unit' do
@@ -186,14 +257,33 @@ RSpec.describe API::V1::Indicators do
 
         expect(last_response.status).to eq(200)
       end
-      it 'returns only data for that unit' do
+      it "response with JSON body containing expected sankey JSON structure" do
         indicator.sandkey = sankey_test
         indicator.save!
 
         header 'Content-Type', 'application/json'
         get "/api/v1/indicators/#{indicator.id}/sandkey?unit=10000t"
 
-        expect(JSON.parse(last_response.body)['sandkey']['data'].count).to eq(1)
+        expect(last_response.body).to look_like_json
+        expect(body_as_json.keys).to match_array(["sandkey"])
+        expect(body_as_json[:sandkey].keys).to match_array(["nodes", "data"])
+        body_as_json[:sandkey][:nodes].each do |node|
+          expect(node.keys).to match_array(["name"])
+        end
+        body_as_json[:sandkey][:data].each do |data_item|
+          expect(data_item.keys).to match_array(["region", "year", "units", "links"])
+          data_item[:links].each do |link|
+            expect(link.keys).to match_array(["source", "target", "value", "class"])
+          end
+        end
+      end
+      it 'returns only data for that unit' do
+        indicator.sandkey = sankey_test
+        indicator.save!
+
+        header 'Content-Type', 'application/json'
+        get "/api/v1/indicators/#{indicator.id}/sandkey?unit=10000t"
+        expect(JSON.parse(last_response.body)['sandkey']['data'].count).to eq(2)
         expect(JSON.parse(last_response.body)['sandkey']['data'].first['units']).to eq('10000t')
       end
     end
@@ -203,9 +293,31 @@ RSpec.describe API::V1::Indicators do
         indicator.save!
 
         header 'Content-Type', 'application/json'
+        get "/api/v1/indicators/#{indicator.id}/sandkey?region=Kenya"
+
+        expect(last_response.status).to eq(200)
+      end
+      it "response with JSON body containing expected sankey JSON structure" do
+        indicator.sandkey = sankey_test
+        indicator.save!
+
+        header 'Content-Type', 'application/json'
         get "/api/v1/indicators/#{indicator.id}/sandkey?region=China"
 
         expect(last_response.status).to eq(200)
+
+        expect(last_response.body).to look_like_json
+        expect(body_as_json.keys).to match_array(["sandkey"])
+        expect(body_as_json[:sandkey].keys).to match_array(["nodes", "data"])
+        body_as_json[:sandkey][:nodes].each do |node|
+          expect(node.keys).to match_array(["name"])
+        end
+        body_as_json[:sandkey][:data].each do |data_item|
+          expect(data_item.keys).to match_array(["region", "year", "units", "links"])
+          data_item[:links].each do |link|
+            expect(link.keys).to match_array(["source", "target", "value", "class"])
+          end
+        end
       end
       it 'returns only data for that region' do
         indicator.sandkey = sankey_test
@@ -213,7 +325,48 @@ RSpec.describe API::V1::Indicators do
 
         header 'Content-Type', 'application/json'
         get "/api/v1/indicators/#{indicator.id}/sandkey?region=China"
+        expect(JSON.parse(last_response.body)['sandkey']['data'].count).to eq(2)
+        expect(JSON.parse(last_response.body)['sandkey']['data'].first['region']).to eq('China')
+      end
+    end
+    context 'filters by combined params' do
+      it 'returns 200 and status ok' do
+        indicator.sandkey = sankey_test
+        indicator.save!
 
+        header 'Content-Type', 'application/json'
+        get "/api/v1/indicators/#{indicator.id}/sandkey?region=China&unit=10000t&year=2009"
+
+        expect(last_response.status).to eq(200)
+      end
+      it "response with JSON body containing expected sankey JSON structure" do
+        indicator.sandkey = sankey_test
+        indicator.save!
+
+        header 'Content-Type', 'application/json'
+        get "/api/v1/indicators/#{indicator.id}/sandkey?region=China&unit=10000t&year=2009"
+
+        expect(last_response.status).to eq(200)
+
+        expect(last_response.body).to look_like_json
+        expect(body_as_json.keys).to match_array(["sandkey"])
+        expect(body_as_json[:sandkey].keys).to match_array(["nodes", "data"])
+        body_as_json[:sandkey][:nodes].each do |node|
+          expect(node.keys).to match_array(["name"])
+        end
+        body_as_json[:sandkey][:data].each do |data_item|
+          expect(data_item.keys).to match_array(["region", "year", "units", "links"])
+          data_item[:links].each do |link|
+            expect(link.keys).to match_array(["source", "target", "value", "class"])
+          end
+        end
+      end
+      it 'returns only data matching the combination of params' do
+        indicator.sandkey = sankey_test
+        indicator.save!
+
+        header 'Content-Type', 'application/json'
+        get "/api/v1/indicators/#{indicator.id}/sandkey?region=China&unit=10000t&year=2009"
         expect(JSON.parse(last_response.body)['sandkey']['data'].count).to eq(1)
         expect(JSON.parse(last_response.body)['sandkey']['data'].first['region']).to eq('China')
       end

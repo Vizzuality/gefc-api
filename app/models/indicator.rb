@@ -240,11 +240,42 @@ class Indicator < ApplicationRecord
         filtered_sandkey = {}
         filtered_sandkey["nodes"] = sandkey["nodes"]
         filtered_sandkey["data"] = []
-        sandkey["data"].each do |data| 
-            filtered_sandkey["data"].push(data) if year.present? and data['year'] == year
-            filtered_sandkey["data"].push(data) if unit.present? and (data['units_en'] == unit or data['units'] == unit)
-            filtered_sandkey["data"].push(data) if region.present? and (data['region_en'] == region or data['region'] == region)
+        sandkey_to_filter = sandkey["data"]
+
+        if year.present?
+            sandkey_to_filter.each do |data|
+                if (data.with_indifferent_access['year'] == year)
+                    filtered_sandkey["data"].push(data)
+                end
+            end
         end
+
+        if unit.present?
+            unless filtered_sandkey["data"].empty?
+                sandkey_to_filter = filtered_sandkey["data"]
+                filtered_sandkey["data"] = []
+            end
+
+            sandkey_to_filter.each do |data|
+                if (data.with_indifferent_access['units_en'] == unit or data.with_indifferent_access['units'] == unit)
+                    filtered_sandkey["data"].push(data)
+                end
+            end
+        end
+
+        if region.present?
+            unless filtered_sandkey["data"].empty?
+                sandkey_to_filter = filtered_sandkey["data"]
+                filtered_sandkey["data"] = []
+            end
+
+            sandkey_to_filter.each do |data|
+                if (data.with_indifferent_access['region_en'] == region or data.with_indifferent_access['region'] == region)
+                    filtered_sandkey["data"].push(data)
+                end
+            end
+        end
+
         filtered_sandkey
     end
 end
