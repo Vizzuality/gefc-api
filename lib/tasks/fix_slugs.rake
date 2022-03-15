@@ -34,7 +34,7 @@ namespace :slugs do
     puts "Indicators"
     Indicator.all.each do |indicator|
       puts indicator.slug unless indicator.slug[/[^\w-]/].nil?
-    enddone
+    end
     puts "checked!"
   end
 end
