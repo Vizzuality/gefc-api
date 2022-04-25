@@ -35,6 +35,18 @@ RSpec.describe API::V1::Users do
         expect(parsed_body["email"]).to eq(params[:email])
         expect(payload_user_id).to eq(new_user.id)
       end
+      it 'creates a new user with the expected params' do
+        header "Api-Auth", Rails.application.credentials.api_valid_jwt
+        params = { 'email': "valid@example.com", "password": "password", 'password_confirmation':  "password", 'name': 'Peter', 'username': 'peter_one', 'organization': 'dummyOrg', 'title': 'CTO' }
+        post "/api/v1/users/signup", params, as: :json
+
+        new_user = User.find_by(email: params[:email])
+
+        expect(new_user.username).to eq('peter_one')
+        expect(new_user.name).to eq('Peter')
+        expect(new_user.organization).to eq('dummyOrg')
+        expect(new_user.title).to eq('CTO')
+      end
     end
   end
 
