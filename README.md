@@ -105,5 +105,8 @@ For running the rake tasks on staging, you need to:
 
 * Services (job queues, cache servers, search engines, etc.)
 
+Sidekiq is used for background jobs (mostly data import.) In development you start it:
+`bundle exec sidekiq`
+
 * Deployment instructions
 Remember to update `.env` if needed and then `cap staging deploy`.

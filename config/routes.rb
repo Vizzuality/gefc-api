@@ -1,3 +1,5 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
   get '/performance_tests', to: 'performance_tests#index'
   
@@ -8,4 +10,6 @@ Rails.application.routes.draw do
     mount API::Base, at: '/'
   end
   mount GrapeSwaggerRails::Engine, at: "/swagger"
+
+  mount Sidekiq::Web => "/sidekiq" # mount Sidekiq::Web in your Rails app
 end
