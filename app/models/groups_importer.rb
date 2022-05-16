@@ -110,6 +110,9 @@ class GroupsImporter
     Group.delete_all
     Subgroup.delete_all
     Indicator.delete_all
+    IndicatorRegion.delete_all
+    IndicatorScenario.delete_all
+    IndicatorUnit.delete_all
     Unit.delete_all
     Region.delete_all
     Scenario.delete_all
