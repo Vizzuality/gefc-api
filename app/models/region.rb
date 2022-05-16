@@ -7,7 +7,7 @@ class Region < ApplicationRecord
 
   translates :name
 
-  enum region_type: [:other, :global, :continent, :country, :province, :coal_power_plant]
+  enum region_type: [:other, :global, :continent, :country, :province, :coal_power_plant, :countries_and_regions, :city, :generating_units, :transmission_line, :coal_enterprise]
   
   # Returns Geometry.
   # Raises exception if there is no geometry.

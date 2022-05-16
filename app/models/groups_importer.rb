@@ -163,7 +163,9 @@ class GroupsImporter
 
       row_data = row.to_hash.transform_keys! { |key| key.to_s.downcase }
       next unless valid_row?(row_data, index)
-      
+
+      next unless Region.region_types.include?(row_data['region_type']&.downcase&.split(' ')&.join('_')&.to_sym)
+
       puts "row >> #{index + 2}"
 
       unless previous_group_name == row_data['group_en']
@@ -249,8 +251,8 @@ class GroupsImporter
         current_record.visualization_types = current_record.widgets_list
         current_record.save!
       end
-      #puts "WIP Records count >> #{Record.all.count}"
+      # puts "WIP Records count >> #{Record.all.count}"
     end
-    #puts "Records count >> #{Record.all.count}"
+    # puts "Records count >> #{Record.all.count}"
   end
 end
