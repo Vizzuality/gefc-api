@@ -18,6 +18,12 @@ require "capistrano/rails"
 require "capistrano-yarn"
 #require "capistrano/rails/migrations"
 
+require 'capistrano/sidekiq'
+install_plugin Capistrano::Sidekiq # Default sidekiq tasks
+# Then select your service manager
+install_plugin Capistrano::Sidekiq::Systemd
+# service unit in /etc/systemd/user/sidekiq.service
+
 Dir.glob("lib/capistrano/tasks/*.rake").each { |r| import r }
 
 require 'appsignal/capistrano'

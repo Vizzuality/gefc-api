@@ -99,6 +99,7 @@ group :development do
   gem 'capistrano-bundler'
   gem 'capistrano3-puma'
   gem 'capistrano-yarn'
+  gem 'capistrano-sidekiq'
   gem 'rubocop', '~> 1.10.0', require: false
   gem 'rubocop-rails'
   gem 'rubocop-performance', require: false
