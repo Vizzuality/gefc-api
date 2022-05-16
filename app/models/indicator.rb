@@ -6,7 +6,7 @@ class Indicator < ApplicationRecord
     serialize :region_ids, Array
     serialize :visualization_types, Array
     serialize :categories, Array
-    serialize :scenarios, Array
+    serialize :serialized_scenarios, Array
     serialize :category_filters, Hash
     serialize :meta, Hash
     serialize :sandkey, Hash
@@ -21,6 +21,12 @@ class Indicator < ApplicationRecord
     has_many :widgets, through: :indicator_widgets
     has_one :default_indicator_widget, -> { by_default }, class_name: 'IndicatorWidget'
     has_one :default_widget, through: :default_indicator_widget, source: :widget
+    has_many :indicator_regions
+    has_many :regions, through: :indicator_regions
+    has_many :indicator_units
+    has_many :units, through: :indicator_units
+    has_many :indicator_scenarios
+    has_many :scenarios, through: :indicator_scenarios
 
     delegate :group, to: :subgroup, allow_nil: true
 
@@ -77,28 +83,31 @@ class Indicator < ApplicationRecord
     # Returns Regions for all indicator's records.
     # Raises exception if there are no Regions.
     #
-    def regions
-      regions = self.cached_regions
-      raise IndicatorRegionException.new("an error has ocurred:there are no regions for the indicator with id:#{id}") unless regions.any?
-      regions
-    end
+    
+    ##  Don't need no more
+    # def regions
+    #   regions = self.cached_regions
+    #   raise IndicatorRegionException.new("an error has ocurred:there are no regions for the indicator with id:#{id}") unless regions.any?
+    #   regions
+    # end
 
-    def cached_regions
-        cached_regions = Rails.cache.read("#{self.id}_cached_regions")
-        unless cached_regions.present?
-            cached_regions = Region.where(id: self.records.select(:region_id))
-            Rails.cache.write("#{self.id}_cached_regions", cached_regions, expires_in: 1.day) if cached_regions.present?
-        end
+    # ##  Don't need no more
+    
+    # def cached_regions
+    #     cached_regions = Rails.cache.read("#{self.id}_cached_regions")
+    #     unless cached_regions.present?
+    #         cached_regions = Region.where(id: self.records.select(:region_id))
+    #         Rails.cache.write("#{self.id}_cached_regions", cached_regions, expires_in: 1.day) if cached_regions.present?
+    #     end
 
-        return cached_regions
-    end
+    #     return cached_regions
+    # end
 
     # Returns an Array of unique Scenarios names for all indicator's records.
-    # Raises exception if there are no Regions.
     #
-    def get_scenarios
+    def serialize_scenarios
         scenarios_array = []
-        Scenario.where(id: records.select(:scenario_id).distinct).pluck(:id, Scenario.current_locale_column(:name)).each do |scenario|
+        self.scenarios.pluck(:id, Scenario.current_locale_column(:name)).each do |scenario|
             scenario_hash = {
                 "id" => scenario[0],
                 'name' => scenario[1]

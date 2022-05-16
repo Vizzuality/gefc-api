@@ -46,7 +46,7 @@ module API
             expose :category_filters, as: :category_filters
             expose :start_date, as: :start_date
             expose :end_date, as: :end_date
-            expose :scenarios, as: :scenarios
+            expose :serialized_scenarios, as: :scenarios
             expose :data_source, as: :data_source
             expose :region_ids, as: :region_ids
         end
@@ -65,7 +65,7 @@ module API
             expose :end_date, as: :end_date
             expose :subgroup, using: 'API::V1::Entities::MinimumSubgroup'
             expose :group, using: 'API::V1::Entities::MinimumGroup'
-            expose :scenarios, as: :scenarios
+            expose :serialized_scenarios, as: :scenarios
             expose :data_source, as: :data_source
             expose :region_ids, as: :region_ids
         end

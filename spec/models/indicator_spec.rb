@@ -29,20 +29,15 @@ RSpec.describe Indicator, type: :model do
       record_1 = create(:record, indicator: indicator, region: region_1)
       record_2 = create(:record, indicator: indicator, region: region_1)
       record_3 = create(:record, indicator: indicator, region: region_2)
+      indicator.reload
       
       expect(indicator.regions.include?(region_1)).to eq(true)
       expect(indicator.regions.include?(region_2)).to eq(true)
       expect(indicator.regions.count).to eq(2)
     end
-
-    it "rises and exception if there are no regions" do
-      indicator = create(:indicator)
-
-      expect { indicator.regions }.to raise_error(IndicatorRegionException)
-    end
   end
 
-  describe :get_scenario do
+  describe :serialized_scenarios do
     it "returns an array with the names of the scenarios" do
       indicator = create(:indicator)
       scenario_1 = create(:scenario)
@@ -50,9 +45,9 @@ RSpec.describe Indicator, type: :model do
       record_1 = create(:record, indicator: indicator, scenario: scenario_1)
       record_2 = create(:record, indicator: indicator, scenario: scenario_2)
       record_3 = create(:record, indicator: indicator)
-      expect(indicator.get_scenarios.include?({"id" => scenario_1.id, "name" => scenario_1.name})).to eq(true)
-      expect(indicator.get_scenarios.include?({"id" => scenario_2.id, "name" => scenario_2.name})).to eq(true)
-      expect(indicator.get_scenarios.count).to eq(2)
+      expect(indicator.serialized_scenarios.include?({"id" => scenario_1.id, "name" => scenario_1.name})).to eq(true)
+      expect(indicator.serialized_scenarios.include?({"id" => scenario_2.id, "name" => scenario_2.name})).to eq(true)
+      expect(indicator.serialized_scenarios.count).to eq(2)
             
     end
   end

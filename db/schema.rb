@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_25_112426) do
+ActiveRecord::Schema.define(version: 2022_05_16_121128) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -125,6 +125,27 @@ ActiveRecord::Schema.define(version: 2022_04_25_112426) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "indicator_regions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "indicator_id"
+    t.uuid "region_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "indicator_scenarios", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "indicator_id"
+    t.uuid "scenario_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "indicator_units", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "indicator_id"
+    t.uuid "unit_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "indicator_widgets", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "indicator_id"
     t.uuid "widget_id"
@@ -155,7 +176,7 @@ ActiveRecord::Schema.define(version: 2022_04_25_112426) do
     t.text "category_filters"
     t.integer "start_date"
     t.integer "end_date"
-    t.text "scenarios"
+    t.text "serialized_scenarios"
     t.json "meta"
     t.text "sandkey"
     t.index ["subgroup_id", "by_default"], name: "index_indicators_on_subgroup_id_and_by_default", unique: true, where: "by_default"

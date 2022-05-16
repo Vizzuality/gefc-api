@@ -105,13 +105,9 @@ RSpec.describe API::V1::Indicators do
         scenario = create(:scenario)      
         record2.scenario = scenario
         record2.save!
-        # TO DO: this should be updated when a record has scenario. Not here...
-        indicator.scenarios = indicator.get_scenarios
-        indicator.save!
 
         header 'Content-Type', 'application/json'
         get "/api/v1/indicators/#{indicator.id}"
-
         expect(parsed_body["scenarios"]).to eq([{"id"=>scenario.id, "name"=>scenario.name}])
       end
 

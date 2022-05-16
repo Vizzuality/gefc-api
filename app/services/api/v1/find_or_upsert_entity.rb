@@ -14,7 +14,6 @@ module API
       end
 
       def call(entity_attributes)
-        byebug
         lookup_keys = lookup_attributes.map { |a| entity_attributes[a] }
         entity = lookup(*lookup_keys)
         unless entity

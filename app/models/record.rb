@@ -13,7 +13,7 @@ class Record < ApplicationRecord
     translates :category_1, :category_2, :category_3
 
     before_save :set_scenario_info, :set_unit_info
-    #after_save :update_indicator_region_ids
+    after_save :update_indicator
 
     def widgets_list
         widgets.pluck(:name).uniq
@@ -21,10 +21,28 @@ class Record < ApplicationRecord
 
     private
 
-    # def update_indicator_region_ids
-    #     self.indicator.region_ids.push(region.id) unless self.indicator.region_ids.include?(region.id)
-    #     self.indicator.save!
-    # end
+    def update_indicator
+        unless self.indicator.regions.include?(self.region)
+            IndicatorRegion.create(
+                indicator: self.indicator,
+                region: self.region
+            )
+        end
+        unless self.indicator.units.include?(self.unit)
+            IndicatorUnit.create(
+                indicator: self.indicator,
+                unit: self.unit
+            )
+        end
+        return if scenario.nil?
+        
+        unless self.indicator.scenarios.include?(self.scenario)
+            IndicatorScenario.create(
+                indicator: self.indicator,
+                scenario: self.scenario
+            )
+        end
+    end
 
     def set_scenario_info
         return if scenario.nil?
