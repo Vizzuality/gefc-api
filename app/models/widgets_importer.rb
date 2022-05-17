@@ -8,15 +8,26 @@ class WidgetsImporter
   # Sets Indicator.default_widget.
   # params: file_path, String.
   #
-  def import_from_json(file_path)
+  def import_from_multiple_json(file_path)
     clear_all
+    all_json_files = Dir.entries(file_path).select { |e| File.extname(e) == ".json" }
+    
+    all_json_files.each do |file_name|
+      full_file_path = file_path + "/" + file_name
+      #puts full_file_path
+
+      import_from_json(full_file_path)
+    end
+  end
+  def import_from_json(file_path)
+    # clear_all
 
     file = File.read(file_path)
     data_hash = JSON.parse!(file)
-    puts "we are going to import #{data_hash.count} indicators if everything works fine"
+    #puts "we are going to import #{data_hash.count} indicators if everything works fine"
 
     data_hash.each do |indicator_data|
-      puts "indicators count >> #{Indicator.count}"
+      #puts "indicators count >> #{Indicator.count}"
 
       # Indicator
       #
@@ -36,9 +47,9 @@ class WidgetsImporter
       indicator_attributes['by_default'] = indicator_data['default'] unless indicator_data['default'].nil?
       current_indicator = API::V1::FindOrUpsertIndicator.call(indicator_attributes, current_subgroup)
 
-      puts current_indicator.data_source_en
-      puts current_indicator.data_source_cn
-      puts current_indicator.download_privilege
+      # puts current_indicator.data_source_en
+      # puts current_indicator.data_source_cn
+      # puts current_indicator.download_privilege
 
       #Widgets
       #

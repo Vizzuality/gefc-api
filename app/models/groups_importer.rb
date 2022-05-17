@@ -93,12 +93,12 @@ class GroupsImporter
   def import_from_multiple_csv(file_path)
     clear_all
 
-    puts "file_path = #{file_path}"
+    #puts "file_path = #{file_path}"
     all_csv_files = Dir.entries(file_path).select { |e| File.extname(e) == ".csv" }
 
     all_csv_files.each do |file_name|
       full_file_path = file_path + "/" + file_name
-      puts full_file_path
+      #puts full_file_path
 
       import_from_csv_file(full_file_path)
     end
@@ -134,7 +134,7 @@ class GroupsImporter
     english_columns = row_data.select{ |key, value| key.include?('_en') }
 
     unless english_columns.values.join('').gsub(/\s+/, "").scan(/\p{Han}/).count == 0
-      puts "Error in row ##{index + 2} >> #{english_columns.values.join('|').gsub(/\s+/, "")}" 
+      #puts "Error in row ##{index + 2} >> #{english_columns.values.join('|').gsub(/\s+/, "")}" 
       return false
     else
       return true
@@ -169,7 +169,7 @@ class GroupsImporter
 
       next unless Region.region_types.include?(row_data['region_type']&.downcase&.split(' ')&.join('_')&.to_sym)
 
-      puts "row >> #{index + 2}"
+      #puts "row >> #{index + 2}"
 
       unless previous_group_name == row_data['group_en']
         previous_group_name = row_data['group_en']
