@@ -247,7 +247,7 @@ class GroupsImporter
           scenario: current_scenario
         )
 
-        widgets.keys.select{ |k| row_data[k] == 'True' }.each do |k|
+        widgets.keys.select{ |k| row_data[k] == 1 }.each do |k|
           RecordWidget.create!(widget: widgets[k], record: current_record)
         end
         
