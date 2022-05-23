@@ -5,7 +5,7 @@ namespace :indicators do
       puts indicator.id
       # Can change for indicator.regions
       #
-      indicator.region_ids = Region.where(id: indicator.records.select(:region_id)).pluck(:id)
+      indicator.region_ids = indicator.regions.pluck(:id)
       indicator.visualization_types = indicator.widgets_list
       indicator.default_visualization_name = indicator.default_visualization
       indicator.categories = indicator.category_1
@@ -20,7 +20,7 @@ namespace :indicators do
   task populate_meta: :environment do
     Indicator.all.each do |indicator|
       next if indicator.visualization_types.include?('sankey')
-      puts indicator.id
+      
       indicator.meta = indicator.get_meta_object
       indicator.save!
     end
@@ -28,61 +28,41 @@ namespace :indicators do
 
   desc "populate meta for sankey"
   task populate_sankey_meta: :environment do
-    meta_object = {}
-    meta_object['default_visualization'] = 'sankey'
-    energy_flows  = Indicator.find_by_id_or_slug!('energy-flows-energy-flows', {}, [])
-    years = []
-    energy_flows.sandkey['data'].each { |data_item| years.push(data_item['year']) }
-    years = years.uniq.sort
-    china = Region.where(name_en: 'China').first
-    regions = []
-    region = {}
-    region['id'] = china.id
-    region['name_en'] = china.name_en
-    region['name_cn'] = china.name_cn
-    regions.push(region)
+    Indicator.all.each do |indicator|
+      if indicator.visualization_types.include?('sankey')
+        meta_object = {}
+        meta_object['default_visualization'] = 'sankey'
+        years = []
+        indicator.sandkey['data'].each { |data_item| years.push(data_item['year']) }
+        years = years.uniq.sort
+        
+        regions = []
+        indicator.regions.each do |current_region|
+          region = {}
+        region['id'] = current_region.id
+        region['name_en'] = current_region.name_en
+        region['name_cn'] = current_region.name_cn
+        regions.push(region)
+        end
 
-    current_unit = API::V1::FindOrUpsertUnit.call({name_en: '10000t'})
+        units = []
+        indicator.units.each do |current_unit|
+          unit = {}
+          unit['id'] = current_unit.id
+          unit['name_en'] = current_unit.name_en
+          unit['name_cn'] = current_unit.name_cn
+          units.push(unit)
+        end
 
-    units = []
-    unit = {}
-    unit['id'] = current_unit.id
-    unit['name_en'] = current_unit.name_en
-    unit['name_cn'] = current_unit.name_cn
-    units.push(unit)
-
-    meta_object['sankey'] = {
-      'year'=> years,
-      'regions'=> regions,
-      'units'=> units,
-      'scenarios'=> []
-    }
-    energy_flows.meta = meta_object
-    energy_flows.save!
-
-    meta_object = {}
-    meta_object['default_visualization'] = 'sankey'
-    emission_flows  = Indicator.find_by_id_or_slug!('energy-flows-emission-flows', {}, [])
-    years = []
-    emission_flows.sandkey['data'].each { |data_item| years.push(data_item['year']) }
-    years = years.uniq.sort
-
-    current_unit = API::V1::FindOrUpsertUnit.call({name_en: '10000tce'})
-
-    units = []
-    unit = {}
-    unit['id'] = current_unit.id
-    unit['name_en'] = current_unit.name_en
-    unit['name_cn'] = current_unit.name_cn
-    units.push(unit)
-
-    meta_object['sankey'] = {
-      'year'=> years,
-      'regions'=> regions,
-      'units'=> units,
-      'scenarios'=> []
-    }
-    emission_flows.meta = meta_object
-    emission_flows.save!
+        meta_object['sankey'] = {
+          'year'=> years,
+          'regions'=> regions,
+          'units'=> units,
+          'scenarios'=> []
+        }
+        indicator.meta = meta_object
+        indicator.save!
+      end
+    end
   end
 end

@@ -3,8 +3,8 @@ namespace :groups do
   task import_csv: :environment do
     GroupsImporter.new.import_from_csv(ENV['file_name'])
   end
-  desc "ASYNC. Imports groups records from csv in local file system."
+  desc "ASYNC. Imports groups records from csv files in local file system."
   task import_csv_async: :environment do
-    ImportFromMultipleFilesJob.perform_later(ENV['file_path'])
+    ImportGroupsFromMultipleFilesJob.perform_later(ENV['file_path'])
   end
 end

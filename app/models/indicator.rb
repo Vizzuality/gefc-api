@@ -80,30 +80,7 @@ class Indicator < ApplicationRecord
         API::V1::FetchIndicator.new.by_id_or_slug(slug_or_id, filters, includes)
     end
 
-    # Returns Regions for all indicator's records.
-    # Raises exception if there are no Regions.
-    #
-    
-    ##  Don't need no more
-    # def regions
-    #   regions = self.cached_regions
-    #   raise IndicatorRegionException.new("an error has ocurred:there are no regions for the indicator with id:#{id}") unless regions.any?
-    #   regions
-    # end
-
-    # ##  Don't need no more
-    
-    # def cached_regions
-    #     cached_regions = Rails.cache.read("#{self.id}_cached_regions")
-    #     unless cached_regions.present?
-    #         cached_regions = Region.where(id: self.records.select(:region_id))
-    #         Rails.cache.write("#{self.id}_cached_regions", cached_regions, expires_in: 1.day) if cached_regions.present?
-    #     end
-
-    #     return cached_regions
-    # end
-
-    # Returns an Array of unique Scenarios names for all indicator's records.
+    # Returns an Array of unique Scenarios.
     #
     def serialize_scenarios
         scenarios_array = []

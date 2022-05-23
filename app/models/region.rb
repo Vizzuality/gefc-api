@@ -13,7 +13,7 @@ class Region < ApplicationRecord
   # Raises exception if there is no geometry.
   #
   def geometry
-    if coal_power_plant?
+    if region_types_with_points.include?(region_type)
       raise GeometryException.new("an error has ocurred:there is no geometry for region with id:#{id}") if geometry_point.nil?
       geometry_point
     else
@@ -22,19 +22,23 @@ class Region < ApplicationRecord
     end
   end
 
+  # TODO:
+  # tooltip_properties is only for points anymore?
+  #
   # Returns Geometry encoded.
   # Raises exception if there is no geometry.
   #
   def get_geometry_encoded
     begin
-      #Rails.logger.info("Fetching region geometry_encoded here!")
-      Rails.cache.fetch([self, 'geometry_encoded']) do
-        encoded = RGeo::GeoJSON.encode(geometry.geometry)
-        encoded["tooltip_properties"] = geometry.tooltip_properties if geometry.class == GeometryPoint
-        encoded
-      end
+      encoded = RGeo::GeoJSON.encode(geometry.geometry)
+      encoded["tooltip_properties"] = geometry.tooltip_properties if geometry.class == GeometryPoint
+      encoded
     rescue GeometryException => e
       return nil
     end
+  end
+
+  def region_types_with_points
+    GeometryPoint.all.pluck(:region_id).map{ |region_id| Region.find(region_id).region_type }.uniq
   end
 end

@@ -21,4 +21,8 @@ namespace :import do
     polygons_file_name = ENV['polygons_file_name']
     ENV['file_name'] = polygons_file_name; Rake::Task['geometries:polygons:import_geojson'].invoke if polygons_file_name
   end
+  desc "Async. Populate extra info after import new dataset"
+  task populate_extra_info_async: :environment do
+    PopulateExtraInfoJob.perform_later
+  end
 end

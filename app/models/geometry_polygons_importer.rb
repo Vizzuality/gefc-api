@@ -1,11 +1,18 @@
 class GeometryPolygonsImporter
+  def import_from_multiple_json(file_path)
+    GeometryPolygon.delete_all
+    all_json_files = Dir.entries(file_path).select { |e| File.extname(e) == ".geojson" }
+    
+    all_json_files.each do |file_name|
+      full_file_path = file_path + "/" + file_name
+      import_from_json(full_file_path)
+    end
+  end
   # @param file_path [String] absolute or relative to root
+  #
   def import_from_json(file_path)
     file = File.read(file_path)
     data_hash = JSON.parse!(file)['features']
-    GeometryPolygon.delete_all
-    puts "we are going to import #{data_hash.count} geometries if everything works fine"
-    puts "polygons count >> #{GeometryPolygon.count}"
 
     data_hash.each do |row_data|
       properties = row_data['properties']
@@ -15,9 +22,6 @@ class GeometryPolygonsImporter
         region_type: properties['region_type']&.downcase&.split(' ')&.join('_')&.to_sym
       )
       new_geometry = GeometryPolygon.create(region: region, geometry: RGeo::GeoJSON.decode(row_data).geometry)
-      puts "new geometry created with id: #{new_geometry.id} for #{new_geometry.region.name}"
-      puts  "polygons count >> #{GeometryPolygon.count}"
     end
-    puts "polygons count >> #{GeometryPolygon.count}"
   end
 end
