@@ -13,7 +13,8 @@ module API
       end
 
       def default_by_group(group)
-        group.default_subgroup
+        return group.default_subgroup unless group.default_subgroup.nil?
+        group.subgroups.first
       end
 
       def default_slug_by_group(group)
