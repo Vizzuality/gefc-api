@@ -114,7 +114,7 @@ class GroupsImporter
     IndicatorScenario.delete_all
     IndicatorUnit.delete_all
     Unit.delete_all
-    Region.delete_all
+    # Region.delete_all
     Scenario.delete_all
     Widget.delete_all
     reset_dictionaries
