@@ -10,11 +10,10 @@ module API
 					use :pagination
 				end
 				get "", root: :groups do
-					groups = Rails.cache.fetch(['response', request.url]) do
-						groups_collection = FetchGroup.new.all
-						groups_presenter = present groups_collection, with: API::V1::Entities::Group
-						groups_presenter.to_json
-					end
+					fetch_group = FetchGroup.new
+					groups_collection = fetch_group.all
+					groups_presenter = present groups_collection, with: API::V1::Entities::Group
+					groups = groups_presenter.to_json
 
 					JSON.parse groups
 				end
@@ -24,11 +23,10 @@ module API
 					requires :id, type: String, desc: "ID / slug of the group"
 				end
 				get ":id", root: "group" do
-					group = Rails.cache.fetch(['response', request.url]) do
-          	group_object = FetchGroup.new.by_id_or_slug(permitted_params[:id])
-						group_presenter = present group_object, with: API::V1::Entities::Group
-						group_presenter.to_json
-					end
+					fetch_group = FetchGroup.new
+					group_object = fetch_group.by_id_or_slug(permitted_params[:id])
+					group_presenter = present group_object, with: API::V1::Entities::Group
+					group = group_presenter.to_json
 
 					JSON.parse group
 				end
@@ -39,12 +37,13 @@ module API
 					use :pagination
 				end
 				get ":id/subgroups" do
-					subgroups = Rails.cache.fetch(['response', request.url]) do
-						group_object = FetchGroup.new.by_id_or_slug(permitted_params[:id])
-						subgroups_collection = FetchSubgroup.new.by_group(group_object)
-						subgroups_presenter = present subgroups_collection, with: API::V1::Entities::BasicSubgroup
-						subgroups_presenter.to_json
-					end
+
+					fetch_group = FetchGroup.new
+					fetch_subgroup = FetchSubgroup.new
+					group_object = fetch_group.by_id_or_slug(permitted_params[:id])
+					subgroups_collection = fetch_subgroup.by_group(group_object)
+					subgroups_presenter = present subgroups_collection, with: API::V1::Entities::BasicSubgroup
+					subgroups = subgroups_presenter.to_json
 
 					JSON.parse subgroups
 				end
@@ -57,11 +56,10 @@ module API
 				get ":id/subgroups/:subgroup_id" do
 					#we are sending the indicators info here.
 					#do we really need the /indicators and /indicators/:id ?
-					subgroup = Rails.cache.fetch(['response', request.url]) do
-						subgroup_object = FetchSubgroup.new.by_id_or_slug(permitted_params[:subgroup_id], {})
-						subgroup_presenter = present subgroup_object, with: API::V1::Entities::FullSubgroup
-						subgroup_presenter.to_json
-					end
+					fetch_subgroup = FetchSubgroup.new
+					subgroup_object = fetch_subgroup.by_id_or_slug(permitted_params[:subgroup_id], {})
+					subgroup_presenter = present subgroup_object, with: API::V1::Entities::FullSubgroup
+					subgroup = subgroup_presenter.to_json
 
 					JSON.parse subgroup
 				end
@@ -73,12 +71,12 @@ module API
 					use :pagination
 				end
 				get ":id/subgroups/:subgroup_id/indicators" do
-					indicators = Rails.cache.fetch(['response', request.url]) do
-						subgroup_object = FetchSubgroup.new.by_id_or_slug(permitted_params[:subgroup_id], {})
-						indicators_collection = FetchIndicator.new.by_subgroup(subgroup_object)
-						indicators_presenter = present indicators_collection, with: API::V1::Entities::FullIndicator
-						indicators_presenter.to_json
-					end
+					fetch_subgroup = FetchSubgroup.new
+					fetch_indicator = FetchIndicator.new
+					subgroup_object = fetch_subgroup.by_id_or_slug(permitted_params[:subgroup_id], {})
+					indicators_collection = fetch_indicator.by_subgroup(subgroup_object)
+					indicators_presenter = present indicators_collection, with: API::V1::Entities::FullIndicator
+					indicators = indicators_presenter.to_json
 
 					JSON.parse indicators
 				end
@@ -90,11 +88,10 @@ module API
 					requires :indicator_id, type: String, desc: "ID / slug of the indicator"
 				end
 				get ":id/subgroups/:subgroup_id/indicators/:indicator_id" do
-					indicator = Rails.cache.fetch(['response', request.url]) do
-						indicator_object = FetchIndicator.new.by_id_or_slug(permitted_params[:indicator_id], {}, [])
-						indicator_presenter = present indicator_object, with: API::V1::Entities::FullIndicator
-						indicator_presenter.to_json
-					end
+					fetch_indicator = FetchIndicator.new
+					indicator_object = fetch_indicator.by_id_or_slug(permitted_params[:indicator_id], {}, [])
+					indicator_presenter = present indicator_object, with: API::V1::Entities::FullIndicator
+					indicator = indicator_presenter.to_json
 
 					JSON.parse indicator
 				end
@@ -115,13 +112,11 @@ module API
 					use :pagination
 				end
 				get ":id/subgroups/:subgroup_id/indicators/:indicator_id/records" do
-					records = Rails.cache.fetch(['response', request.url]) do
-						fetch_indicator = FetchIndicator.new
-						indicator_object = fetch_indicator.by_id_or_slug(permitted_params[:indicator_id], {}, [])
-						records_collection = fetch_indicator.records(indicator_object, params.slice(:category_1, :scenario, :region, :unit, :year, :start_year, :end_year, :visualization))
-						records_presenter = present records_collection.page(params[:page]).per(params[:per_page]), with: API::V1::Entities::Record
-						records_presenter.to_json
-					end
+					fetch_indicator = FetchIndicator.new
+					indicator_object = fetch_indicator.by_id_or_slug(permitted_params[:indicator_id], {}, [])
+					records_collection = fetch_indicator.records(indicator_object, params.slice(:category_1, :scenario, :region, :unit, :year, :start_year, :end_year, :visualization))
+					records_presenter = present records_collection.page(params[:page]).per(params[:per_page]), with: API::V1::Entities::Record
+					records = records_presenter.to_json
 
 					JSON.parse records
 				end
