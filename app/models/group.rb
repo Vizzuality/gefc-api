@@ -22,11 +22,11 @@ class Group < ApplicationRecord
         end
     end
 
-    def cached_subgroups
+    def ordered_subgroups
         API::V1::FetchSubgroup.new.by_group(self)
     end
      
-    def cached_header_image_url
+    def header_image_url
         API::V1::FetchGroup.new.header_image_url(self)
     end
 end
