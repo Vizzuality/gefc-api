@@ -15,11 +15,10 @@ module API
 			resource :indicators do
 				desc "Return all indicators"
 				get "" do
-					indicators = Rails.cache.fetch(['response', request.url]) do
-						indicators_collection = Indicator.all
-						indicator_presenter = present indicators_collection, with: API::V1::Entities::FullIndicator
-						indicator_presenter.to_json
-					end
+					fetch_indicator = FetchIndicator.new
+					indicators_collection = fetch_indicator.all
+					indicator_presenter = present indicators_collection, with: API::V1::Entities::FullIndicator
+					indicators = indicator_presenter.to_json
 
 					JSON.parse indicators
 				end
@@ -29,11 +28,10 @@ module API
 					requires :id, type: String, desc: "ID / slug of the indicator"
 				end
 				get ":id", root: "indicator" do
-					indicator = Rails.cache.fetch(['response', request.url]) do
-							indicator_object = Indicator.find_by_id_or_slug!(permitted_params[:id], {}, [])
-							indicator_presenter = present indicator_object, with: API::V1::Entities::FullIndicator
-							indicator_presenter.to_json
-					end
+					fetch_indicator = FetchIndicator.new
+					indicator_object = fetch_indicator.by_id_or_slug(permitted_params[:id], {}, [])
+					indicator_presenter = present indicator_object, with: API::V1::Entities::FullIndicator
+					indicator = indicator_presenter.to_json
 
 					JSON.parse indicator
 				end
@@ -46,13 +44,11 @@ module API
 					optional :end_year, type: Integer, desc: "End year"
 				end
 				get ":id/records" do
-					records = Rails.cache.fetch(['response', request.url]) do
-						fetch_indicator = FetchIndicator.new
-						indicator = fetch_indicator.by_id_or_slug(permitted_params[:id], {}, [])
-						records = fetch_indicator.records(indicator, params.slice(:category_1, :scenario, :region, :unit, :year, :start_year, :end_year, :visualization))
-						records_presenter = present records.page(params[:page]).per(params[:per_page]), with: API::V1::Entities::Record
-						records_presenter.to_json
-					end
+					fetch_indicator = FetchIndicator.new
+					indicator = fetch_indicator.by_id_or_slug(permitted_params[:id], {}, [])
+					indicator_records = fetch_indicator.records(indicator, params.slice(:category_1, :scenario, :region, :unit, :year, :start_year, :end_year, :visualization))
+					records_presenter = present indicator_records.page(params[:page]).per(params[:per_page]), with: API::V1::Entities::Record
+					records = records_presenter.to_json
 
 					JSON.parse records
 				end
@@ -62,11 +58,10 @@ module API
 					requires :id, type: String, desc: "ID / slug of the indicator"
 				end
 				get ":id/meta" do
-					indicator = Rails.cache.fetch(['response', request.url]) do
-						indicator_object = Indicator.find_by_id_or_slug!(permitted_params[:id], {}, [])
-						indicator_presenter = present indicator_object, with: API::V1::Entities::IndicatorMeta, :locale => permitted_params[:locale]
-						indicator_presenter.to_json
-					end
+					fetch_indicator = FetchIndicator.new
+					indicator_object = fetch_indicator.by_id_or_slug(permitted_params[:id], {}, [])
+					indicator_presenter = present indicator_object, with: API::V1::Entities::IndicatorMeta, :locale => permitted_params[:locale]
+					indicator = indicator_presenter.to_json
 
 					JSON.parse indicator
 				end
@@ -79,17 +74,16 @@ module API
 					optional :year, type: Integer, desc: "Year"
 				end
 				get ":id/sandkey" do
-					indicator = Rails.cache.fetch(['response', request.url]) do
-						indicator_object = Indicator.find_by_id_or_slug!(permitted_params[:id], {}, [])
-						indicator_object.has_sankey?
-						indicator_presenter = present indicator_object,
-							with: API::V1::Entities::IndicatorSandkey,
-							:locale => permitted_params[:locale],
-							:year => permitted_params[:year],
-							:unit => permitted_params[:unit],
-							:region => permitted_params[:region]
-						indicator_presenter.to_json
-					end
+					fetch_indicator = FetchIndicator.new
+					indicator_object = fetch_indicator.by_id_or_slug(permitted_params[:id], {}, [])
+					indicator_object.has_sankey?
+					indicator_presenter = present indicator_object,
+						with: API::V1::Entities::IndicatorSandkey,
+						:locale => permitted_params[:locale],
+						:year => permitted_params[:year],
+						:unit => permitted_params[:unit],
+						:region => permitted_params[:region]
+					indicator = indicator_presenter.to_json
 
 					JSON.parse indicator
 				end
