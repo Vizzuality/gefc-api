@@ -16,12 +16,8 @@ class Subgroup < ApplicationRecord
     def self.find_by_id_or_slug!(slug_or_id, filters)
         API::V1::FetchSubgroup.new.by_id_or_slug(slug_or_id, filters)
     end
-
-    def cached_default_indicator
-        API::V1::FetchIndicator.new.default_by_subgroup(self)
-    end
     
-    def cached_indicators
+    def ordered_indicators
         API::V1::FetchIndicator.new.by_subgroup(self)
     end
 end
