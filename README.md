@@ -76,21 +76,26 @@ curl --location --request GET 'http://localhost:3000/api/v1/users/me' \
 
 ## Updating datasets
 
-3 ways to do this:
-  1. using the CMS: import files in the order in which they come in the `Import` menu item:
-    1. Groups
-    2. Widgets
-    3. Points
-    4. Polygons
-  2. using individual rake tasks: need to be run in the correct order
+
+  1. Using individual rake tasks that starts async jobs: need to be run in the correct order:
     ```
-    file_name=socioecon_widgets_2306.csv bundle exec rake groups:import_csv
-    file_name=socioecon_widgets.json bundle exec rake widgets:import_json
-    file_name=geometries_poly.geojson bundle exec rake geometries:polygons:import_geojson
-    file_name=geometries_point.geojson bundle exec rake geometries:points:import_geojson
+    bundle exec rails groups:import_csv_async file_path="public/to_upload/groups/"
+
+    bundle exec rails widgets:import_json_async file_path="public/to_upload/widgets/"
+
+    bundle exec rails geometries:points:import_geojson_async file_path="public/to_upload/geometries/points/"
+    
+    bundle exec rails geometries:polygons:import_geojson_async file_path="public/to_upload/geometries/polygons/"
+
+    bundle exec rails sankeys:import_json_async file_path="/var/www/gefc_api/current/public/to_upload/sankey/"
     ```
-  3. using a combo rake task
-    `groups_file_name=socioecon_widgets_2306.csv widgets_file_name=socioecon_widgets.json points_file_name=geometries_point.geojson polygons_file_name=geometries_poly.geojson bundle exec rake import:all`
+
+    OR using a combo rake task
+    `groups_file_path="public/to_upload/groups/" widgets_file_path="public/to_upload/widgets/" points_file_path="public/to_upload/geometries/points/" polygons_file_path="public/to_upload/geometries/polygons/" sankeys_file_path="/var/www/gefc_api/current/public/to_upload/sankey/" bundle exec rake import:all`
+
+  2. Then we need to run some fixing tasks:
+    ```
+    import:populate_extra_info_async
 
 For running the rake tasks on staging, you need to:
   - be able to ssh to the staging server
