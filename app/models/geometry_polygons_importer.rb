@@ -8,6 +8,7 @@ class GeometryPolygonsImporter
       import_from_json(full_file_path)
     end
   end
+
   # @param file_path [String] absolute or relative to root
   #
   def import_from_json(file_path)
@@ -21,7 +22,8 @@ class GeometryPolygonsImporter
         name_cn: properties['region_cn'],
         region_type: properties['region_type']&.downcase&.split(' ')&.join('_')&.to_sym
       )
-      new_geometry = GeometryPolygon.create(region: region, geometry: RGeo::GeoJSON.decode(row_data).geometry)
+
+      GeometryPolygon.create(region: region, geometry: RGeo::GeoJSON.decode(row_data).geometry)
     end
   end
 end
