@@ -9,7 +9,7 @@ class IndicatorRegion < ApplicationRecord
   private
   def update_region_ids
     # can you do the same in a single line?
-    self.indicator.visualization_types = self.indicator.regions.pluck(:id)
+    self.indicator.region_ids = self.indicator.regions.pluck(:id)
     self.indicator.save!
   end
 end
