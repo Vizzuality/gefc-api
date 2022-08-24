@@ -1,7 +1,6 @@
 require 'capistrano/setup'
 require 'capistrano/deploy'
 require 'capistrano/rbenv'
-require 'capistrano/puma'
 require 'capistrano/bundler'
 require 'capistrano/scm/git'
 
@@ -11,10 +10,9 @@ set :rbenv_roles, :all # default value
 set :rbenv_ruby, '3.0.0p0'
 
 install_plugin Capistrano::SCM::Git
-install_plugin Capistrano::Puma, load_hooks: true
-install_plugin Capistrano::Puma::Systemd
 
 require "capistrano/rails"
+require "capistrano/passenger"
 require "capistrano-yarn"
 #require "capistrano/rails/migrations"
 

@@ -90,9 +90,6 @@ Rails.application.configure do
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
 
-  # Show full error reports.
-  config.consider_all_requests_local = true
-
   # Log disallowed deprecations.
   config.active_support.disallowed_deprecation = :log
 

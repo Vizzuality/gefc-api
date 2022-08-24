@@ -45,7 +45,7 @@ gem 'appsignal'
 
 # REST-like API framework for Ruby. Read more: https://github.com/ruby-grape/grape
 gem 'grape'
-# Is an API focused facade that sits on top of an object model. Read more: https://github.com/ruby-grape/grape-entity 
+# Is an API focused facade that sits on top of an object model. Read more: https://github.com/ruby-grape/grape-entity
 gem 'grape-entity'
 #
 gem 'grape-rails-cache'
@@ -92,7 +92,7 @@ group :development do
   gem "capistrano-rails", "~> 1.6", require: false
   gem 'capistrano-rbenv', '~> 2.2'
   gem 'capistrano-bundler'
-  gem 'capistrano3-puma'
+  gem 'capistrano-passenger'
   gem 'capistrano-yarn'
   gem 'rubocop', '~> 1.10.0', require: false
   gem 'rubocop-rails'
