@@ -107,3 +107,8 @@ For running the rake tasks on staging, you need to:
 
 * Deployment instructions
 Remember to update `.env` if needed and then `cap staging deploy`.
+
+## Deploying
+
+Deploying the application to production is done using [Capistrano](https://capistranorb.com/), which is already configured.
+You will need SSH access to the server, which you can get from the server's admin.
