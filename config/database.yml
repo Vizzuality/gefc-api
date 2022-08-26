@@ -1,27 +1,23 @@
-
 default: &default
   adapter: postgis
   encoding: unicode
-  pool: <%= ENV['RAILS_MAX_THREADS'] { 20 } %>
+  pool: <%= ENV.fetch('RAILS_MAX_THREADS') { 20 } %>
+  database: <%= ENV.fetch('POSTGRES_DATABASE') { "gefc_api" } %>
+  username: <%= ENV.fetch('POSTGRES_USERNAME') { "postgres" }%>
+  password: <%= ENV.fetch('POSTGRES_PASSWORD') {} %>
+  host: <%= ENV.fetch('POSTGRES_HOST') { "localhost" } %>
+  post: <%= ENV.fetch('POSTGRES_PORT') { 5432 } %>
 
 development:
   <<: *default
   database: gefc_api_development
+
 test:
   <<: *default
   database: gefc_api_test
+
 staging:
   <<: *default
-  database: <%= ENV['RDS_DATABASE'] %>
-  username: <%= ENV['RDS_USERNAME'] %>
-  password: <%= ENV['RDS_PASSWORD'] %>
-  host: <%= ENV['RDS_HOST'] %>
-  post: 5432
 
 production:
   <<: *default
-  database: <%= ENV['RDS_DATABASE'] %>
-  username: <%= ENV['RDS_USERNAME'] %>
-  password: <%= ENV['RDS_PASSWORD'] %>
-  host: <%= ENV['RDS_HOST'] %>
-  post: 5432
