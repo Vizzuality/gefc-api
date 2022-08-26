@@ -27,7 +27,7 @@ After running the test suit you will find the a coverage report at coverage/inde
  - How should the client authenticate?
 	Since /login and /signup are protected using authentication, the api expects a header with key 'Api-Auth' and a valid jwt as value, but only for those endpoints.
  - What makes valid an api jwt?
-	The api_jwt es generated using two elements: the payload that we expect to be encrypted and the encryption key.
+	The api_jwt is generated using two elements: the payload that we expect to be encrypted and the encryption key.
 	 - In the payload we expect to find encrypted the api_client_key in our credentials.
 	 - We use the devise_secret_key as encryption key.
  - How can I get one of those super cool api valid jwt?

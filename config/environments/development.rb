@@ -19,23 +19,22 @@ Rails.application.configure do
   if Rails.root.join('tmp/caching-dev.txt').exist?
 
     config.action_controller.perform_caching = true
-  
+
     config.static_cache_control = "public, max-age=172800"
-  
+
     config.cache_store = :mem_cache_store
-  
+
   else
-  
+
     config.action_controller.perform_caching = false
-  
+
     config.cache_store = :null_store
-  
+
   end
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
 
-  #
   config.serve_static_files = true
 
   # Don't care if the mailer can't send.
@@ -46,7 +45,7 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 
   config.action_mailer.delivery_method = :smtp
-  
+
   # config.action_mailer.smtp_settings = {
   #   address:              'smtp.gmail.com',
   #   port:                 587,
@@ -54,7 +53,7 @@ Rails.application.configure do
   #   user_name:            ENV[TEST_EMAIL_USERNAME], #Your gmail user
   #   password:             ENV[TEST_EMAIL_PASSWORD], #Your gmail password
   #   authentication:       'plain',
-  #   enable_starttls_auto: true  
+  #   enable_starttls_auto: true
   # }
   config.action_mailer.smtp_settings = {
     :address => "email-smtp.ap-southeast-1.amazonaws.com",
