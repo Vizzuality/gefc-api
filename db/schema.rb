@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_25_112426) do
+ActiveRecord::Schema.define(version: 2022_08_30_154520) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -59,7 +59,7 @@ ActiveRecord::Schema.define(version: 2022_04_25_112426) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "admin_users", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
+  create_table "admin_users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
@@ -71,7 +71,7 @@ ActiveRecord::Schema.define(version: 2022_04_25_112426) do
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
   end
 
-  create_table "geometry_points", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
+  create_table "geometry_points", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.geometry "geometry", limit: {:srid=>0, :type=>"geometry"}
@@ -79,7 +79,7 @@ ActiveRecord::Schema.define(version: 2022_04_25_112426) do
     t.json "tooltip_properties"
   end
 
-  create_table "geometry_points_import_attempts", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
+  create_table "geometry_points_import_attempts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "total_rows_count"
@@ -89,14 +89,14 @@ ActiveRecord::Schema.define(version: 2022_04_25_112426) do
     t.string "file_path"
   end
 
-  create_table "geometry_polygons", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
+  create_table "geometry_polygons", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.geometry "geometry", limit: {:srid=>0, :type=>"geometry"}
     t.uuid "region_id"
   end
 
-  create_table "geometry_polygons_import_attempts", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
+  create_table "geometry_polygons_import_attempts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "total_rows_count"
@@ -106,7 +106,7 @@ ActiveRecord::Schema.define(version: 2022_04_25_112426) do
     t.string "file_path"
   end
 
-  create_table "groups", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
+  create_table "groups", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name_en"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -119,13 +119,13 @@ ActiveRecord::Schema.define(version: 2022_04_25_112426) do
     t.string "subtitle_cn"
   end
 
-  create_table "groups_import_attempts", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
+  create_table "groups_import_attempts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "file_path"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "indicator_widgets", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
+  create_table "indicator_widgets", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "indicator_id"
     t.uuid "widget_id"
     t.datetime "created_at", precision: 6, null: false
@@ -133,7 +133,7 @@ ActiveRecord::Schema.define(version: 2022_04_25_112426) do
     t.boolean "by_default", default: false, null: false
   end
 
-  create_table "indicators", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
+  create_table "indicators", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "subgroup_id"
     t.string "name_en"
     t.datetime "created_at", precision: 6, null: false
@@ -157,20 +157,20 @@ ActiveRecord::Schema.define(version: 2022_04_25_112426) do
     t.integer "end_date"
     t.text "scenarios"
     t.json "meta"
-    t.text "sandkey"
+    t.text "sankey"
     t.index ["subgroup_id", "by_default"], name: "index_indicators_on_subgroup_id_and_by_default", unique: true, where: "by_default"
     t.index ["subgroup_id"], name: "index_indicators_on_subgroup_id"
     t.index ["widget_id"], name: "index_indicators_on_widget_id"
   end
 
-  create_table "record_widgets", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
+  create_table "record_widgets", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "record_id"
     t.uuid "widget_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "records", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
+  create_table "records", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "indicator_id"
     t.float "value"
     t.integer "year"
@@ -195,7 +195,7 @@ ActiveRecord::Schema.define(version: 2022_04_25_112426) do
     t.index ["unit_id"], name: "index_records_on_unit_id"
   end
 
-  create_table "regions", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
+  create_table "regions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name_en"
     t.integer "region_type"
     t.datetime "created_at", precision: 6, null: false
@@ -211,7 +211,7 @@ ActiveRecord::Schema.define(version: 2022_04_25_112426) do
     t.string "name_cn"
   end
 
-  create_table "subgroups", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
+  create_table "subgroups", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "group_id"
     t.string "name_en"
     t.datetime "created_at", precision: 6, null: false
@@ -226,14 +226,14 @@ ActiveRecord::Schema.define(version: 2022_04_25_112426) do
     t.index ["group_id"], name: "index_subgroups_on_group_id"
   end
 
-  create_table "units", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
+  create_table "units", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name_en"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "name_cn"
   end
 
-  create_table "users", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
+  create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
@@ -250,13 +250,13 @@ ActiveRecord::Schema.define(version: 2022_04_25_112426) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  create_table "widgets", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
+  create_table "widgets", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "widgets_import_attempts", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
+  create_table "widgets_import_attempts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "total_rows_count"

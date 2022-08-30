@@ -139,8 +139,8 @@ module API
         expose(:meta) { |item, options| item.meta_by_locale(options[:locale]) }
       end
 
-      class IndicatorSandkey < Grape::Entity
-        expose(:sandkey) { |item, options| item.sandkey_by_locale(options[:locale], options[:year], options[:unit], options[:region]) }
+      class IndicatorSankey < Grape::Entity
+        expose(:sankey) { |item, options| item.sankey_by_locale(options[:locale], options[:year], options[:unit], options[:region]) }
       end
     end
   end

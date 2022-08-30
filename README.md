@@ -2,25 +2,31 @@
 
 API for Green Energy China Platform.
 
-## Ruby version
-3.0.0
-
 ## System dependencies
-PostgreSQL 12
+
+- Ruby v3.0.0
+- PostgreSQL v12
+- Memcached
 
 ## Configuration
 
-Grab a copy of the `.env` file
+Copy the `.env.sample` file as `.env` and fill the different variable values accordingly. 
 
 
-## Database creation
-Grab a dump
+## Tests
 
-## How to run the test suite
 `bundle exec rspec spec`
 
-## Check coverage
-After running the test suit you will find the a coverage report at coverage/index.html. Try running `xdg-open coverage/index.html`
+## Code coverage
+
+After running the test suit, you will find a coverage report at `coverage/index.html`.
+
+## Data import tasks
+
+This project includes multiple `rake` tasks to handle different data import and transformation tasks.
+
+- `widgets:import_json`: Imports a .json file containing widget/indicator data
+- `indicators:populate_meta`: For existing indicators, 
 
 ## Authentication
 
@@ -36,7 +42,7 @@ After running the test suit you will find the a coverage report at coverage/inde
 Remember to add to your credentials:
 
     api_valid_jwt: { generated rails api_jwt:generate }
-*Right now this one is only used in the specs but I would like to keep it in the credentials until we agree with the FE about how are we going to authenticate because I have seen that api-key is saved in the .env in otp, but for me makes more sense not saving it at all and rely in deconding the token to authenticate.*
+*Right now this one is only used in the specs but I would like to keep it in the credentials until we agree with the FE about how are we going to authenticate because I have seen that api-key is saved in the .env in otp, but for me makes more sense not saving it at all and rely in decoding the token to authenticate.*
 
     devise_secret_key: { generated with rails secret }
 

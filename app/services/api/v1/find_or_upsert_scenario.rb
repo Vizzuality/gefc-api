@@ -8,7 +8,7 @@ module API
       private
 
       def lookup_attributes
-        [:name_en]
+        [:name_en, :name_cn]
       end
 
       def create(attributes)

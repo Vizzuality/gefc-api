@@ -10,7 +10,7 @@ class Indicator < ApplicationRecord
   serialize :scenarios, Array
   serialize :category_filters, Hash
   serialize :meta, Hash
-  serialize :sandkey, Hash
+  serialize :sankey, Hash
 
   validates_uniqueness_of :by_default, scope: :subgroup_id, if: :by_default?
   validates_uniqueness_of :name_en, scope: :subgroup_id
@@ -183,19 +183,19 @@ class Indicator < ApplicationRecord
   end
 
   def has_sankey?
-    raise SankeyException.new("an error has occurred:there is no sankey for the indicator with id:#{id}") unless sandkey.present?
-    sandkey.present?
+    raise SankeyException.new("an error has occurred:there is no sankey for the indicator with id:#{id}") unless sankey.present?
+    sankey.present?
   end
 
   # TODO: Grappe is calling this method twice every time that is exposed
-  def sandkey_by_locale(locale, year, unit, region)
-    sandkey_by_locale = if [year, unit, region].any?
-      sandkey_filter(year, unit, region)
+  def sankey_by_locale(locale, year, unit, region)
+    sankey_by_locale = if [year, unit, region].any?
+      sankey_filter(year, unit, region)
     else
-      sandkey
+      sankey
     end
 
-    sandkey_by_locale["nodes"].each do |node|
+    sankey_by_locale["nodes"].each do |node|
       if (locale == "cn") && node["name_cn"].present?
         node["name"] = node["name_cn"]
       elsif node["name_en"].present?
@@ -205,7 +205,7 @@ class Indicator < ApplicationRecord
       node.delete("name_cn")
     end
 
-    sandkey_by_locale["data"].each do |data|
+    sankey_by_locale["data"].each do |data|
       if (locale == "cn") && data["region_cn"].present?
         data["region"] = data["region_cn"]
       elsif data["region_en"].present?
@@ -233,49 +233,49 @@ class Indicator < ApplicationRecord
       end
     end
 
-    sandkey_by_locale
+    sankey_by_locale
   end
 
-  def sandkey_filter(year, unit, region)
-    filtered_sandkey = {}
-    filtered_sandkey["nodes"] = sandkey["nodes"]
-    filtered_sandkey["data"] = []
-    sandkey_to_filter = sandkey["data"]
+  def sankey_filter(year, unit, region)
+    filtered_sankey = {}
+    filtered_sankey["nodes"] = sankey["nodes"]
+    filtered_sankey["data"] = []
+    sankey_to_filter = sankey["data"]
 
     if year.present?
-      sandkey_to_filter.each do |data|
+      sankey_to_filter.each do |data|
         if data.with_indifferent_access["year"] == year
-          filtered_sandkey["data"].push(data)
+          filtered_sankey["data"].push(data)
         end
       end
     end
 
     if unit.present?
-      unless filtered_sandkey["data"].empty?
-        sandkey_to_filter = filtered_sandkey["data"]
-        filtered_sandkey["data"] = []
+      unless filtered_sankey["data"].empty?
+        sankey_to_filter = filtered_sankey["data"]
+        filtered_sankey["data"] = []
       end
 
-      sandkey_to_filter.each do |data|
+      sankey_to_filter.each do |data|
         if (data.with_indifferent_access["units_en"] == unit) || (data.with_indifferent_access["units"] == unit)
-          filtered_sandkey["data"].push(data)
+          filtered_sankey["data"].push(data)
         end
       end
     end
 
     if region.present?
-      unless filtered_sandkey["data"].empty?
-        sandkey_to_filter = filtered_sandkey["data"]
-        filtered_sandkey["data"] = []
+      unless filtered_sankey["data"].empty?
+        sankey_to_filter = filtered_sankey["data"]
+        filtered_sankey["data"] = []
       end
 
-      sandkey_to_filter.each do |data|
+      sankey_to_filter.each do |data|
         if (data.with_indifferent_access["region_en"] == region) || (data.with_indifferent_access["region"] == region)
-          filtered_sandkey["data"].push(data)
+          filtered_sankey["data"].push(data)
         end
       end
     end
 
-    filtered_sandkey
+    filtered_sankey
   end
 end
