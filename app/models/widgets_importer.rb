@@ -12,10 +12,10 @@ class WidgetsImporter
     clear_all
 
     file = File.read(file_path)
-    data_hash = JSON.parse!(file)
-    puts "we are going to import #{data_hash.count} indicators if everything works fine"
+    indicator_list = JSON.parse!(file)
+    puts "we are going to import #{indicator_list.count} indicators if everything works fine"
 
-    data_hash.each do |indicator_data|
+    indicator_list.each do |indicator_data|
       puts ""
       puts "=== Indicator number: #{Indicator.count} ==="
       puts "Indicator name (English) #{indicator_data["indicator_en"]}"

@@ -157,45 +157,45 @@ RSpec.describe API::V1::Indicators do
     context "when requesting list of indicator records" do
       it "returns 404 if sankey does not exists" do
         header "Content-Type", "application/json"
-        get "/api/v1/indicators/#{indicator.id}/sandkey"
+        get "/api/v1/indicators/#{indicator.id}/sankey"
 
         expect(last_response.status).to eq(404)
       end
 
       it "returns 200 if sankey exists" do
-        indicator.sandkey = sankey_test
+        indicator.sankey = sankey_test
         indicator.save!
 
         header "Content-Type", "application/json"
-        get "/api/v1/indicators/#{indicator.id}/sandkey"
+        get "/api/v1/indicators/#{indicator.id}/sankey"
 
         expect(last_response.status).to eq(200)
       end
       it "returns 200 if sankey exists" do
-        indicator.sandkey = sankey_test
+        indicator.sankey = sankey_test
         indicator.save!
 
         header "Content-Type", "application/json"
-        get "/api/v1/indicators/#{indicator.id}/sandkey"
+        get "/api/v1/indicators/#{indicator.id}/sankey"
 
         expect(last_response.status).to eq(200)
       end
       it "response with JSON body containing expected sankey JSON structure" do
-        indicator.sandkey = sankey_test
+        indicator.sankey = sankey_test
         indicator.save!
 
         header "Content-Type", "application/json"
-        get "/api/v1/indicators/#{indicator.id}/sandkey"
+        get "/api/v1/indicators/#{indicator.id}/sankey"
 
         expect(last_response.status).to eq(200)
 
         expect(last_response.body).to look_like_json
-        expect(body_as_json.keys).to match_array(["sandkey"])
-        expect(body_as_json[:sandkey].keys).to match_array(["nodes", "data"])
-        body_as_json[:sandkey][:nodes].each do |node|
+        expect(body_as_json.keys).to match_array(["sankey"])
+        expect(body_as_json[:sankey].keys).to match_array(["nodes", "data"])
+        body_as_json[:sankey][:nodes].each do |node|
           expect(node.keys).to match_array(["name"])
         end
-        body_as_json[:sandkey][:data].each do |data_item|
+        body_as_json[:sankey][:data].each do |data_item|
           expect(data_item.keys).to match_array(["region", "year", "units", "links"])
           data_item[:links].each do |link|
             expect(link.keys).to match_array(["source", "target", "value", "class"])
@@ -205,30 +205,30 @@ RSpec.describe API::V1::Indicators do
     end
     context "filters by year" do
       it "returns 200 and status ok" do
-        indicator.sandkey = sankey_test
+        indicator.sankey = sankey_test
         indicator.save!
 
         header "Content-Type", "application/json"
-        get "/api/v1/indicators/#{indicator.id}/sandkey?year=2009"
+        get "/api/v1/indicators/#{indicator.id}/sankey?year=2009"
 
         expect(last_response.status).to eq(200)
       end
       it "response with JSON body containing expected sankey JSON structure" do
-        indicator.sandkey = sankey_test
+        indicator.sankey = sankey_test
         indicator.save!
 
         header "Content-Type", "application/json"
-        get "/api/v1/indicators/#{indicator.id}/sandkey?year=2009"
+        get "/api/v1/indicators/#{indicator.id}/sankey?year=2009"
 
         expect(last_response.status).to eq(200)
 
         expect(last_response.body).to look_like_json
-        expect(body_as_json.keys).to match_array(["sandkey"])
-        expect(body_as_json[:sandkey].keys).to match_array(["nodes", "data"])
-        body_as_json[:sandkey][:nodes].each do |node|
+        expect(body_as_json.keys).to match_array(["sankey"])
+        expect(body_as_json[:sankey].keys).to match_array(["nodes", "data"])
+        body_as_json[:sankey][:nodes].each do |node|
           expect(node.keys).to match_array(["name"])
         end
-        body_as_json[:sandkey][:data].each do |data_item|
+        body_as_json[:sankey][:data].each do |data_item|
           expect(data_item.keys).to match_array(["region", "year", "units", "links"])
           data_item[:links].each do |link|
             expect(link.keys).to match_array(["source", "target", "value", "class"])
@@ -236,40 +236,40 @@ RSpec.describe API::V1::Indicators do
         end
       end
       it "returns only data for that year" do
-        indicator.sandkey = sankey_test
+        indicator.sankey = sankey_test
         indicator.save!
 
         header "Content-Type", "application/json"
-        get "/api/v1/indicators/#{indicator.id}/sandkey?year=2009"
+        get "/api/v1/indicators/#{indicator.id}/sankey?year=2009"
 
-        expect(JSON.parse(last_response.body)["sandkey"]["data"].count).to eq(1)
-        expect(JSON.parse(last_response.body)["sandkey"]["data"].first["year"]).to eq(2009)
+        expect(JSON.parse(last_response.body)["sankey"]["data"].count).to eq(1)
+        expect(JSON.parse(last_response.body)["sankey"]["data"].first["year"]).to eq(2009)
       end
     end
     context "filters by unit" do
       it "returns 200 and status ok" do
-        indicator.sandkey = sankey_test
+        indicator.sankey = sankey_test
         indicator.save!
 
         header "Content-Type", "application/json"
-        get "/api/v1/indicators/#{indicator.id}/sandkey?unit=10000t"
+        get "/api/v1/indicators/#{indicator.id}/sankey?unit=10000t"
 
         expect(last_response.status).to eq(200)
       end
       it "response with JSON body containing expected sankey JSON structure" do
-        indicator.sandkey = sankey_test
+        indicator.sankey = sankey_test
         indicator.save!
 
         header "Content-Type", "application/json"
-        get "/api/v1/indicators/#{indicator.id}/sandkey?unit=10000t"
+        get "/api/v1/indicators/#{indicator.id}/sankey?unit=10000t"
 
         expect(last_response.body).to look_like_json
-        expect(body_as_json.keys).to match_array(["sandkey"])
-        expect(body_as_json[:sandkey].keys).to match_array(["nodes", "data"])
-        body_as_json[:sandkey][:nodes].each do |node|
+        expect(body_as_json.keys).to match_array(["sankey"])
+        expect(body_as_json[:sankey].keys).to match_array(["nodes", "data"])
+        body_as_json[:sankey][:nodes].each do |node|
           expect(node.keys).to match_array(["name"])
         end
-        body_as_json[:sandkey][:data].each do |data_item|
+        body_as_json[:sankey][:data].each do |data_item|
           expect(data_item.keys).to match_array(["region", "year", "units", "links"])
           data_item[:links].each do |link|
             expect(link.keys).to match_array(["source", "target", "value", "class"])
@@ -277,41 +277,41 @@ RSpec.describe API::V1::Indicators do
         end
       end
       it "returns only data for that unit" do
-        indicator.sandkey = sankey_test
+        indicator.sankey = sankey_test
         indicator.save!
 
         header "Content-Type", "application/json"
-        get "/api/v1/indicators/#{indicator.id}/sandkey?unit=10000t"
-        expect(JSON.parse(last_response.body)["sandkey"]["data"].count).to eq(2)
-        expect(JSON.parse(last_response.body)["sandkey"]["data"].first["units"]).to eq("10000t")
+        get "/api/v1/indicators/#{indicator.id}/sankey?unit=10000t"
+        expect(JSON.parse(last_response.body)["sankey"]["data"].count).to eq(2)
+        expect(JSON.parse(last_response.body)["sankey"]["data"].first["units"]).to eq("10000t")
       end
     end
     context "filters by region name" do
       it "returns 200 and status ok" do
-        indicator.sandkey = sankey_test
+        indicator.sankey = sankey_test
         indicator.save!
 
         header "Content-Type", "application/json"
-        get "/api/v1/indicators/#{indicator.id}/sandkey?region=Kenya"
+        get "/api/v1/indicators/#{indicator.id}/sankey?region=Kenya"
 
         expect(last_response.status).to eq(200)
       end
       it "response with JSON body containing expected sankey JSON structure" do
-        indicator.sandkey = sankey_test
+        indicator.sankey = sankey_test
         indicator.save!
 
         header "Content-Type", "application/json"
-        get "/api/v1/indicators/#{indicator.id}/sandkey?region=China"
+        get "/api/v1/indicators/#{indicator.id}/sankey?region=China"
 
         expect(last_response.status).to eq(200)
 
         expect(last_response.body).to look_like_json
-        expect(body_as_json.keys).to match_array(["sandkey"])
-        expect(body_as_json[:sandkey].keys).to match_array(["nodes", "data"])
-        body_as_json[:sandkey][:nodes].each do |node|
+        expect(body_as_json.keys).to match_array(["sankey"])
+        expect(body_as_json[:sankey].keys).to match_array(["nodes", "data"])
+        body_as_json[:sankey][:nodes].each do |node|
           expect(node.keys).to match_array(["name"])
         end
-        body_as_json[:sandkey][:data].each do |data_item|
+        body_as_json[:sankey][:data].each do |data_item|
           expect(data_item.keys).to match_array(["region", "year", "units", "links"])
           data_item[:links].each do |link|
             expect(link.keys).to match_array(["source", "target", "value", "class"])
@@ -319,41 +319,41 @@ RSpec.describe API::V1::Indicators do
         end
       end
       it "returns only data for that region" do
-        indicator.sandkey = sankey_test
+        indicator.sankey = sankey_test
         indicator.save!
 
         header "Content-Type", "application/json"
-        get "/api/v1/indicators/#{indicator.id}/sandkey?region=China"
-        expect(JSON.parse(last_response.body)["sandkey"]["data"].count).to eq(2)
-        expect(JSON.parse(last_response.body)["sandkey"]["data"].first["region"]).to eq("China")
+        get "/api/v1/indicators/#{indicator.id}/sankey?region=China"
+        expect(JSON.parse(last_response.body)["sankey"]["data"].count).to eq(2)
+        expect(JSON.parse(last_response.body)["sankey"]["data"].first["region"]).to eq("China")
       end
     end
     context "filters by combined params" do
       it "returns 200 and status ok" do
-        indicator.sandkey = sankey_test
+        indicator.sankey = sankey_test
         indicator.save!
 
         header "Content-Type", "application/json"
-        get "/api/v1/indicators/#{indicator.id}/sandkey?region=China&unit=10000t&year=2009"
+        get "/api/v1/indicators/#{indicator.id}/sankey?region=China&unit=10000t&year=2009"
 
         expect(last_response.status).to eq(200)
       end
       it "response with JSON body containing expected sankey JSON structure" do
-        indicator.sandkey = sankey_test
+        indicator.sankey = sankey_test
         indicator.save!
 
         header "Content-Type", "application/json"
-        get "/api/v1/indicators/#{indicator.id}/sandkey?region=China&unit=10000t&year=2009"
+        get "/api/v1/indicators/#{indicator.id}/sankey?region=China&unit=10000t&year=2009"
 
         expect(last_response.status).to eq(200)
 
         expect(last_response.body).to look_like_json
-        expect(body_as_json.keys).to match_array(["sandkey"])
-        expect(body_as_json[:sandkey].keys).to match_array(["nodes", "data"])
-        body_as_json[:sandkey][:nodes].each do |node|
+        expect(body_as_json.keys).to match_array(["sankey"])
+        expect(body_as_json[:sankey].keys).to match_array(["nodes", "data"])
+        body_as_json[:sankey][:nodes].each do |node|
           expect(node.keys).to match_array(["name"])
         end
-        body_as_json[:sandkey][:data].each do |data_item|
+        body_as_json[:sankey][:data].each do |data_item|
           expect(data_item.keys).to match_array(["region", "year", "units", "links"])
           data_item[:links].each do |link|
             expect(link.keys).to match_array(["source", "target", "value", "class"])
@@ -361,13 +361,13 @@ RSpec.describe API::V1::Indicators do
         end
       end
       it "returns only data matching the combination of params" do
-        indicator.sandkey = sankey_test
+        indicator.sankey = sankey_test
         indicator.save!
 
         header "Content-Type", "application/json"
-        get "/api/v1/indicators/#{indicator.id}/sandkey?region=China&unit=10000t&year=2009"
-        expect(JSON.parse(last_response.body)["sandkey"]["data"].count).to eq(1)
-        expect(JSON.parse(last_response.body)["sandkey"]["data"].first["region"]).to eq("China")
+        get "/api/v1/indicators/#{indicator.id}/sankey?region=China&unit=10000t&year=2009"
+        expect(JSON.parse(last_response.body)["sankey"]["data"].count).to eq(1)
+        expect(JSON.parse(last_response.body)["sankey"]["data"].first["region"]).to eq("China")
       end
     end
   end

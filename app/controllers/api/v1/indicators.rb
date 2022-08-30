@@ -51,18 +51,18 @@ module API
           present indicator_object, with: API::V1::Entities::IndicatorMeta, locale: permitted_params[:locale]
         end
 
-        desc "Return an indicator's sandkey"
+        desc "Return an indicator's sankey"
         params do
           requires :id, type: String, desc: "ID / slug of the indicator"
           optional :region, type: String, desc: "UUID of the region"
           optional :unit, type: String, desc: "UUID of the region"
           optional :year, type: Integer, desc: "Year"
         end
-        get ":id/sandkey" do
+        get ":id/sankey" do
           indicator_object = Indicator.find_by_id_or_slug!(permitted_params[:id], {}, [])
           indicator_object.has_sankey?
           present indicator_object,
-                  with: API::V1::Entities::IndicatorSandkey,
+                  with: API::V1::Entities::IndicatorSankey,
                   locale: permitted_params[:locale],
                   year: permitted_params[:year],
                   unit: permitted_params[:unit],

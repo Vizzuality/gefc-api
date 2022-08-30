@@ -16,7 +16,7 @@ module API
       private
 
       def lookup_attributes
-        [:subgroup_id, :name_en]
+        [:subgroup_id, :name_en, :name_cn]
       end
 
       def create(attributes)
