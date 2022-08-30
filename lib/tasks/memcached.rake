@@ -19,25 +19,6 @@ namespace :memcached do
 
     socket.close
   end
-  # desc 'Populates cached groups'
-  # task :populate_groups => :environment do
-  #   groups = Group.includes([:subgroups]).all.order(:name_en)
-  #   Rails.cache.write('groups', groups, expires_in: 1.day) if groups.present?
-  # end
-
-  # desc 'Checks if groups and cached groups match'
-  # task :check_cached_groups_match => :environment do
-  #   groups = Group.includes([:subgroups]).all.order(:name_en)
-  #   cached_groups = Rails.cache.read('groups')
-  #   puts 'wrong number' unless cached_groups.present? and cached_groups.count == groups.count
-  #   puts 'OK' if cached_groups.present? and cached_groups.count == groups.count
-  # end
-
-  # desc 'Delete groups from cache'
-  # task :delete_all_groups => :environment do
-  #   Rails.cache.delete('groups')
-  #   puts 'ok' if Rails.cache.read('groups') == nil
-  # end
 
   desc "Populate Groups and Subgroups cache"
   task populate_groups_and_subgroups: :environment do
