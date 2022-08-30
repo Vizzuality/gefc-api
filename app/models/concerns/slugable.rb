@@ -9,13 +9,14 @@ module Slugable
 
   def set_slug
     self.slug = if instance_of?(Indicator)
-      "#{sanitaize_name(subgroup.name_en)}-#{sanitaize_name(name_en)}"
+      "#{sanitize_name(subgroup.name_en)}-#{sanitize_name(name_en)}"
     else
-      sanitaize_name(name_en)
+      sanitize_name(name_en)
     end
   end
 
-  def sanitaize_name(name)
+  def sanitize_name(name)
     name.downcase.strip.gsub(/[[:space:]]/, "-").gsub(/[^\w-]/, "")
   end
+  module_function :sanitize_name
 end

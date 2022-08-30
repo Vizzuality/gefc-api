@@ -20,6 +20,6 @@ RSpec.describe Group, type: :model do
   it "has a valid slug" do
     group = create(:group)
 
-    expect(group.slug).to eq(group.name_en.downcase.gsub(/[[:space:]]/, "-"))
+    expect(group.slug).to eq(Slugable.sanitize_name(group.name_en))
   end
 end
