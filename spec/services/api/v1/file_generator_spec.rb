@@ -29,12 +29,13 @@ RSpec.describe API::V1::FileGenerator do
       file_generator = API::V1::FileGenerator.new(indicator.records, file_format, :en)
 
       file_name, extension_in_file_name = file_generator.call.split(".")
+      puts file_name
       elements_of_the_file_name = file_name.split("_")
       indicator_in_file_name = elements_of_the_file_name.first
       date_time_in_file_name = elements_of_the_file_name.last
 
       expect(elements_of_the_file_name.count).to eq(2)
-      expect(indicator_in_file_name.include?(indicator.name_en)).to eq(true)
+      expect(indicator_in_file_name.include?(Slugable.sanitize_name(indicator.name_en))).to eq(true)
       expect(DateTime.strptime(date_time_in_file_name).class).to eq(DateTime)
       expect(extension_in_file_name).to eq(file_format)
     end

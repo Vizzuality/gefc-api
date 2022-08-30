@@ -178,7 +178,9 @@ module API
 
       def file_name
         indicator_name_en = @records.first.indicator.name_en
-        "#{Rails.root}#{ENV["DOWNLOADS_PATH"]}#{indicator_name_en}_#{DateTime.new.strftime("%FT%T%:z")}.#{@file_format}"
+        name = "#{Rails.root}#{ENV["DOWNLOADS_PATH"]}#{Slugable.sanitize_name(indicator_name_en)}_#{DateTime.new.strftime("%FT%T%:z")}.#{@file_format}"
+        puts name
+        name
       end
 
       def attr_value_chinese?(string)

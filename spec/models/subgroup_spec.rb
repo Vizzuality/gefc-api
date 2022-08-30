@@ -21,6 +21,6 @@ RSpec.describe Subgroup, type: :model do
   it "has a valid slug" do
     subgroup = create(:subgroup)
 
-    expect(subgroup.slug).to eq(subgroup.name_en.downcase.gsub(/[[:space:]]/, "-"))
+    expect(subgroup.slug).to eq(Slugable.sanitize_name(subgroup.name_en))
   end
 end
