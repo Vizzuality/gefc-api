@@ -79,7 +79,7 @@ class Indicator < ApplicationRecord
   #
   def regions
     regions = cached_regions
-    raise IndicatorRegionException.new("an error has ocurred:there are no regions for the indicator with id:#{id}") unless regions.any?
+    raise IndicatorRegionException.new("an error has occurred:there are no regions for the indicator with id:#{id}") unless regions.any?
     regions
   end
 
@@ -183,7 +183,7 @@ class Indicator < ApplicationRecord
   end
 
   def has_sankey?
-    raise SankeyException.new("an error has ocurred:there is no sankey for the indicator with id:#{id}") unless sandkey.present?
+    raise SankeyException.new("an error has occurred:there is no sankey for the indicator with id:#{id}") unless sandkey.present?
     sandkey.present?
   end
 

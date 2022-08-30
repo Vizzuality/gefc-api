@@ -13,8 +13,8 @@ class FileValidator
   # Returns full file path
   #
   def path
-    raise PathException.new("an error has ocurred:this file dont exist:#{@full_path}") unless File.file?(@full_path)
-    raise ExtensionException.new("an error has ocurred:file is not a csv:#{@full_path}") unless File.extname(@full_path) == ".csv"
+    raise PathException.new("an error has occurred:this file dont exist:#{@full_path}") unless File.file?(@full_path)
+    raise ExtensionException.new("an error has occurred:file is not a csv:#{@full_path}") unless File.extname(@full_path) == ".csv"
     @full_path
   end
 end

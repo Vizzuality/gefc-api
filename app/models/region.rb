@@ -14,10 +14,10 @@ class Region < ApplicationRecord
   #
   def geometry
     if coal_power_plant?
-      raise GeometryException.new("an error has ocurred:there is no geometry for region with id:#{id}") if geometry_point.nil?
+      raise GeometryException.new("an error has occurred:there is no geometry for region with id:#{id}") if geometry_point.nil?
       geometry_point
     else
-      raise GeometryException.new("an error has ocurred:there is no geometry for region with id:#{id}") if geometry_polygon.nil?
+      raise GeometryException.new("an error has occurred:there is no geometry for region with id:#{id}") if geometry_polygon.nil?
       geometry_polygon
     end
   end
