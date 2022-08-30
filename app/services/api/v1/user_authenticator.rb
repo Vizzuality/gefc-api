@@ -6,23 +6,22 @@ module API
       end
 
       def valid?
-        @request.headers['Authentication'].present?
+        @request.headers["Authentication"].present?
       end
 
       def authenticate!
         return false unless valid?
-        return current_user.present?
-
+        current_user.present?
       rescue ::JWT::ExpiredSignature
-        return "Auth token has expired"
+        "Auth token has expired"
       rescue ::JWT::DecodeError
-        return "Auth token is invalid"
+        "Auth token is invalid"
       end
 
       def current_user
-        token = @request.headers.fetch('Authentication', '').split(' ').last
+        token = @request.headers.fetch("Authentication", "").split(" ").last
         payload = JsonWebToken.decode(token)
-        User.find(payload['sub'])
+        User.find(payload["sub"])
       end
     end
   end

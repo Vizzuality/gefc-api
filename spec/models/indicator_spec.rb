@@ -1,10 +1,10 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Indicator, type: :model do
   it "returns an array of records category without repited elements" do
     indicator = create(:indicator)
     record_1 = create(:record, indicator: indicator, category_1: "category one")
-    record_2 = create(:record, indicator: indicator, category_1: "category one")
+    create(:record, indicator: indicator, category_1: "category one")
     record_3 = create(:record, indicator: indicator, category_1: "category two")
 
     expect(indicator.category_1).to eq([record_1.category_1, record_3.category_1])
@@ -17,8 +17,8 @@ RSpec.describe Indicator, type: :model do
     record_1 = create(:record, indicator: indicator, category_1: category_one, category_2: "filter one")
     record_2 = create(:record, indicator: indicator, category_1: category_one, category_2: "another filter")
     record_3 = create(:record, indicator: indicator, category_1: category_two, category_2: "filter two")
-  
-    expect(indicator.get_category_filters).to eq({ category_one => [record_1.category_2, record_2.category_2], category_two => [record_3.category_2] })
+
+    expect(indicator.get_category_filters).to eq({category_one => [record_1.category_2, record_2.category_2], category_two => [record_3.category_2]})
   end
 
   describe :regions do
@@ -26,10 +26,10 @@ RSpec.describe Indicator, type: :model do
       indicator = create(:indicator)
       region_1 = create(:region)
       region_2 = create(:region)
-      record_1 = create(:record, indicator: indicator, region: region_1)
-      record_2 = create(:record, indicator: indicator, region: region_1)
-      record_3 = create(:record, indicator: indicator, region: region_2)
-      
+      create(:record, indicator: indicator, region: region_1)
+      create(:record, indicator: indicator, region: region_1)
+      create(:record, indicator: indicator, region: region_2)
+
       expect(indicator.regions.include?(region_1)).to eq(true)
       expect(indicator.regions.include?(region_2)).to eq(true)
       expect(indicator.regions.count).to eq(2)
@@ -47,13 +47,12 @@ RSpec.describe Indicator, type: :model do
       indicator = create(:indicator)
       scenario_1 = create(:scenario)
       scenario_2 = create(:scenario)
-      record_1 = create(:record, indicator: indicator, scenario: scenario_1)
-      record_2 = create(:record, indicator: indicator, scenario: scenario_2)
-      record_3 = create(:record, indicator: indicator)
+      create(:record, indicator: indicator, scenario: scenario_1)
+      create(:record, indicator: indicator, scenario: scenario_2)
+      create(:record, indicator: indicator)
       expect(indicator.get_scenarios.include?({"id" => scenario_1.id, "name" => scenario_1.name})).to eq(true)
       expect(indicator.get_scenarios.include?({"id" => scenario_2.id, "name" => scenario_2.name})).to eq(true)
       expect(indicator.get_scenarios.count).to eq(2)
-            
     end
   end
 end

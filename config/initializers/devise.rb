@@ -24,7 +24,7 @@ Devise.setup do |config|
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
-  config.mailer_sender = 'please-change-me-at-config-initializers-devise@example.com'
+  config.mailer_sender = "please-change-me-at-config-initializers-devise@example.com"
 
   # Configure the class responsible to send e-mails.
   # config.mailer = 'Devise::Mailer'
@@ -36,7 +36,7 @@ Devise.setup do |config|
   # Load and configure the ORM. Supports :active_record (default) and
   # :mongoid (bson_ext recommended) by default. Other ORMs may be
   # available as additional gems.
-  require 'devise/orm/active_record'
+  require "devise/orm/active_record"
 
   # ==> Configuration for any authentication mechanism
   # Configure which keys are used when authenticating a user. The default is
@@ -279,8 +279,8 @@ Devise.setup do |config|
   #
   # We only use this for controllers that don't involve Grappe!
   config.warden do |manager|
-  #   manager.intercept_401 = false
-  #   manager.default_strategies(scope: :user).unshift :some_external_strategy
+    #   manager.intercept_401 = false
+    #   manager.default_strategies(scope: :user).unshift :some_external_strategy
     manager.strategies.add :jwt, Devise::Strategies::JWT
     manager.default_strategies(scope: :user).unshift :jwt
   end
@@ -315,7 +315,6 @@ end
 
 module Devise
   module Strategies
-
     class UserAuthenticator < API::V1::UserAuthenticator
     end
 
@@ -324,14 +323,14 @@ module Devise
         user_authenticator = UserAuthenticator.new(request)
         user_authenticator.valid?
       end
-      
+
       def authenticate!
         user_authenticator = UserAuthenticator.new(request)
         success! user_authenticator.current_user
       rescue ::JWT::ExpiredSignature
-        fail! 'Auth token has expired'
+        fail! "Auth token has expired"
       rescue ::JWT::DecodeError
-        fail! 'Auth token is invalid'
+        fail! "Auth token is invalid"
       end
     end
   end

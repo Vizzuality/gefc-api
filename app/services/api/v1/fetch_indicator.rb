@@ -1,7 +1,8 @@
 module API
   module V1
     class FetchIndicator
-      def initialize() end
+      def initialize
+      end
 
       def all
         Indicator.all.order(:name_en)
@@ -18,14 +19,14 @@ module API
       def records(indicator, params = {})
         if params.any?
           filter = FilterIndicatorRecords.new(indicator, params.slice(:category_1, :scenario, :region, :unit, :year, :start_year, :end_year, :visualization))
-          records = filter.call.includes(:widgets, :unit, :region, :scenario).order(year: :desc)
+          filter.call.includes(:widgets, :unit, :region, :scenario).order(year: :desc)
         else
           indicator.records
         end
       end
 
       def by_id_or_slug(slug_or_id, filters, includes)
-        rel = Indicator.where('id::TEXT = :id OR slug = :id', id: slug_or_id)
+        rel = Indicator.where("id::TEXT = :id OR slug = :id", id: slug_or_id)
         rel = rel.includes(*includes) if includes.any?
         rel = rel.where(filters) if filters.any?
         rel.first!

@@ -2,7 +2,7 @@ module API
   module V1
     class FindOrUpsertIndicator < FindOrUpsertEntity
       def call(attributes, subgroup)
-        super(attributes.merge({ subgroup_id: subgroup.id }))
+        super(attributes.merge({subgroup_id: subgroup.id}))
       end
 
       def reload
@@ -20,7 +20,7 @@ module API
       end
 
       def create(attributes)
-        #set as by_default for a subgroup
+        # set as by_default for a subgroup
         if attributes[:by_default] && attributes[:subgroup_id]
           current_default = Indicator.by_default.where(subgroup_id: attributes[:subgroup_id]).first
         end

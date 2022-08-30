@@ -4,7 +4,7 @@ namespace :slugs do
     puts "Groups"
     Group.all.each do |group|
       group.set_slug
-      group.save!      
+      group.save!
     end
     puts "Subgroups"
     Subgroup.all.each do |subgroup|
@@ -23,13 +23,10 @@ namespace :slugs do
     puts "Groups"
     Group.all.each do |group|
       puts group.slug unless group.slug[/[^\w-]/].nil?
-      
     end
     puts "Subgroups"
     Subgroup.all.each do |subgroup|
-      
       puts subgroup.slug unless subgroup.slug[/[^\w-]/].nil?
-      
     end
     puts "Indicators"
     Indicator.all.each do |indicator|

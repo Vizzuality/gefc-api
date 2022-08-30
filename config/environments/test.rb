@@ -1,12 +1,12 @@
 require "active_support/core_ext/integer/time"
-require 'simplecov'
-SimpleCov.start 'rails' do
-  add_filter '/bin/'
-  add_filter '/db/'
-  add_filter '/mailers/'
-  add_filter '/channels/'
-  add_filter '/jobs/'
-  add_filter '/spec/' # for rspec
+require "simplecov"
+SimpleCov.start "rails" do
+  add_filter "/bin/"
+  add_filter "/db/"
+  add_filter "/mailers/"
+  add_filter "/channels/"
+  add_filter "/jobs/"
+  add_filter "/spec/" # for rspec
 end
 puts "required simplecov"
 
@@ -29,11 +29,11 @@ Rails.application.configure do
   # Configure public file server for tests with Cache-Control for performance.
   config.public_file_server.enabled = true
   config.public_file_server.headers = {
-    'Cache-Control' => "public, max-age=#{1.hour.to_i}"
+    "Cache-Control" => "public, max-age=#{1.hour.to_i}"
   }
 
   # Show full error reports and disable caching.
-  config.consider_all_requests_local       = true
+  config.consider_all_requests_local = true
   config.action_controller.perform_caching = false
   config.cache_store = :null_store
 
@@ -52,7 +52,7 @@ Rails.application.configure do
   # The :test delivery method accumulates sent emails in the
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
-  
+
   config.active_job.queue_adapter = :inline
 
   # Print deprecation notices to the stderr.

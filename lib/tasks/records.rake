@@ -3,7 +3,7 @@ namespace :records do
   task populate_extra_info: :environment do
     Record.all.each do |record|
       puts record.id
-      if record.visualization_types.nil? or record.visualization_types.blank?
+      if record.visualization_types.nil? || record.visualization_types.blank?
         puts "blank"
         record.visualization_types = record.widgets_list
         record.save!
@@ -13,7 +13,7 @@ namespace :records do
     end
   end
   desc "Set nil unit"
-  #This task fixes records that have a unit with name nil
+  # This task fixes records that have a unit with name nil
   task set_nil_unit: :environment do
     nil_unit = Unit.where(name_en: nil).first
     if nil_unit.present?

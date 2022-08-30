@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Region, type: :model do
   let(:coal_power_plant) {
@@ -32,7 +32,6 @@ RSpec.describe Region, type: :model do
       expect(province.get_geometry_encoded).to eq(geometry_encoded)
     end
     it "returns nil if there is no geometry" do
-
       expect(region_without_geometry.get_geometry_encoded).to eq(nil)
     end
   end

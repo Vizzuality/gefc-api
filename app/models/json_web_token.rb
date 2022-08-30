@@ -1,5 +1,4 @@
 class JsonWebToken
-
   def self.encode(payload, expire = true)
     if expire
       expiration = 2.weeks.from_now.to_i

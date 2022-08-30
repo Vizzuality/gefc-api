@@ -17,7 +17,7 @@ module API
 
           def permitted_params
             @permitted_params ||= declared(params,
-                                           include_missing: false)
+              include_missing: false)
           end
 
           def logger
@@ -34,7 +34,7 @@ module API
         end
 
         params do
-          optional :locale, type: String, desc: 'Name of the locale (en|cn)'
+          optional :locale, type: String, desc: "Name of the locale (en|cn)"
         end
       end
     end

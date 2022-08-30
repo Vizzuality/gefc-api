@@ -7,7 +7,7 @@ class RecordWidget < ApplicationRecord
   private
 
   def update_visualization_types
-    self.record.visualization_types = self.record.widgets_list
-    self.record.save!
+    record.visualization_types = record.widgets_list
+    record.save!
   end
 end
