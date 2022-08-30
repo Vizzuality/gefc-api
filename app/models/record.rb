@@ -13,7 +13,7 @@ class Record < ApplicationRecord
   translates :category_1, :category_2, :category_3
 
   before_save :set_scenario_info, :set_unit_info
-  #after_save :update_indicator_region_ids
+  # after_save :update_indicator_region_ids
 
   def widgets_list
     widgets.pluck(:name).uniq
@@ -29,19 +29,19 @@ class Record < ApplicationRecord
   def set_scenario_info
     return if scenario.nil?
     self.scenario_info = {
-      'id' => scenario.id,
-      'name' => scenario.name
+      "id" => scenario.id,
+      "name" => scenario.name
     }
   end
 
   def set_unit_info
     self.unit_info = {
-      'id' => unit&.id,
-      'name' => unit&.name
+      "id" => unit&.id,
+      "name" => unit&.name
     }
   end
 
   def set_visualization_types
-    self.visualization_types = self.widgets_list
+    self.visualization_types = widgets_list
   end
 end

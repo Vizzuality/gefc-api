@@ -5,12 +5,12 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-Widget.create([{ name: 'chart'}, { name: 'pie' }])
-Group.create([{ name: 'group one'}, { name: 'group two' }])
-Subgroup.create(name: 'subgroup one', group: Group.first, by_default: true)
-first_indicator = Indicator.create(name: 'indicator one', subgroup: Subgroup.first, by_default: true)
+Widget.create([{name: "chart"}, {name: "pie"}])
+Group.create([{name: "group one"}, {name: "group two"}])
+Subgroup.create(name: "subgroup one", group: Group.first, by_default: true)
+first_indicator = Indicator.create(name: "indicator one", subgroup: Subgroup.first, by_default: true)
 
-second_indicator = Indicator.create(name: 'indicator one', subgroup: Subgroup.first, by_default: true)
+Indicator.create(name: "indicator one", subgroup: Subgroup.first, by_default: true)
 
 IndicatorWidget.create(indicator: first_indicator, widget: Widget.first)
 IndicatorWidget.create(indicator: first_indicator, widget: Widget.last, by_default: true)

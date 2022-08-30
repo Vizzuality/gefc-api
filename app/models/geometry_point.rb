@@ -7,7 +7,7 @@ class GeometryPoint < ApplicationRecord
   private
 
   def set_geometry_encoded_for_the_region
-    self.region.geometry_encoded = self.region.get_geometry_encoded
-    self.region.save!
+    region.geometry_encoded = region.get_geometry_encoded
+    region.save!
   end
 end

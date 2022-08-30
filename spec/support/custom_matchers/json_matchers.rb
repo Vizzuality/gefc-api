@@ -1,11 +1,9 @@
 # spec/support/custom_matchers/json_matchers.rb
 RSpec::Matchers.define :look_like_json do |expected|
   match do |actual|
-    begin
-      JSON.parse(actual)
-    rescue JSON::ParserError
-      false
-    end
+    JSON.parse(actual)
+  rescue JSON::ParserError
+    false
   end
 
   failure_message do |actual|

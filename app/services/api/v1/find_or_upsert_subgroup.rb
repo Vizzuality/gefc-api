@@ -2,7 +2,7 @@ module API
   module V1
     class FindOrUpsertSubgroup < FindOrUpsertEntity
       def call(attributes, group)
-        super(attributes.merge({ group_id: group.id }))
+        super(attributes.merge({group_id: group.id}))
       end
 
       def reload
@@ -17,10 +17,6 @@ module API
 
       def lookup_attributes
         [:group_id, :name_en]
-      end
-
-      def create(attributes)
-        Subgroup.create(attributes)
       end
 
       def create(attributes)

@@ -1,5 +1,5 @@
-require 'rails_helper'
-require 'csv'
+require "rails_helper"
+require "csv"
 
 RSpec.describe WidgetsImporter, type: :model do
   let(:file_path) { "spec/files/local_json/widgets_import_test.json" }
@@ -37,7 +37,7 @@ RSpec.describe WidgetsImporter, type: :model do
       if indicator_data["classification"]["subgroup_default"] == true
         expect(Group.find_by(name_en: indicator_data["classification"]["group_en"]).default_subgroup).to eq(Subgroup.find_by(name_en: indicator_data["classification"]["subgroup_en"]))
       else
-        
+
         expect(Group.find_by(name_en: indicator_data["classification"]["group_en"]).default_subgroup).to_not eq(Subgroup.find_by(name_en: indicator_data["classification"]["subgroup_en"]))
       end
     end

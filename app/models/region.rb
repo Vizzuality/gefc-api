@@ -26,15 +26,13 @@ class Region < ApplicationRecord
   # Raises exception if there is no geometry.
   #
   def get_geometry_encoded
-    begin
-      #Rails.logger.info("Fetching region geometry_encoded here!")
-      Rails.cache.fetch([self, 'geometry_encoded']) do
-        encoded = RGeo::GeoJSON.encode(geometry.geometry)
-        encoded["tooltip_properties"] = geometry.tooltip_properties if geometry.class == GeometryPoint
-        encoded
-      end
-    rescue GeometryException => e
-      return nil
+    # Rails.logger.info("Fetching region geometry_encoded here!")
+    Rails.cache.fetch([self, "geometry_encoded"]) do
+      encoded = RGeo::GeoJSON.encode(geometry.geometry)
+      encoded["tooltip_properties"] = geometry.tooltip_properties if geometry.instance_of?(GeometryPoint)
+      encoded
     end
+  rescue GeometryException
+    nil
   end
 end

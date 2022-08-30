@@ -7,11 +7,11 @@ class SandkeysImporter
     puts "we are going to import #{data_hash.count} sandkeys"
 
     data_hash.each do |indicator_data|
-      puts "indicator name >> #{indicator_data['indicator_en']}"
+      puts "indicator name >> #{indicator_data["indicator_en"]}"
 
       # Indicator
       #
-      current_indicator = Indicator.where(name_en: indicator_data['indicator_en']).first
+      current_indicator = Indicator.where(name_en: indicator_data["indicator_en"]).first
       puts current_indicator.id
 
       current_sandkey = {

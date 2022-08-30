@@ -1,5 +1,4 @@
 ActiveAdmin.register Group do
-
   # See permitted parameters documentation:
   # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
   #
@@ -20,7 +19,7 @@ ActiveAdmin.register Group do
     column :name
     column :published
     column :description
-    column 'Header Image' do |group|
+    column "Header Image" do |group|
       group.header_image.filename
     end
     actions
@@ -31,7 +30,7 @@ ActiveAdmin.register Group do
       f.input :name
       f.input :published
       f.input :description
-      f.input :header_image, as: :file, input_html: { multiple: false }
+      f.input :header_image, as: :file, input_html: {multiple: false}
       if f.object.header_image.attached?
         span do
           image_tag(f.object.header_image)
@@ -40,5 +39,4 @@ ActiveAdmin.register Group do
     end
     f.actions
   end
-
 end

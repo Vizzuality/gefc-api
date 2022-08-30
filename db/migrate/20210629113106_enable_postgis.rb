@@ -17,8 +17,8 @@ class EnablePostgis < ActiveRecord::Migration[6.1]
 
   def version_13plus?
     # e.g. 11.5
-    version = ActiveRecord::Base.connection.select_value('show server_version')
-    major = version.split('.').first
+    version = ActiveRecord::Base.connection.select_value("show server_version")
+    major = version.split(".").first
     major.to_i >= 13
   end
 end

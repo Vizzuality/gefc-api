@@ -20,7 +20,7 @@ class Indicator < ApplicationRecord
   has_many :records
   has_many :indicator_widgets
   has_many :widgets, through: :indicator_widgets
-  has_one :default_indicator_widget, -> { by_default }, class_name: 'IndicatorWidget'
+  has_one :default_indicator_widget, -> { by_default }, class_name: "IndicatorWidget"
   has_one :default_widget, through: :default_indicator_widget, source: :widget
 
   delegate :group, to: :subgroup, allow_nil: true
@@ -48,10 +48,10 @@ class Indicator < ApplicationRecord
   def get_category_filters
     category_filters = {}
     category_1.each do |category_1|
-      category_filters[category_1] = records.
-        where(Record.current_locale_column(:category_1) => category_1).
-        pluck(Record.current_locale_column(:category_2)).
-        uniq
+      category_filters[category_1] = records
+        .where(Record.current_locale_column(:category_1) => category_1)
+        .pluck(Record.current_locale_column(:category_2))
+        .uniq
     end
     category_filters
   end
@@ -78,19 +78,19 @@ class Indicator < ApplicationRecord
   # Raises exception if there are no Regions.
   #
   def regions
-    regions = self.cached_regions
+    regions = cached_regions
     raise IndicatorRegionException.new("an error has ocurred:there are no regions for the indicator with id:#{id}") unless regions.any?
     regions
   end
 
   def cached_regions
-    cached_regions = Rails.cache.read("#{self.id}_cached_regions")
+    cached_regions = Rails.cache.read("#{id}_cached_regions")
     unless cached_regions.present?
-      cached_regions = Region.where(id: self.records.select(:region_id))
-      Rails.cache.write("#{self.id}_cached_regions", cached_regions, expires_in: 1.day) if cached_regions.present?
+      cached_regions = Region.where(id: records.select(:region_id))
+      Rails.cache.write("#{id}_cached_regions", cached_regions, expires_in: 1.day) if cached_regions.present?
     end
 
-    return cached_regions
+    cached_regions
   end
 
   # Returns an Array of unique Scenarios names for all indicator's records.
@@ -101,7 +101,7 @@ class Indicator < ApplicationRecord
     Scenario.where(id: records.select(:scenario_id).distinct).pluck(:id, Scenario.current_locale_column(:name)).each do |scenario|
       scenario_hash = {
         "id" => scenario[0],
-        'name' => scenario[1]
+        "name" => scenario[1]
       }
       scenarios_array.push(scenario_hash)
     end
@@ -110,46 +110,46 @@ class Indicator < ApplicationRecord
 
   def get_meta_object
     meta_object = {}
-    meta_object['default_visualization'] = if default_visualization_name.present?
-                                             default_visualization_name
-                                           else
-                                             visualization_types.first
-                                           end
+    meta_object["default_visualization"] = if default_visualization_name.present?
+      default_visualization_name
+    else
+      visualization_types.first
+    end
 
     visualization_types.each do |visualization_type|
       meta_object[visualization_type] = {}
       widget = Widget.where(name: visualization_type).first
-      records = widget.records.where(indicator_id: self.id)
+      records = widget.records.where(indicator_id: id)
       years = records.pluck(:year).uniq
-      meta_object[visualization_type]['year'] = years.sort
+      meta_object[visualization_type]["year"] = years.sort
       regions = []
       regions_ids_by_visualization = records.pluck(:region_id).uniq
       regions_ids_by_visualization.each do |region_id|
         region = {}
-        region['id'] = region_id
-        region['name_en'] = Region.find(region_id).name_en
-        region['name_cn'] = Region.find(region_id).name_cn
+        region["id"] = region_id
+        region["name_en"] = Region.find(region_id).name_en
+        region["name_cn"] = Region.find(region_id).name_cn
         regions.push(region)
       end
-      meta_object[visualization_type]['regions'] = regions
+      meta_object[visualization_type]["regions"] = regions
 
       units = []
       units_ids_by_visualization = records.pluck(:unit_id).uniq
       units_ids_by_visualization.each do |unit_id|
         next if unit_id.nil?
         unit = {}
-        unit['id'] = unit_id
-        unit['name_en'] = Unit.find(unit_id).name_en
-        unit['name_cn'] = Unit.find(unit_id).name_cn
+        unit["id"] = unit_id
+        unit["name_en"] = Unit.find(unit_id).name_en
+        unit["name_cn"] = Unit.find(unit_id).name_cn
         units.push(unit)
       end
-      meta_object[visualization_type]['units'] = units
+      meta_object[visualization_type]["units"] = units
 
       scenarios = []
       records.where.not(scenario: nil).each do |record|
         scenarios.push(record.scenario_info)
       end
-      meta_object[visualization_type]['scenarios'] = scenarios.uniq
+      meta_object[visualization_type]["scenarios"] = scenarios.uniq
     end
 
     meta_object
@@ -159,24 +159,24 @@ class Indicator < ApplicationRecord
   def meta_by_locale(locale)
     meta_by_locale = meta
     meta_by_locale.keys.each do |key|
-      next if key == 'default_visualization'
-      meta_by_locale[key]['regions'].each do |region|
-        if locale == 'cn' and region['name_cn'].present?
-          region['name'] = region['name_cn']
-        else
-          region['name'] = region['name_en'] if region['name_en'].present?
+      next if key == "default_visualization"
+      meta_by_locale[key]["regions"].each do |region|
+        if (locale == "cn") && region["name_cn"].present?
+          region["name"] = region["name_cn"]
+        elsif region["name_en"].present?
+          region["name"] = region["name_en"]
         end
-        region.delete('name_en')
-        region.delete('name_cn')
+        region.delete("name_en")
+        region.delete("name_cn")
       end
-      meta_by_locale[key]['units'].each do |unit|
-        if locale == 'cn' and unit['name_cn'].present?
-          unit['name'] = unit['name_cn']
-        else
-          unit['name'] = unit['name_en'] if unit['name_en'].present?
+      meta_by_locale[key]["units"].each do |unit|
+        if (locale == "cn") && unit["name_cn"].present?
+          unit["name"] = unit["name_cn"]
+        elsif unit["name_en"].present?
+          unit["name"] = unit["name_en"]
         end
-        unit.delete('name_en')
-        unit.delete('name_cn')
+        unit.delete("name_en")
+        unit.delete("name_cn")
       end
     end
     meta_by_locale
@@ -189,47 +189,47 @@ class Indicator < ApplicationRecord
 
   # TODO: Grappe is calling this method twice every time that is exposed
   def sandkey_by_locale(locale, year, unit, region)
-    if [year, unit, region].any?
-      sandkey_by_locale = sandkey_filter(year, unit, region)
+    sandkey_by_locale = if [year, unit, region].any?
+      sandkey_filter(year, unit, region)
     else
-      sandkey_by_locale = sandkey
+      sandkey
     end
 
     sandkey_by_locale["nodes"].each do |node|
-      if locale == 'cn' and node['name_cn'].present?
-        node['name'] = node['name_cn']
-      else
-        node['name'] = node['name_en'] if node['name_en'].present?
+      if (locale == "cn") && node["name_cn"].present?
+        node["name"] = node["name_cn"]
+      elsif node["name_en"].present?
+        node["name"] = node["name_en"]
       end
-      node.delete('name_en')
-      node.delete('name_cn')
+      node.delete("name_en")
+      node.delete("name_cn")
     end
 
     sandkey_by_locale["data"].each do |data|
-      if locale == 'cn' and data['region_cn'].present?
-        data['region'] = data['region_cn']
-      else
-        data['region'] = data['region_en'] if data['region_en'].present?
+      if (locale == "cn") && data["region_cn"].present?
+        data["region"] = data["region_cn"]
+      elsif data["region_en"].present?
+        data["region"] = data["region_en"]
       end
-      data.delete('region_en')
-      data.delete('region_cn')
+      data.delete("region_en")
+      data.delete("region_cn")
 
-      if locale == 'cn' and data['units_cn'].present?
-        data['units'] = data['units_cn']
-      else
-        data['units'] = data['units_en'] if data['units_en'].present?
+      if (locale == "cn") && data["units_cn"].present?
+        data["units"] = data["units_cn"]
+      elsif data["units_en"].present?
+        data["units"] = data["units_en"]
       end
-      data.delete('units_en')
-      data.delete('units_cn')
+      data.delete("units_en")
+      data.delete("units_cn")
 
-      data['links'].each do |link|
-        if locale == 'cn' and link['class_cn'].present?
-          link['class'] = link['class_cn']
-        else
-          link['class'] = link['class_en'] if link['class_en'].present?
+      data["links"].each do |link|
+        if (locale == "cn") && link["class_cn"].present?
+          link["class"] = link["class_cn"]
+        elsif link["class_en"].present?
+          link["class"] = link["class_en"]
         end
-        link.delete('class_en')
-        link.delete('class_cn')
+        link.delete("class_en")
+        link.delete("class_cn")
       end
     end
 
@@ -244,7 +244,7 @@ class Indicator < ApplicationRecord
 
     if year.present?
       sandkey_to_filter.each do |data|
-        if (data.with_indifferent_access['year'] == year)
+        if data.with_indifferent_access["year"] == year
           filtered_sandkey["data"].push(data)
         end
       end
@@ -257,7 +257,7 @@ class Indicator < ApplicationRecord
       end
 
       sandkey_to_filter.each do |data|
-        if (data.with_indifferent_access['units_en'] == unit or data.with_indifferent_access['units'] == unit)
+        if (data.with_indifferent_access["units_en"] == unit) || (data.with_indifferent_access["units"] == unit)
           filtered_sandkey["data"].push(data)
         end
       end
@@ -270,7 +270,7 @@ class Indicator < ApplicationRecord
       end
 
       sandkey_to_filter.each do |data|
-        if (data.with_indifferent_access['region_en'] == region or data.with_indifferent_access['region'] == region)
+        if (data.with_indifferent_access["region_en"] == region) || (data.with_indifferent_access["region"] == region)
           filtered_sandkey["data"].push(data)
         end
       end

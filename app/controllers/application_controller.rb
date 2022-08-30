@@ -7,5 +7,4 @@ class ApplicationController < ActionController::Base
   def access_denied(exception)
     redirect_to new_admin_user_session_path
   end
-
 end

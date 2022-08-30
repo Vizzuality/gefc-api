@@ -3,7 +3,10 @@ class AddSlugToIndicators < ActiveRecord::Migration[6.1]
     add_column :indicators, :slug, :string
     reversible do |dir|
       dir.up do
-        Indicator.all.each { |i| i.set_slug; i.save }
+        Indicator.all.each { |i|
+          i.set_slug
+          i.save
+        }
       end
     end
   end

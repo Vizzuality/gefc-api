@@ -2,7 +2,7 @@ module API
   module V1
     module FileGeneration
       extend ActiveSupport::Concern
-      require 'ox'
+      require "ox"
 
       included do
         helpers do

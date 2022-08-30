@@ -12,8 +12,8 @@ class IndicatorWidget < ApplicationRecord
   private
 
   def update_visualization_types
-    self.indicator.visualization_types = self.indicator.widgets_list
-    self.indicator.default_visualization_name = self.widget.name if self.by_default?
-    self.indicator.save!
+    indicator.visualization_types = indicator.widgets_list
+    indicator.default_visualization_name = widget.name if by_default?
+    indicator.save!
   end
 end

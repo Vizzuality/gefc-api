@@ -16,13 +16,12 @@ module API
       def call(entity_attributes)
         lookup_keys = lookup_attributes.map { |a| entity_attributes[a] }
         entity = lookup(*lookup_keys)
-        unless entity
-          entity = create(entity_attributes)
-          add(entity, *lookup_keys)
+        entity = if entity
+          update(entity, entity_attributes)
         else
-          entity = update(entity, entity_attributes)
-          add(entity, *lookup_keys)
+          create(entity_attributes)
         end
+        add(entity, *lookup_keys)
         entity
       end
 

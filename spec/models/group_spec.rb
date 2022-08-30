@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Group, type: :model do
   it "is valid with valid attributes" do
@@ -20,6 +20,6 @@ RSpec.describe Group, type: :model do
   it "has a valid slug" do
     group = create(:group)
 
-    expect(group.slug).to eq(group.name_en.downcase.gsub(/[[:space:]]/, '-'))
+    expect(group.slug).to eq(group.name_en.downcase.gsub(/[[:space:]]/, "-"))
   end
 end

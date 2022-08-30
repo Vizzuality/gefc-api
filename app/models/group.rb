@@ -4,7 +4,7 @@ class Group < ApplicationRecord
   validates_uniqueness_of :name_en
   validates_presence_of :name_en
   has_many :subgroups
-  has_one :default_subgroup, -> { by_default }, class_name: 'Subgroup'
+  has_one :default_subgroup, -> { by_default }, class_name: "Subgroup"
   has_one_attached :header_image
   translates :name, :description, :subtitle
 
@@ -17,9 +17,7 @@ class Group < ApplicationRecord
   end
 
   def header_image_url
-    if self.header_image.attachment
-      self.header_image.attachment.service_url
-    end
+    header_image.attachment&.service_url
   end
 
   def cached_subgroups

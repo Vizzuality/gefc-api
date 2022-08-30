@@ -20,7 +20,7 @@ module API
         return entity unless attributes_for_update.any?
         begin
           entity.update(attributes_for_update)
-        rescue RGeo::Error::InvalidGeometry => e
+        rescue RGeo::Error::InvalidGeometry
           # no-op
         end
         entity
