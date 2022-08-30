@@ -2,7 +2,7 @@ module API
   module V1
     class FindOrUpsertSubgroup < FindOrUpsertEntity
       def call(attributes, group)
-        super(attributes.merge({group_id: group.id}))
+        super(attributes.merge({ group_id: group.id }))
       end
 
       def reload

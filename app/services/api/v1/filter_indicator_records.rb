@@ -7,7 +7,7 @@ module API
         filter_by_region(params['region'])
         filter_by_unit(params['unit'])
         filter_by_category(params['category_1'])
-        filter_by_year_or_range(params['year'],params['start_year'], params['end_year'])
+        filter_by_year_or_range(params['year'], params['start_year'], params['end_year'])
       end
 
       def call

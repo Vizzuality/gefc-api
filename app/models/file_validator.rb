@@ -1,6 +1,8 @@
 class FileValidator
   class FileValidatorException < StandardError; end
+
   class PathException < FileValidatorException; end
+
   class ExtensionException < FileValidatorException; end
 
   def initialize(file_path)

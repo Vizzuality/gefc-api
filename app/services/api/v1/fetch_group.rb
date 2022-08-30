@@ -1,8 +1,7 @@
 module API
   module V1
     class FetchGroup
-      def initialize()
-      end
+      def initialize() end
 
       def all
         Group.all.order(:name_en)

@@ -1,27 +1,27 @@
 class Subgroup < ApplicationRecord
-    include Slugable
+  include Slugable
 
-    validates_uniqueness_of :by_default, scope: :group_id, if: :by_default?
-    validates_uniqueness_of :name_en
-    validates_presence_of :name_en
-    
-    belongs_to :group
-    has_many :indicators
-    has_one :default_indicator, -> { by_default }, class_name: 'Indicator'
+  validates_uniqueness_of :by_default, scope: :group_id, if: :by_default?
+  validates_uniqueness_of :name_en
+  validates_presence_of :name_en
 
-    scope :by_default, -> { where(by_default: true) }
+  belongs_to :group
+  has_many :indicators
+  has_one :default_indicator, -> { by_default }, class_name: 'Indicator'
 
-    translates :name, :description
+  scope :by_default, -> { where(by_default: true) }
 
-    def self.find_by_id_or_slug!(slug_or_id, filters)
-        API::V1::FetchSubgroup.new.by_id_or_slug(slug_or_id, filters)
-    end
+  translates :name, :description
 
-    def cached_default_indicator
-        API::V1::FetchIndicator.new.default_by_subgroup(self)
-    end
-    
-    def cached_indicators
-        API::V1::FetchIndicator.new.by_subgroup(self)
-    end
+  def self.find_by_id_or_slug!(slug_or_id, filters)
+    API::V1::FetchSubgroup.new.by_id_or_slug(slug_or_id, filters)
+  end
+
+  def cached_default_indicator
+    API::V1::FetchIndicator.new.default_by_subgroup(self)
+  end
+
+  def cached_indicators
+    API::V1::FetchIndicator.new.by_subgroup(self)
+  end
 end

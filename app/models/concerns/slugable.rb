@@ -16,6 +16,6 @@ module Slugable
   end
 
   def sanitaize_name(name)
-    name.downcase.strip.gsub(/[[:space:]]/, '-').gsub(/[^\w-]/,'')
+    name.downcase.strip.gsub(/[[:space:]]/, '-').gsub(/[^\w-]/, '')
   end
 end

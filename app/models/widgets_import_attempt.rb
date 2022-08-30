@@ -1,6 +1,6 @@
 class WidgetsImportAttempt < ApplicationRecord
   after_create_commit :import
-  
+
   has_one_attached :original_file
 
   def import

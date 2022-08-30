@@ -1,6 +1,6 @@
 class GroupsImportAttempt < ApplicationRecord
   after_create_commit :import_groups
-  
+
   has_one_attached :original_file
 
   def import_groups

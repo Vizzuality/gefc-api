@@ -21,6 +21,6 @@ ActiveAdmin.register GroupsImportAttempt do
     f.inputs do
       f.input :original_file, as: :file
     end
-    f.actions         # adds the 'Submit' and 'Cancel' buttons
+    f.actions # adds the 'Submit' and 'Cancel' buttons
   end
 end

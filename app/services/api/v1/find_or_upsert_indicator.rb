@@ -2,7 +2,7 @@ module API
   module V1
     class FindOrUpsertIndicator < FindOrUpsertEntity
       def call(attributes, subgroup)
-        super(attributes.merge({subgroup_id: subgroup.id}))
+        super(attributes.merge({ subgroup_id: subgroup.id }))
       end
 
       def reload
