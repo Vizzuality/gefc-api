@@ -27,23 +27,23 @@ class GroupsImporter
 
       row_data = row.to_hash.transform_keys! { |key| key.to_s.downcase }
       next unless valid_row?(row_data, index)
-      
+
       puts "row >> #{index + 2}"
 
-      group_attributes = {name_en: row_data['group_en'], name_cn: row_data['group_cn']}
+      group_attributes = { name_en: row_data['group_en'], name_cn: row_data['group_cn'] }
       current_group = API::V1::FindOrUpsertGroup.call(group_attributes)
-      subgroup_attributes = {name_en: row_data['subgroup_en'], name_cn: row_data['subgroup_cn']}
+      subgroup_attributes = { name_en: row_data['subgroup_en'], name_cn: row_data['subgroup_cn'] }
       current_subgroup = API::V1::FindOrUpsertSubgroup.call(subgroup_attributes, current_group)
-      indicator_attributes = {name_en: row_data['indicator_en'], name_cn: row_data['indicator_cn']}
+      indicator_attributes = { name_en: row_data['indicator_en'], name_cn: row_data['indicator_cn'] }
       current_indicator = API::V1::FindOrUpsertIndicator.call(indicator_attributes, current_subgroup)
       unit_name = row_data['units_en']
       if unit_name.blank?
         puts "no unit here"
         current_unit = nil
       else
-        current_unit = API::V1::FindOrUpsertUnit.call({name_en: unit_name})
+        current_unit = API::V1::FindOrUpsertUnit.call({ name_en: unit_name })
       end
-      
+
       region_attributes = {
         name_en: row_data['region_en']&.strip,
         name_cn: row_data['region_cn'],
@@ -54,7 +54,7 @@ class GroupsImporter
       if scenario_name.blank?
         current_scenario = nil
       else
-        current_scenario = API::V1::FindOrUpsertScenario.call({name_en: scenario_name, name_cn: row_data['scenario_cn']})
+        current_scenario = API::V1::FindOrUpsertScenario.call({ name_en: scenario_name, name_cn: row_data['scenario_cn'] })
       end
       # Bulk is better.
       #
@@ -76,11 +76,11 @@ class GroupsImporter
         puts "Records count >> #{Record.all.count}"
         puts "Records indicator >> #{current_indicator.slug}"
 
-        widgets.keys.select{ |k| row_data[k] == 1 }.each do |k|
+        widgets.keys.select { |k| row_data[k] == 1 }.each do |k|
           RecordWidget.create!(widget: widgets[k], record: current_record)
           # TO DO Shall be uniq
         end
-        
+
         current_record.visualization_types = current_record.widgets_list
         current_record.save!
 
@@ -115,10 +115,10 @@ class GroupsImporter
 
   # Validates that values with headers containing '_en' are not Chinesse characters.
   def valid_row?(row_data, index)
-    english_columns = row_data.select{ |key, value| key.include?('_en') }
+    english_columns = row_data.select { |key, value| key.include?('_en') }
 
     unless english_columns.values.join('').gsub(/\s+/, "").scan(/\p{Han}/).count == 0
-      puts "Error in row ##{index + 2} >> #{english_columns.values.join('|').gsub(/\s+/, "")}" 
+      puts "Error in row ##{index + 2} >> #{english_columns.values.join('|').gsub(/\s+/, "")}"
       return false
     else
       return true

@@ -40,5 +40,5 @@ ActiveAdmin.register Group do
     end
     f.actions
   end
-  
+
 end

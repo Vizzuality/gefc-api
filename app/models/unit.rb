@@ -1,3 +1,3 @@
 class Unit < ApplicationRecord
-    translates :name
+  translates :name
 end

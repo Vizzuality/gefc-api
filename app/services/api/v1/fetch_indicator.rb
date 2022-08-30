@@ -1,8 +1,7 @@
 module API
   module V1
     class FetchIndicator
-      def initialize()
-      end
+      def initialize() end
 
       def all
         Indicator.all.order(:name_en)
@@ -19,7 +18,7 @@ module API
       def records(indicator, params = {})
         if params.any?
           filter = FilterIndicatorRecords.new(indicator, params.slice(:category_1, :scenario, :region, :unit, :year, :start_year, :end_year, :visualization))
-					records = filter.call.includes(:widgets, :unit, :region, :scenario).order(year: :desc)
+          records = filter.call.includes(:widgets, :unit, :region, :scenario).order(year: :desc)
         else
           indicator.records
         end

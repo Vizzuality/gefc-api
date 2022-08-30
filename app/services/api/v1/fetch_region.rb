@@ -1,8 +1,7 @@
 module API
   module V1
     class FetchRegion
-      def initialize()
-      end
+      def initialize() end
 
       def all
         Region.all

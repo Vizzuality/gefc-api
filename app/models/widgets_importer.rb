@@ -16,13 +16,14 @@ class WidgetsImporter
     puts "we are going to import #{data_hash.count} indicators if everything works fine"
 
     data_hash.each do |indicator_data|
-      puts "indicators count >> #{Indicator.count}"
+      puts ''
+      puts "=== Indicator number: #{Indicator.count} ==="
+      puts "Indicator name (English) #{indicator_data['indicator_en']}"
 
       # Indicator
-      #
-      group_attributes = {name_en: indicator_data['classification']['group_en']}
+      group_attributes = { name_en: indicator_data['classification']['group_en'] }
       current_group = API::V1::FindOrUpsertGroup.call(group_attributes)
-      subgroup_attributes = {name_en: indicator_data['classification']['subgroup_en']}
+      subgroup_attributes = { name_en: indicator_data['classification']['subgroup_en'] }
       subgroup_attributes['by_default'] = indicator_data['classification']['subgroup_default'] unless indicator_data['default'].nil?
       current_subgroup = API::V1::FindOrUpsertSubgroup.call(subgroup_attributes, current_group)
       indicator_attributes = {
@@ -36,12 +37,11 @@ class WidgetsImporter
       indicator_attributes['by_default'] = indicator_data['default'] unless indicator_data['default'].nil?
       current_indicator = API::V1::FindOrUpsertIndicator.call(indicator_attributes, current_subgroup)
 
-      puts current_indicator.data_source_en
-      puts current_indicator.data_source_cn
-      puts current_indicator.download_privilege
+      puts "Data source (english): #{current_indicator.data_source_en}"
+      puts "Data source (chinese): #{current_indicator.data_source_cn}"
+      puts "Download privilege: #{current_indicator.download_privilege}"
 
-      #Widgets
-      #
+      # Widgets
       indicator_data['widget'].each do |widget|
         by_default = (indicator_data['default_widget'] == widget)
         widget = API::V1::FindOrUpsertWidget.call(name: widget)
