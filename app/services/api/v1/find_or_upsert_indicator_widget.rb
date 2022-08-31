@@ -34,7 +34,8 @@ module API
         end
         IndicatorWidget.transaction do
           current_default&.update_attribute(:by_default, false)
-          entity.update(attributes_for_update)
+          entity.assign_attributes(attributes_for_update)
+          entity.save if entity.changed?
         end
         entity
       end
