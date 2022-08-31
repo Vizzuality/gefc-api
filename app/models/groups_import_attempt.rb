@@ -5,6 +5,6 @@ class GroupsImportAttempt < ApplicationRecord
 
   def import_groups
     file_path = ActiveStorage::Blob.service.path_for(original_file.key)
-    GroupsImporter.new.import_from_csv(file_path)
+    GroupsImporter.new.import_from_file(file_path)
   end
 end
