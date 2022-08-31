@@ -43,7 +43,9 @@ module API
         attributes_for_update = attributes.except(*lookup_attributes)
         return entity unless attributes_for_update.any?
 
-        entity.update(attributes_for_update)
+        entity.assign_attributes(attributes_for_update)
+        entity.save if entity.changed?
+
         entity
       end
 

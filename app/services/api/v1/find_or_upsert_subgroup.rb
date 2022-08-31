@@ -16,7 +16,7 @@ module API
       private
 
       def lookup_attributes
-        [:group_id, :name_en, :name_cn]
+        [:group_id, :name_en]
       end
 
       def create(attributes)
@@ -38,7 +38,8 @@ module API
         end
         Subgroup.transaction do
           current_default&.update_attribute(:by_default, false)
-          entity.update(attributes_for_update)
+          entity.assign_attributes(attributes_for_update)
+          entity.save if entity.changed?
         end
         entity
       end
