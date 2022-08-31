@@ -19,7 +19,8 @@ module API
         attributes_for_update = attributes.except(*lookup_attributes)
         return entity unless attributes_for_update.any?
         begin
-          entity.update(attributes_for_update)
+          entity.assign_attributes(attributes_for_update)
+          entity.save if entity.changed?
         rescue RGeo::Error::InvalidGeometry
           # no-op
         end
