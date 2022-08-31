@@ -9,11 +9,11 @@ RSpec.describe GroupsImporter, type: :model do
   it "creates exact number of records for a valid csv" do
     arr_of_rows = CSV.read(file_path, headers: true)
 
-    expect { GroupsImporter.new.import_from_csv(file_path) }.to change { Record.all.count }.by(arr_of_rows.count)
+    expect { GroupsImporter.new.import_from_file(file_path) }.to change { Record.all.count }.by(arr_of_rows.count)
   end
 
   it "creates exact number of groups for a valid csv" do
-    expect { GroupsImporter.new.import_from_csv(file_path) }.to change { Group.all.count }.by(1)
+    expect { GroupsImporter.new.import_from_file(file_path) }.to change { Group.all.count }.by(1)
   end
 
   # Attention! we are using a csv with 9 rows with line set to true.
@@ -22,7 +22,7 @@ RSpec.describe GroupsImporter, type: :model do
   it "establish a relationship between record and the assigned widgets" do
     arr_of_rows = CSV.read(file_path, headers: true)
 
-    expect { GroupsImporter.new.import_from_csv(file_path) }.to change {
+    expect { GroupsImporter.new.import_from_file(file_path) }.to change {
       line = Widget.find_by_name("line")
       RecordWidget.where(widget: line).count
     }.by(arr_of_rows.count)
@@ -35,15 +35,15 @@ RSpec.describe GroupsImporter, type: :model do
     choropleth = create(:widget, name: "choropleth")
     non_assigned_widgets = [pie, chart, choropleth]
 
-    expect { GroupsImporter.new.import_from_csv(file_path) }.to_not change { RecordWidget.where(widget: non_assigned_widgets).count }
+    expect { GroupsImporter.new.import_from_file(file_path) }.to_not change { RecordWidget.where(widget: non_assigned_widgets).count }
   end
 
   it "creates two subgroups" do
-    expect { GroupsImporter.new.import_from_csv(file_path) }.to change { Subgroup.count }.by(2)
+    expect { GroupsImporter.new.import_from_file(file_path) }.to change { Subgroup.count }.by(2)
   end
 
   it "establish a relationship between group and subgroup" do
-    GroupsImporter.new.import_from_csv(file_path)
+    GroupsImporter.new.import_from_file(file_path)
     Subgroup.all.each do |subgroup|
       expect(subgroup.group.present?).to eq(true)
       expect(subgroup.by_default).to eq(false)
@@ -51,11 +51,11 @@ RSpec.describe GroupsImporter, type: :model do
   end
 
   it "creates 3 indicators" do
-    expect { GroupsImporter.new.import_from_csv(file_path) }.to change { Indicator.count }.by(3)
+    expect { GroupsImporter.new.import_from_file(file_path) }.to change { Indicator.count }.by(3)
   end
 
   it "establish a relationship between subgroup and indicator" do
-    GroupsImporter.new.import_from_csv(file_path)
+    GroupsImporter.new.import_from_file(file_path)
     Indicator.all.each do |indicator|
       expect(indicator.subgroup.present?).to eq(true)
       expect(indicator.by_default).to eq(false)

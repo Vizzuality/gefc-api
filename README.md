@@ -26,7 +26,9 @@ After running the test suit, you will find a coverage report at `coverage/index.
 This project includes multiple `rake` tasks to handle different data import and transformation tasks.
 
 - `widgets:import_json`: Imports a .json file containing widget/indicator data
-- `indicators:populate_meta`: For existing indicators, 
+- `indicators:populate_meta`: For existing indicators, <tbd>
+- `groups:import_csv_file`: Imports a .csv file containing Records. Creates associated Groups, Subgroups, Units, Regions, Scenarios, Widgets, and underlying associations. Clears all these data types prior to import. Requires a `file_name` env var with the full path to the .csv file.
+- `groups:import_csv_folder`: Similar to `groups:import_csv_file`, but instead imports all .csv files found within a given folder. Requires a `folder_name` env var with the full path to the folder containing the .csv files.
 
 ## Authentication
 

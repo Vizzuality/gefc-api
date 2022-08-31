@@ -3,17 +3,37 @@ require "csv"
 class GroupsImporter
   class InvalidFileException < StandardError; end
 
+  def import_from_folder(folder_path)
+    clear_all
+    RecordWidget.skip_callback(:create, :after, :update_visualization_types)
+
+    records = Dir.glob("#{folder_path}/**/*.csv")
+    records.each do |file_path|
+      import_from_csv(file_path)
+    end
+
+    RecordWidget.set_callback(:create, :after, :update_visualization_types)
+    puts "Records count: #{Record.all.count}"
+  end
+
+  def import_from_file(file_path)
+    clear_all
+    RecordWidget.skip_callback(:create, :after, :update_visualization_types)
+
+    import_from_csv(file_path)
+
+    RecordWidget.set_callback(:create, :after, :update_visualization_types)
+    puts "Records count: #{Record.all.count}"
+  end
+
   # TO DO Use the FileValidator and handle_invalid_file_exception
   #
   # Creates a new Record in the db
   # for each row of the csv in the file_path.
   # Creates a relationship between Record and Widgets.
   # params: file_path, String.
-  #
   def import_from_csv(file_path)
-    clear_all
-    RecordWidget.skip_callback(:create, :after, :update_visualization_types)
-    puts "starting with #{Indicator.count} indicators."
+    puts "Importing #{file_path}..."
 
     # Widgets:
     #
@@ -37,19 +57,23 @@ class GroupsImporter
         indicator_attributes = { name_en: row_data["indicator_en"], name_cn: row_data["indicator_cn"] }
         current_indicator = API::V1::FindOrUpsertIndicator.call(indicator_attributes, current_subgroup)
         unit_name = row_data["units_en"]
-        if unit_name.blank?
-          puts "no unit here"
-          current_unit = nil
-        else
-          current_unit = API::V1::FindOrUpsertUnit.call({ name_en: unit_name })
-        end
+        current_unit = if unit_name.blank?
+                         nil
+                       else
+                         API::V1::FindOrUpsertUnit.call({ name_en: unit_name })
+                       end
 
         region_attributes = {
           name_en: row_data["region_en"]&.strip,
           name_cn: row_data["region_cn"],
           region_type: row_data["region_type"]&.downcase&.split(" ")&.join("_")&.to_sym
         }
-        current_region = API::V1::FindOrUpsertRegion.call(region_attributes)
+        begin
+          current_region = API::V1::FindOrUpsertRegion.call(region_attributes)
+        rescue ArgumentError
+          puts "Invalid region values: #{region_attributes.values.join("|")}"
+          next
+        end
         scenario_name = row_data["scenario_en"]
         current_scenario = if scenario_name.blank?
                              nil
@@ -86,11 +110,10 @@ class GroupsImporter
       end
     end
 
-    RecordWidget.set_callback(:create, :after, :update_visualization_types)
-    puts "Records count: #{Record.all.count}"
   end
 
   def clear_all
+    puts "Clearing data prior to import"
     Record.delete_all
     RecordWidget.delete_all
     Group.delete_all
@@ -100,6 +123,7 @@ class GroupsImporter
     Region.delete_all
     Scenario.delete_all
     Widget.delete_all
+    puts "Data cleared!"
     reset_dictionaries
   end
 
@@ -119,7 +143,7 @@ class GroupsImporter
     if english_columns.values.join("").gsub(/\s+/, "").scan(/\p{Han}/).count == 0
       true
     else
-      puts "Error in row ##{index + 2} >> #{english_columns.values.join("|").gsub(/\s+/, "")}"
+      puts "Error in row ##{index + 2}: chinese characters found where only latin characters are expected >> #{english_columns.values.join("|").gsub(/\s+/, "")}"
       false
     end
   end

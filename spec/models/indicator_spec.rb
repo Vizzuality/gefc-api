@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Indicator, type: :model do
-  it "returns an array of records category without repited elements" do
+  it "returns an array of records category without repeated elements" do
     indicator = create(:indicator)
     record_1 = create(:record, indicator: indicator, category_1: "category one")
     create(:record, indicator: indicator, category_1: "category one")
