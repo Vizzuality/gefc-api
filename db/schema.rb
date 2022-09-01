@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_01_075740) do
+ActiveRecord::Schema.define(version: 2022_09_01_110800) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -160,6 +160,7 @@ ActiveRecord::Schema.define(version: 2022_09_01_075740) do
     t.json "meta"
     t.text "sankey"
     t.index ["name_en", "name_cn", "subgroup_id"], name: "index_indicators_on_name_en_and_name_cn_and_subgroup_id", unique: true
+    t.index ["slug"], name: "index_indicators_on_slug", unique: true
     t.index ["subgroup_id", "by_default"], name: "index_indicators_on_subgroup_id_and_by_default", unique: true, where: "by_default"
     t.index ["subgroup_id"], name: "index_indicators_on_subgroup_id"
     t.index ["widget_id"], name: "index_indicators_on_widget_id"
@@ -276,6 +277,7 @@ ActiveRecord::Schema.define(version: 2022_09_01_075740) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "indicator_widgets", "indicators"
   add_foreign_key "indicator_widgets", "widgets"
+  add_foreign_key "indicators", "subgroups"
   add_foreign_key "record_widgets", "records"
   add_foreign_key "record_widgets", "widgets"
   add_foreign_key "records", "indicators"
