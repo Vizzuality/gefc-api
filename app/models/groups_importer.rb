@@ -50,13 +50,13 @@ class GroupsImporter
         row_data = row.to_hash.transform_keys! { |key| key.to_s.downcase }
         next unless valid_row?(row_data, index)
 
-        group_attributes = { name_en: row_data["group_en"], name_cn: row_data["group_cn"] }
+        group_attributes = { name_en: row_data["group_en"]&.strip, name_cn: row_data["group_cn"]&.strip }
         current_group = API::V1::FindOrUpsertGroup.call(group_attributes)
-        subgroup_attributes = { group_id: current_group.id, name_en: row_data["subgroup_en"], name_cn: row_data["subgroup_cn"] }
+        subgroup_attributes = { group_id: current_group.id, name_en: row_data["subgroup_en"]&.strip, name_cn: row_data["subgroup_cn"]&.strip }
         current_subgroup = API::V1::FindOrUpsertSubgroup.call(subgroup_attributes, current_group)
-        indicator_attributes = { name_en: row_data["indicator_en"], name_cn: row_data["indicator_cn"] }
+        indicator_attributes = { name_en: row_data["indicator_en"]&.strip, name_cn: row_data["indicator_cn"]&.strip }
         current_indicator = API::V1::FindOrUpsertIndicator.call(indicator_attributes, current_subgroup)
-        unit_name = row_data["units_en"]
+        unit_name = row_data["units_en"]&.strip
         current_unit = if unit_name.blank?
                          nil
                        else
@@ -65,7 +65,7 @@ class GroupsImporter
 
         region_attributes = {
           name_en: row_data["region_en"]&.strip,
-          name_cn: row_data["region_cn"],
+          name_cn: row_data["region_cn"]&.strip,
           region_type: row_data["region_type"]&.downcase&.split(" ")&.join("_")&.to_sym
         }
         begin
@@ -74,23 +74,23 @@ class GroupsImporter
           puts "Invalid region values: #{region_attributes.values.join("|")}"
           next
         end
-        scenario_name = row_data["scenario_en"]
+        scenario_name = row_data["scenario_en"]&.strip
         current_scenario = if scenario_name.blank?
                              nil
                            else
-                             API::V1::FindOrUpsertScenario.call({ name_en: scenario_name, name_cn: row_data["scenario_cn"] })
+                             API::V1::FindOrUpsertScenario.call({ name_en: scenario_name, name_cn: row_data["scenario_cn"]&.strip })
                            end
         # Bulk is better.
         #
         unless row_data["value"].nil? || row_data["value"].blank?
           current_record = Record.new(
             indicator: current_indicator,
-            category_1_en: row_data["category_1_en"],
-            category_2_en: row_data["category_2_en"],
-            category_3_en: row_data["category_3_en"],
-            category_1_cn: row_data["category_1_cn"],
-            category_2_cn: row_data["category_2_cn"],
-            category_3_cn: row_data["category_3_cn"],
+            category_1_en: row_data["category_1_en"]&.strip,
+            category_2_en: row_data["category_2_en"]&.strip,
+            category_3_en: row_data["category_3_en"]&.strip,
+            category_1_cn: row_data["category_1_cn"]&.strip,
+            category_2_cn: row_data["category_2_cn"]&.strip,
+            category_3_cn: row_data["category_3_cn"]&.strip,
             region: current_region,
             unit: current_unit,
             value: row_data["value"],
@@ -114,12 +114,12 @@ class GroupsImporter
 
   def clear_all
     puts "Clearing data prior to import"
-    Record.delete_all
     RecordWidget.delete_all
+    IndicatorWidget.delete_all
+    Record.delete_all
+    Indicator.delete_all
     Subgroup.delete_all
     Group.delete_all
-    IndicatorWidget.delete_all
-    Indicator.delete_all
     Unit.delete_all
     Region.delete_all
     Scenario.delete_all
