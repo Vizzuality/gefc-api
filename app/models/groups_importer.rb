@@ -7,7 +7,7 @@ class GroupsImporter
     clear_all
     RecordWidget.skip_callback(:create, :after, :update_visualization_types)
 
-    records = Dir.glob("#{folder_path}/**/*.csv")
+    records = Dir.glob("#{folder_path}/*.csv")
     records.each do |file_path|
       import_from_csv(file_path)
     end
@@ -116,8 +116,9 @@ class GroupsImporter
     puts "Clearing data prior to import"
     Record.delete_all
     RecordWidget.delete_all
-    Group.delete_all
     Subgroup.delete_all
+    Group.delete_all
+    IndicatorWidget.delete_all
     Indicator.delete_all
     Unit.delete_all
     Region.delete_all
