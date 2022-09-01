@@ -5,7 +5,7 @@ API for Green Energy China Platform.
 ## System dependencies
 
 - Ruby v3.0.0
-- PostgreSQL v12
+- PostgreSQL v14 + PostGIS
 - Memcached
 
 ## Configuration
