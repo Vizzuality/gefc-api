@@ -1,4 +1,4 @@
-env: 
+env:
   POSTGRES_DB: gefc_api_test
   POSTGRES_PASSWORD: postgres
   POSTGRES_USER: postgres
@@ -6,7 +6,7 @@ env:
   LOCAL_FILES_PATH: /spec/files/local_files/
   DOWNLOADS_PATH: /spec/files/downloads/
 
-  
+
 name: Tests
 
 on: [push, workflow_dispatch]
@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-20.04
     services:
       postgres:
-        image: postgis/postgis:12-master
+        image: postgis/postgis:14-master
         ports:
           - 5432:5432
         env:
