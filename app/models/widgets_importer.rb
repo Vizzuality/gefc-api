@@ -18,6 +18,8 @@ class WidgetsImporter
     puts "Data imported successfully"
   end
 
+  private
+
   # TO DO Use the FileValidator and handle_invalid_file_exception
   #
   # Creates Group, Subgroup and Indicator in the db if they don't exist
@@ -50,10 +52,16 @@ class WidgetsImporter
           data_source_cn: indicator_data["data_source_cn"]&.strip,
           description_en: indicator_data["description_en"]&.strip,
           description_cn: indicator_data["description_cn"]&.strip,
-          download_privilege: indicator_data["download_privilege"]
+          download_privilege: indicator_data["download_privilege"],
+          subgroup_id: current_subgroup.id
         }
         indicator_attributes["by_default"] = indicator_data["default"] unless indicator_data["default"].nil?
-        current_indicator = API::V1::FindOrUpsertIndicator.call(indicator_attributes, current_subgroup)
+        begin
+          current_indicator = API::V1::FindOrUpsertIndicator.call(indicator_attributes, false)
+        rescue
+          puts ">> Could not find indicator #{indicator_attributes[:name_en]} for subgroups #{current_subgroup[:name_en]}"
+          next
+        end
 
         # Widgets
         indicator_data["widget"].each do |widget|

@@ -1,7 +1,7 @@
 namespace :indicators do
   desc "populate_extra_info"
   task populate_extra_info: :environment do
-    Indicator.all.each do |indicator|
+    Parallel.map(Indicator.all) do |indicator|
       puts indicator.id
       indicator.region_ids = Region.where(id: indicator.records.select(:region_id)).pluck(:id)
       indicator.visualization_types = indicator.widgets_list
@@ -16,7 +16,7 @@ namespace :indicators do
   end
   desc "populate_meta"
   task populate_meta: :environment do
-    Indicator.all.each do |indicator|
+    Parallel.map(Indicator.all) do |indicator|
       next if indicator.visualization_types.include?("sankey")
       puts "Recalculating metadata for indicator #{indicator.name_en}"
       indicator.meta = indicator.get_meta_object
