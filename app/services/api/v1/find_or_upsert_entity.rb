@@ -11,18 +11,25 @@ module API
       class << self
         delegate :call, to: :instance
         delegate :reload, to: :instance
+        delegate :all, to: :instance
       end
 
-      def call(entity_attributes)
+      def call(entity_attributes, create_if_not_exists = true)
         lookup_keys = lookup_attributes.map { |a| entity_attributes[a] }
         entity = lookup(*lookup_keys)
         entity = if entity
-          update(entity, entity_attributes)
-        else
-          create(entity_attributes)
-        end
+                   update(entity, entity_attributes)
+                 elsif create_if_not_exists
+                   create(entity_attributes)
+                 else
+                   raise StandardError.new "Could not find entity with provided attributes, and create_if_not_exists=false"
+                 end
         add(entity, *lookup_keys)
         entity
+      end
+
+      def all
+        @dict
       end
 
       # @abstract

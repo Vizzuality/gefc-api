@@ -443,6 +443,7 @@ DEPENDENCIES
   memory_profiler
   mimemagic (= 0.3.5)!
   ox
+  parallel
   pg (~> 1.1)
   puma (~> 5.0)
   rack-cors

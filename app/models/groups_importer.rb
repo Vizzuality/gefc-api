@@ -26,6 +26,15 @@ class GroupsImporter
     puts "Records count: #{Record.all.count}"
   end
 
+  private
+
+  def create_widgets
+    API::V1::FindOrUpsertWidget.call(name: "pie")
+    API::V1::FindOrUpsertWidget.call(name: "line")
+    API::V1::FindOrUpsertWidget.call(name: "bar")
+    API::V1::FindOrUpsertWidget.call(name: "choropleth")
+  end
+
   # TO DO Use the FileValidator and handle_invalid_file_exception
   #
   # Creates a new Record in the db
@@ -35,14 +44,6 @@ class GroupsImporter
   def import_from_csv(file_path)
     puts "Importing #{file_path}..."
 
-    # Widgets:
-    #
-    widgets = {
-      "pie" => API::V1::FindOrUpsertWidget.call(name: "pie"),
-      "line" => API::V1::FindOrUpsertWidget.call(name: "line"),
-      "bar" => API::V1::FindOrUpsertWidget.call(name: "bar"),
-      "choropleth" => API::V1::FindOrUpsertWidget.call(name: "choropleth")
-    }
     ActiveRecord::Base.transaction do
       CSV.foreach(file_path, headers: true, converters: :numeric).with_index do |row, index|
         puts "Processing index #{index}..." if index % 100 == 0
@@ -50,12 +51,14 @@ class GroupsImporter
         row_data = row.to_hash.transform_keys! { |key| key.to_s.downcase }
         next unless valid_row?(row_data, index)
 
+        widgets = API::V1::FindOrUpsertWidget.all
+
         group_attributes = { name_en: row_data["group_en"]&.strip, name_cn: row_data["group_cn"]&.strip }
         current_group = API::V1::FindOrUpsertGroup.call(group_attributes)
         subgroup_attributes = { group_id: current_group.id, name_en: row_data["subgroup_en"]&.strip, name_cn: row_data["subgroup_cn"]&.strip }
         current_subgroup = API::V1::FindOrUpsertSubgroup.call(subgroup_attributes, current_group)
-        indicator_attributes = { name_en: row_data["indicator_en"]&.strip, name_cn: row_data["indicator_cn"]&.strip }
-        current_indicator = API::V1::FindOrUpsertIndicator.call(indicator_attributes, current_subgroup)
+        indicator_attributes = { name_en: row_data["indicator_en"]&.strip, name_cn: row_data["indicator_cn"]&.strip, subgroup_id: current_subgroup.id }
+        current_indicator = API::V1::FindOrUpsertIndicator.call(indicator_attributes)
         unit_name = row_data["units_en"]&.strip
         current_unit = if unit_name.blank?
                          nil
@@ -66,7 +69,7 @@ class GroupsImporter
         region_attributes = {
           name_en: row_data["region_en"]&.strip,
           name_cn: row_data["region_cn"]&.strip,
-          region_type: row_data["region_type"]&.downcase&.split(" ")&.join("_")&.to_sym
+          region_type: row_data["region_type"]&.strip&.downcase&.split(" ")&.join("_")&.to_sym
         }
         begin
           current_region = API::V1::FindOrUpsertRegion.call(region_attributes)
@@ -105,7 +108,6 @@ class GroupsImporter
           end
 
           current_record.save!
-
         end
       end
     end
@@ -125,6 +127,7 @@ class GroupsImporter
     Scenario.delete_all
     Widget.delete_all
     puts "Data cleared!"
+    create_widgets
     reset_dictionaries
   end
 
