@@ -1,1 +1,93 @@
-[{"indicator_en": "Total Power of Agricultural Machinery", "classification": {"group_en": "Socioeconomic", "subgroup_en": "Agriculture", "subgroup_default": true}, "units_en": ["10 000 kw"], "widget": ["line", "choropleth", "bar"], "default": true, "default_widget": "line"}, {"indicator_en": "Farm Machinery", "classification": {"group_en": "Socioeconomic", "subgroup_en": "Agriculture", "subgroup_default": true}, "units_en": ["10 000 units"], "widget": ["line", "choropleth", "bar", "pie"], "default": false, "default_widget": "pie"}, {"indicator_en": "Irrigated Area of Cultivated Land", "classification": {"group_en": "Socioeconomic", "subgroup_en": "Agriculture", "subgroup_default": true}, "units_en": ["1 000 hectares"], "widget": ["line", "choropleth", "bar"], "default": false, "default_widget": "choropleth"}, {"indicator_en": "Consumption of Chemical Fertilizers", "classification": {"group_en": "Socioeconomic", "subgroup_en": "Agriculture", "subgroup_default": true}, "units_en": ["10 000 tons"], "widget": ["line", "choropleth", "bar", "pie"], "default": false, "default_widget": "bar"}, {"indicator_en": "Irrigated Areas", "classification": {"group_en": "Socioeconomic", "subgroup_en": "Agriculture", "subgroup_default": true}, "units_en": ["Number"], "widget": ["line", "pie"], "default": false, "default_widget": "pie"}]
+[
+    {
+        "indicator_en": "Total Power of Agricultural Machinery",
+        "classification": {
+            "group_en": "Socioeconomic",
+            "subgroup_en": "Agriculture",
+            "subgroup_default": true
+        },
+        "units_en": [
+            "10 000 kw"
+        ],
+        "widget": [
+            "line",
+            "choropleth",
+            "bar"
+        ],
+        "default": true,
+        "default_widget": "line"
+    },
+    {
+        "indicator_en": "Farm Machinery",
+        "classification": {
+            "group_en": "Socioeconomic",
+            "subgroup_en": "Agriculture",
+            "subgroup_default": true
+        },
+        "units_en": [
+            "10 000 units"
+        ],
+        "widget": [
+            "line",
+            "choropleth",
+            "bar",
+            "pie"
+        ],
+        "default": false,
+        "default_widget": "pie"
+    },
+    {
+        "indicator_en": "Irrigated Area of Cultivated Land",
+        "classification": {
+            "group_en": "Socioeconomic",
+            "subgroup_en": "Agriculture",
+            "subgroup_default": true
+        },
+        "units_en": [
+            "1 000 hectares"
+        ],
+        "widget": [
+            "line",
+            "choropleth",
+            "bar"
+        ],
+        "default": false,
+        "default_widget": "choropleth"
+    },
+    {
+        "indicator_en": "Consumption of Chemical Fertilizers",
+        "classification": {
+            "group_en": "Socioeconomic",
+            "subgroup_en": "Agriculture",
+            "subgroup_default": true
+        },
+        "units_en": [
+            "10 000 tons"
+        ],
+        "widget": [
+            "line",
+            "choropleth",
+            "bar",
+            "pie"
+        ],
+        "default": false,
+        "default_widget": "bar"
+    },
+    {
+        "indicator_en": "Irrigated Areas",
+        "classification": {
+            "group_en": "Socioeconomic",
+            "subgroup_en": "Agriculture",
+            "subgroup_default": true
+        },
+        "units_en": [
+            "Number"
+        ],
+        "widget": [
+            "line",
+            "pie"
+        ],
+        "default": false,
+        "default_widget": "pie"
+    }
+]
