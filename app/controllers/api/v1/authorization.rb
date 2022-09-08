@@ -5,8 +5,12 @@ module API
 
       included do
         helpers do
-          def authorize!
-            UserAuthorizator.new(request).authorize!
+          def authenticate!
+            UserAuthenticator.new(request).authenticate!
+          end
+
+          def current_user
+            UserAuthenticator.new(request).current_user
           end
         end
       end

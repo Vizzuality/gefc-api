@@ -5,18 +5,8 @@ RSpec.describe API::V1::Users do
   include Rack::Test::Methods
 
   describe "POST user" do
-    context "when posting a user with invalid api token" do
-      it "returns 401" do
-        header "Api-Auth", "12345"
-        params = {'email': "valid@example.com", "password": "password", 'password_confirmation': "password"}
-        post "/api/v1/users/signup", params, as: :json
-
-        expect(last_response.status).to eq 401
-      end
-    end
     context "when posting a user without password confirmation" do
       it "returns 200 and status ok" do
-        header "Api-Auth", Rails.application.credentials.api_valid_jwt
         params = {'email': "valid@example.com", "password": "password"}
         post "/api/v1/users/signup", params, as: :json
 
@@ -25,7 +15,6 @@ RSpec.describe API::V1::Users do
     end
     context "when posting a user without matching password confirmation" do
       it "returns 200 and status ok" do
-        header "Api-Auth", Rails.application.credentials.api_valid_jwt
         params = {'email': "valid@example.com", "password": "password", 'password_confirmation': "potato"}
         post "/api/v1/users/signup", params, as: :json
 
@@ -34,14 +23,12 @@ RSpec.describe API::V1::Users do
     end
     context "when posting a user with valid params and valid Api-Auth" do
       it "returns 200 and status ok" do
-        header "Api-Auth", Rails.application.credentials.api_valid_jwt
         params = {'email': "valid@example.com", "password": "password", 'password_confirmation': "password"}
         post "/api/v1/users/signup", params, as: :json
 
         expect(last_response.status).to eq 201
       end
       it "returns email and jwt_token with the user id" do
-        header "Api-Auth", Rails.application.credentials.api_valid_jwt
         params = {'email': "valid@example.com", "password": "password", 'password_confirmation': "password"}
         post "/api/v1/users/signup", params, as: :json
 
@@ -54,7 +41,6 @@ RSpec.describe API::V1::Users do
         expect(payload_user_id).to eq(new_user.id)
       end
       it "creates a new user with the expected params" do
-        header "Api-Auth", Rails.application.credentials.api_valid_jwt
         params = {'email': "valid@example.com", "password": "password", 'password_confirmation': "password", 'name': "Peter", 'username': "peter_one", 'organization': "dummyOrg", 'title': "CTO"}
         post "/api/v1/users/signup", params, as: :json
 
@@ -71,26 +57,14 @@ RSpec.describe API::V1::Users do
   describe "POST users login" do
     let!(:user) { FactoryBot.create(:user, email: "valid@example.com", password: "password", password_confirmation: "password") }
 
-    context "when posting a users login with invalid api token" do
-      it "returns 401" do
-        header "Api-Auth", "12345"
-        params = {'email': user.email, "password": "password"}
-        post "/api/v1/users/login", params, as: :json
-
-        expect(last_response.status).to eq 401
-      end
-    end
-
     context "when login a user with valid params" do
       it "returns 200 and status ok" do
-        header "Api-Auth", Rails.application.credentials.api_valid_jwt
         params = {'email': user.email, "password": "password"}
         post "/api/v1/users/login", params, as: :json
 
         expect(last_response.status).to eq 201
       end
       it "returns email and jwt_token" do
-        header "Api-Auth", Rails.application.credentials.api_valid_jwt
         params = {'email': user.email, "password": "password"}
         post "/api/v1/users/login", params, as: :json
 

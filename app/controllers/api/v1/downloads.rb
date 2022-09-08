@@ -2,7 +2,6 @@ module API
   module V1
     class Downloads < Grape::API
       include API::V1::Defaults
-      include API::V1::Authentication
       include API::V1::Authorization
       include API::V1::FileGeneration
 
@@ -21,21 +20,21 @@ module API
         optional :start_year, type: Integer, desc: "Start year"
         optional :end_year, type: Integer, desc: "End year"
       end
+
       get "downloads" do
-        if authenticate! && authorize!
-          indicator = Indicator.find_by_id_or_slug!(permitted_params[:id], {}, [])
-          filter = FilterIndicatorRecords.new(indicator, params.slice(:category_1, :start_year, :end_year))
-          records = filter.call.includes(:unit, :region)
-
-          file_name = generate_file(records, permitted_params[:file_format], I18n.locale)
-
-          content_type "application/octet-stream"
-          header["Content-Disposition"] = "attachment; filename=#{file_name.split("/").last}"
-          env["api.format"] = :binary
-          File.open(file_name, "rb").read
-        else
-          error!({error_code: 401, error_message: authorize!}, 401)
+        if authenticate! != true
+          error!({error_code: 401, error_message: authenticate!}, 401)
         end
+        indicator = Indicator.find_by_id_or_slug!(permitted_params[:id], {}, [])
+        filter = FilterIndicatorRecords.new(indicator, params.slice(:category_1, :start_year, :end_year))
+        records = filter.call.includes(:unit, :region)
+
+        file_name = generate_file(records, permitted_params[:file_format], I18n.locale)
+
+        content_type "application/octet-stream"
+        header["Content-Disposition"] = "attachment; filename=#{file_name.split("/").last}"
+        env["api.format"] = :binary
+        File.open(file_name, "rb").read
       end
     end
   end

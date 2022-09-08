@@ -14,6 +14,7 @@ namespace :indicators do
       indicator.save!
     end
   end
+
   desc "populate_meta"
   task populate_meta: :environment do
     Parallel.map(Indicator.all) do |indicator|

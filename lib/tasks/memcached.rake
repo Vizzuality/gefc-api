@@ -52,6 +52,7 @@ namespace :memcached do
   task populate_regions: :environment do
     API::V1::FetchRegion.new.all
   end
+
   desc "Populate all cache"
   task populate_all: :environment do
     API::V1::FetchGroup.new.all

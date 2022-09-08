@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_01_110800) do
+ActiveRecord::Schema.define(version: 2022_09_08_091215) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -112,7 +112,7 @@ ActiveRecord::Schema.define(version: 2022_09_01_110800) do
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "published", default: false, null: false
     t.text "description_en"
-    t.string "slug"
+    t.string "slug", null: false
     t.string "subtitle_en"
     t.string "name_cn"
     t.string "description_cn"
@@ -145,7 +145,7 @@ ActiveRecord::Schema.define(version: 2022_09_01_110800) do
     t.boolean "by_default", default: false, null: false
     t.string "name_cn"
     t.text "description_cn"
-    t.string "slug"
+    t.string "slug", null: false
     t.string "data_source_en"
     t.string "data_source_cn"
     t.boolean "download_privilege"
@@ -225,14 +225,14 @@ ActiveRecord::Schema.define(version: 2022_09_01_110800) do
     t.boolean "by_default", default: false, null: false
     t.string "name_cn"
     t.string "description_cn"
-    t.string "slug"
+    t.string "slug", null: false
     t.index ["group_id", "by_default"], name: "index_subgroups_on_group_id_and_by_default", unique: true, where: "by_default"
     t.index ["group_id", "name_en", "name_cn"], name: "index_subgroups_on_group_id_and_name_en_and_name_cn", unique: true
     t.index ["group_id"], name: "index_subgroups_on_group_id"
   end
 
   create_table "units", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "name_en"
+    t.string "name_en", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "name_cn"
