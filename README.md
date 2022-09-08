@@ -25,63 +25,18 @@ After running the test suit, you will find a coverage report at `coverage/index.
 
 This project includes multiple `rake` tasks to handle different data import and transformation tasks.
 
+### Data import
 
 - `groups:import_csv_file`: Imports a .csv file containing Records. Creates associated Indicator, Groups, Subgroups, Units, Regions, Scenarios, Widgets, and underlying associations. Deletes all these data types prior to import. Requires a `file_name` env var with the full path to the .csv file.
 - `groups:import_csv_folder`: Similar to `groups:import_csv_file`, but instead imports all .csv files found within a given folder. Requires a `folder_name` env var with the full path to the folder containing the .csv files.
 - `widgets:import_json_file`: Imports a .json file containing widgets configuration data, extending existing Indicator data and creating IndicatorWidget associations. Deletes all IndicatorWidget prior to import. Requires preexisting Indicator, Groups, Subgroups data (imported through either `groups:import_csv_file` or `groups:import_csv_folder`). Requires a `file_name` env var with the full path to the .json file.
 - `widgets:import_json_folder`: Similar to `widgets:import_json_file`, but instead imports all .json files found within a given folder. Requires a `folder_name` env var with the full path to the folder containing the .json files.
-- `indicators:populate_meta`: For existing indicators, <tbd>
+- `sankeys:import_json`: Imports a .json file containing sankey Indicator data, extending existing Indicator data. Requires preexisting Indicator data (imported through either `groups:import_csv_file` or `groups:import_csv_folder`). Requires a `file_name` env var with the full path to the .json file.
 
-## Authentication
+### Data transform
 
- - How should the client authenticate?
-	Since /login and /signup are protected using authentication, the api expects a header with key 'Api-Auth' and a valid jwt as value, but only for those endpoints.
- - What makes valid an api jwt?
-	The api_jwt is generated using two elements: the payload that we expect to be encrypted and the encryption key.
-	 - In the payload we expect to find encrypted the api_client_key in our credentials.
-	 - We use the devise_secret_key as encryption key.
- - How can I get one of those super cool api valid jwt?
-	Just run rails api_jwt:generate
-
-Remember to add to your credentials:
-
-    api_valid_jwt: { generated rails api_jwt:generate }
-*Right now this one is only used in the specs but I would like to keep it in the credentials until we agree with the FE about how are we going to authenticate because I have seen that api-key is saved in the .env in otp, but for me makes more sense not saving it at all and rely in decoding the token to authenticate.*
-
-    devise_secret_key: { generated with rails secret }
-
-*This is the key that we are using to encrypt all jwt, maybe would make more sense to rename it into jwt_secret_key, right?*
-
-    api_client_key: { generated with rails secret }
-
-*this is the key that we encrypt into the api_jwt payload.*
-
-### Usage example
-
- - Signup request, which creates a new user if Api-Auth is valid:
- ```
-	     curl --location --request POST 'http://127.0.0.1:3000/api/v1/users/signup' \
-    --header 'Api-Auth: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5MDc0NzlmMTkzNDc1ZmRmOTQ5ZDkzN2QxZTA2ZDUxMmE5ZWRmMDdjNTUxZmFmODFlOGEyNWQyMTZmYmRiNTMxZjk0ZDhkNjcyZTZmNGYyZDVjMDFjYTQzNDBmODdhOTg0YTY0ZmEwZDYzM2IyM2QxNTFjNDlmYjIzZWRjYTY1NyIsImV4cCI6MTYyNjc3ODA2N30.kAAUhF35vHZYbHPN1lTebrRJm5wWj7OjO4Hv_Eh7uiY"' \
-    --header 'Content-Type: application/json' \
-    --header 'Cookie: __profilin=p%3Dt' \
-    --data-raw '{
-        "email": "valid_example@example.com",
-        "password": "12345678""
-    }'
-```
-
-Same for /login.
-
-**Both endpoints will return the user jwt that are needed to reach users/me.**
-
-- Once signup/login is successful, the response to those endpoints will include a user valid jwt that must be provided to authenticate.
-
-```
-curl --location --request GET 'http://localhost:3000/api/v1/users/me' \
---header 'Authentication: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMmZiY2Y4MS00NWM2LTQ4YTMtYTAxOC01N2M3MmM5OTY4ODMiLCJleHAiOjE2MjY4NzM2MjV9.3s6FZwkxobHcYNWnw-91SdJEnq_AoOlbl1V2lbn0-Ns' \
---header 'Cookie: __profilin=p%3Dt' \
---data-raw ''
-```
+- `indicators:populate_meta`: For existing indicators that are not visualized in a sankey diagram, recalculates the visualisation metadata that is used to configure frontend visualisations. Should only be executed after `widgets:import_json_file` or `widgets:import_json_folder`
+- `indicators:populate_sankey_meta`: For existing indicators that are visualized in a sankey diagram, recalculates the visualisation metadata that is used to configure frontend visualisations. Should only be executed after `widgets:import_json_file` or `widgets:import_json_folder`
 
 ## Updating datasets
 

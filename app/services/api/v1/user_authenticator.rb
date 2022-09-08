@@ -6,7 +6,8 @@ module API
       end
 
       def valid?
-        @request.headers["Authentication"].present?
+        return false unless @request.headers["Authentication"].present?
+        current_user.present?
       end
 
       def authenticate!
@@ -22,6 +23,12 @@ module API
         token = @request.headers.fetch("Authentication", "").split(" ").last
         payload = JsonWebToken.decode(token)
         User.find(payload["sub"])
+      end
+
+      def is_admin_user?
+        token = @request.headers.fetch("Authentication", "").split(" ").last
+        payload = JsonWebToken.decode(token)
+        User.find(payload["sub"]).admin?
       end
     end
   end

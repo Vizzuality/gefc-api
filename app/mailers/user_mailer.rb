@@ -1,4 +1,4 @@
-class UsermailerMailer < ApplicationMailer
+class UserMailer < ApplicationMailer
   default from: "ibrahim.lachguer@vizzuality.com"
 
   def restore_password_email(user, recover_password_token)

@@ -30,7 +30,7 @@ class Indicator < ApplicationRecord
   translates :name, :description, :data_source
 
   def accessible_by
-    ["guest", "admin"]
+    %w[guest admin]
   end
 
   def default_visualization
