@@ -14,6 +14,24 @@ RSpec.describe API::V1::Users do
         expect(last_response.status).to eq 401
       end
     end
+    context "when posting a user without password confirmation" do
+      it "returns 200 and status ok" do
+        header "Api-Auth", Rails.application.credentials.api_valid_jwt
+        params = {'email': "valid@example.com", "password": "password"}
+        post "/api/v1/users/signup", params, as: :json
+
+        expect(last_response.status).to eq 201
+      end
+    end
+    context "when posting a user without matching password confirmation" do
+      it "returns 200 and status ok" do
+        header "Api-Auth", Rails.application.credentials.api_valid_jwt
+        params = {'email': "valid@example.com", "password": "password", 'password_confirmation': "potato"}
+        post "/api/v1/users/signup", params, as: :json
+
+        expect(last_response.status).to eq 422
+      end
+    end
     context "when posting a user with valid params and valid Api-Auth" do
       it "returns 200 and status ok" do
         header "Api-Auth", Rails.application.credentials.api_valid_jwt

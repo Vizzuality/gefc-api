@@ -16,7 +16,7 @@ module API
         params do
           requires :email, type: String, desc: "email of the user"
           requires :password, type: String, desc: "password"
-          requires :password_confirmation, type: String, desc: "password confirmation"
+          optional :password_confirmation, type: String, desc: "password confirmation"
           optional :username, type: String, desc: "username of the user"
           optional :name, type: String, desc: "name of the user"
           optional :organization, type: String, desc: "organization of the user"
