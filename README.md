@@ -66,12 +66,11 @@ Remember to add to your credentials:
     --header 'Cookie: __profilin=p%3Dt' \
     --data-raw '{
         "email": "valid_example@example.com",
-        "password": "12345678",
-        "password_confirmation": "12345678"
+        "password": "12345678""
     }'
 ```
 
-Same for /login, but without password_confirmation.
+Same for /login.
 
 **Both endpoints will return the user jwt that are needed to reach users/me.**
 
