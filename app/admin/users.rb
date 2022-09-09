@@ -1,11 +1,24 @@
 ActiveAdmin.register User do
-  permit_params :email, :password, :password_confirmation, :role, :username
+  permit_params :email, :password, :password_confirmation, :role
+
+  show :title => :name do
+    attributes_table do
+      row :title
+      row :name
+      row :email
+      row :organization
+      row :created_at
+      row :role
+    end
+  end
 
   index do
     selectable_column
     id_column
+    column :title
+    column :name
     column :email
-    column :username
+    column :organization
     column :current_sign_in_at
     column :sign_in_count
     column :created_at
@@ -13,8 +26,10 @@ ActiveAdmin.register User do
     actions
   end
 
+  filter :title
+  filter :name
   filter :email
-  filter :username
+  filter :organization
   filter :current_sign_in_at
   filter :sign_in_count
   filter :created_at
@@ -22,8 +37,11 @@ ActiveAdmin.register User do
 
   form do |f|
     f.inputs do
+      f.input :title
+      f.input :name
       f.input :email
-      f.input :username
+      f.input :organization
+      f.input :password
       f.select :role, User.roles.keys, {}
     end
     f.actions

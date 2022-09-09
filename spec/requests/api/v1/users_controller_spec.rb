@@ -41,13 +41,13 @@ RSpec.describe API::V1::Users do
         expect(payload_user_id).to eq(new_user.id)
       end
       it "creates a new user with the expected params" do
-        params = {'email': "valid@example.com", "password": "password", 'password_confirmation': "password", 'name': "Peter", 'username': "peter_one", 'organization': "dummyOrg", 'title': "CTO"}
+        params = {'email': "valid@example.com", "password": "password", 'password_confirmation': "password", 'name': "Peter", 'organization': "dummyOrg", 'title': "CTO"}
         post "/api/v1/users/signup", params, as: :json
 
         new_user = User.find_by(email: params[:email])
 
-        expect(new_user.username).to eq("peter_one")
         expect(new_user.name).to eq("Peter")
+        expect(new_user.email).to eq("valid@example.com")
         expect(new_user.organization).to eq("dummyOrg")
         expect(new_user.title).to eq("CTO")
       end

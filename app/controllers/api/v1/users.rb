@@ -10,7 +10,6 @@ module API
           requires :email, type: String, desc: "email of the user"
           requires :password, type: String, desc: "password"
           optional :password_confirmation, type: String, desc: "password confirmation"
-          optional :username, type: String, desc: "username of the user"
           optional :name, type: String, desc: "name of the user"
           optional :organization, type: String, desc: "organization of the user"
           optional :title, type: String, desc: "title of the user"
@@ -65,7 +64,6 @@ module API
           optional :password, type: String, desc: "current password"
           optional :new_password, type: String, desc: "new password"
           optional :password_confirmation, type: String, desc: "password confirmation"
-          optional :username, type: String, desc: "username of the user"
         end
         put "/me" do
           if authenticate! != true

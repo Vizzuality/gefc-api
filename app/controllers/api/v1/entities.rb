@@ -119,8 +119,7 @@ module API
 
       class UserWithJWT < Grape::Entity
         expose :email, documentation: {type: "String", desc: "User's email."}
-        expose :name, documentation: {type: "String", desc: "User's username."}
-        expose :username, documentation: {type: "String", desc: "User's name."}
+        expose :name, documentation: {type: "String", desc: "User's name."}
         expose :organization, documentation: {type: "String", desc: "User's organization."}
         expose :title, documentation: {type: "String", desc: "User's title."}
         expose :jwt_token, as: :jwt_token
@@ -129,7 +128,6 @@ module API
       class UserInfo < Grape::Entity
         expose :email, documentation: {type: "String", desc: "User's email."}
         expose :name, documentation: {type: "String", desc: "User's username."}
-        expose :username, documentation: {type: "String", desc: "User's name."}
         expose :organization, documentation: {type: "String", desc: "User's organization."}
         expose :title, documentation: {type: "String", desc: "User's title."}
         expose :role, documentation: {type: "String", desc: "User's role"}
