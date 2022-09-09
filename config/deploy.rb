@@ -1,5 +1,3 @@
-lock "~> 3.16.0"
-
 set :application, "gefc"
 
 set :repo_url, "git@github.com:Vizzuality/gefc-api.git"
