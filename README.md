@@ -32,6 +32,8 @@ This project includes multiple `rake` tasks to handle different data import and 
 - `widgets:import_json_file`: Imports a .json file containing widgets configuration data, extending existing Indicator data and creating IndicatorWidget associations. Deletes all IndicatorWidget prior to import. Requires preexisting Indicator, Groups, Subgroups data (imported through either `groups:import_csv_file` or `groups:import_csv_folder`). Requires a `file_name` env var with the full path to the .json file.
 - `widgets:import_json_folder`: Similar to `widgets:import_json_file`, but instead imports all .json files found within a given folder. Requires a `folder_name` env var with the full path to the folder containing the .json files.
 - `sankeys:import_json`: Imports a .json file containing sankey Indicator data, extending existing Indicator data. Requires preexisting Indicator data (imported through either `groups:import_csv_file` or `groups:import_csv_folder`). Requires a `file_name` env var with the full path to the .json file.
+- `geometries:points:import_geojson`: Imports a .json containing geojson points data into the GeometryPoint table. Associates geographic data with Regions.
+- `geometries:polygons:import_geojson`: Imports a .json containing geojson polygon data into the GeometryPolygon table. Associates geographic data with Regions.
 
 ### Data transform
 

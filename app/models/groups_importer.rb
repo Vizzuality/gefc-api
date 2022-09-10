@@ -121,7 +121,7 @@ class GroupsImporter
     puts "Clearing data prior to import"
     RecordWidget.delete_all
     IndicatorWidget.delete_all
-    Record.delete_all
+    ActiveRecord::Base.connection.execute("TRUNCATE records CASCADE")
     Indicator.delete_all
     Subgroup.delete_all
     Group.delete_all
