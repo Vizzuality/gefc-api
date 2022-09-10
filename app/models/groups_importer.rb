@@ -44,6 +44,8 @@ class GroupsImporter
   def import_from_csv(file_path)
     puts "Importing #{file_path}..."
 
+    records = []
+    record_widgets = []
     ActiveRecord::Base.transaction do
       CSV.foreach(file_path, headers: true, converters: :numeric).with_index do |row, index|
         puts "Processing index #{index}..." if index % 100 == 0
@@ -83,35 +85,36 @@ class GroupsImporter
                            else
                              API::V1::FindOrUpsertScenario.call({ name_en: scenario_name, name_cn: row_data["scenario_cn"]&.strip })
                            end
-        # Bulk is better.
-        #
+
         unless row_data["value"].nil? || row_data["value"].blank?
-          current_record = Record.new(
-            indicator: current_indicator,
+          current_record = {
+            id: SecureRandom.uuid,
+            indicator_id: current_indicator.id,
             category_1_en: row_data["category_1_en"]&.strip,
             category_2_en: row_data["category_2_en"]&.strip,
             category_3_en: row_data["category_3_en"]&.strip,
             category_1_cn: row_data["category_1_cn"]&.strip,
             category_2_cn: row_data["category_2_cn"]&.strip,
             category_3_cn: row_data["category_3_cn"]&.strip,
-            region: current_region,
-            unit: current_unit,
+            region_id: current_region.id,
+            unit_id: current_unit&.id,
             value: row_data["value"],
             year: row_data["year"],
-            scenario: current_scenario,
+            scenario_id: current_scenario&.id,
             visualization_types: widgets.keys
-          )
+          }
+          records.push(current_record)
 
           widgets.keys.select { |k| row_data[k] == 1 }.each do |k|
-            record_widget = RecordWidget.new(widget: widgets[k], record: current_record)
-            record_widget.save!(validate: false) # skip id validation for belongs_to associated entities
+            record_widget = { widget_id: widgets[k].id, record_id: current_record[:id] }
+            record_widgets.push record_widget
           end
-
-          current_record.save!
         end
       end
-    end
 
+      Record.insert_all(records) unless records.empty?
+      RecordWidget.insert_all(record_widgets) unless record_widgets.empty?
+    end
   end
 
   def clear_all

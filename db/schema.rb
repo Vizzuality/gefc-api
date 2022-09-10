@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_09_081942) do
+ActiveRecord::Schema.define(version: 2022_09_09_152516) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -144,9 +144,9 @@ ActiveRecord::Schema.define(version: 2022_09_09_081942) do
     t.text "category_filters"
     t.integer "start_date"
     t.integer "end_date"
-    t.text "scenarios"
     t.json "meta"
     t.text "sankey"
+    t.text "scenarios"
     t.index ["name_en", "name_cn", "subgroup_id"], name: "index_indicators_on_name_en_and_name_cn_and_subgroup_id", unique: true
     t.index ["slug"], name: "index_indicators_on_slug", unique: true
     t.index ["subgroup_id", "by_default"], name: "index_indicators_on_subgroup_id_and_by_default", unique: true, where: "by_default"
@@ -157,8 +157,8 @@ ActiveRecord::Schema.define(version: 2022_09_09_081942) do
   create_table "record_widgets", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "record_id"
     t.uuid "widget_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", default: "2022-09-09 15:26:45", null: false
+    t.datetime "updated_at", default: "2022-09-09 15:26:45", null: false
   end
 
   create_table "records", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -167,8 +167,8 @@ ActiveRecord::Schema.define(version: 2022_09_09_081942) do
     t.integer "year"
     t.string "category_1_en"
     t.string "category_2_en"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", default: "2022-09-09 15:26:45", null: false
+    t.datetime "updated_at", default: "2022-09-09 15:26:45", null: false
     t.uuid "unit_id"
     t.uuid "region_id"
     t.json "original_categories"
