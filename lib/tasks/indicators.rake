@@ -11,16 +11,7 @@ namespace :indicators do
       indicator.start_date = indicator.get_start_date
       indicator.end_date = indicator.get_end_date
       indicator.scenarios = indicator.get_scenarios
-      indicator.save!
-    end
-  end
-
-  desc "populate_meta"
-  task populate_meta: :environment do
-    Parallel.map(Indicator.all) do |indicator|
-      next if indicator.visualization_types.include?("sankey")
-      puts "Recalculating metadata for indicator #{indicator.name_en}"
-      indicator.meta = indicator.get_meta_object
+      indicator.meta = indicator.get_meta_object unless indicator.visualization_types.include?("sankey")
       indicator.save!
     end
   end

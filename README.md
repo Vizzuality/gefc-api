@@ -45,9 +45,8 @@ This project includes multiple `rake` tasks to handle different data import and 
 
 ### Data transform
 
-- `indicators:populate_meta`: For existing indicators that are not visualized in a sankey diagram, recalculates the
-  visualisation metadata that is used to configure frontend visualisations. Should only be executed
-  after `widgets:import_json_file` or `widgets:import_json_folder`
+- `populate_extra_info`: Recalculates Indicator visualization meta that is used to configure frontend visualisations. 
+   Should only be executed after `widgets:import_json_file` or `widgets:import_json_folder`
 - `indicators:populate_sankey_meta`: For existing indicators that are visualized in a sankey diagram, recalculates the
   visualisation metadata that is used to configure frontend visualisations. Should only be executed
   after `widgets:import_json_file` or `widgets:import_json_folder`
