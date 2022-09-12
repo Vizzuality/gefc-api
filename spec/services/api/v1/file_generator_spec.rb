@@ -7,10 +7,11 @@ RSpec.describe API::V1::FileGenerator do
 
   context "when records and locale are provided" do
     before do
-      ENV["DOWNLOADS_PATH"] = "/spec/files/downloads/"
+      ENV["DOWNLOADS_PATH"] = "/tmp/gefc/"
     end
     after do
-      dir_path = "#{Rails.root}#{ENV["DOWNLOADS_PATH"]}"
+      dir_path = "#{ENV["DOWNLOADS_PATH"]}"
+      FileUtils.mkdir_p(dir_path) unless File.directory?(dir_path)
       Dir.foreach(dir_path) do |f|
         fn = File.join(dir_path, f)
         File.delete(fn) if f != "." && f != ".." && f != ".keep"

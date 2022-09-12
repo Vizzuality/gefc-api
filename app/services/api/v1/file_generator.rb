@@ -178,7 +178,7 @@ module API
 
       def file_name
         indicator_name_en = @records.first.indicator.name_en
-        name = "#{Rails.root}#{ENV["DOWNLOADS_PATH"]}#{Slugable.sanitize_name(indicator_name_en)}_#{DateTime.new.strftime("%FT%T%:z")}.#{@file_format}"
+        name = "#{ENV["DOWNLOADS_PATH"]}#{Slugable.sanitize_name(indicator_name_en)}_#{DateTime.new.strftime("%FT%T%:z")}.#{@file_format}"
         puts name
         name
       end

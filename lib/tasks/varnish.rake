@@ -2,7 +2,7 @@ namespace :varnish do
   desc "Flushes Varnish"
   task clear_all: :environment do
     regexp = "^/api/v1/"
-    with_uri(ENV.fetch("API_HOST")) do |uri|
+    with_uri(ENV.fetch("API_BASE_URL")) do |uri|
       Rails.logger.debug "Banning: #{regexp}"
       request = Net::HTTP::Ban.new uri.request_uri
       request["x-invalidate-pattern"] = regexp
