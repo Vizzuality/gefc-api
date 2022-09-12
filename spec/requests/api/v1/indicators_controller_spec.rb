@@ -5,10 +5,8 @@ RSpec.describe API::V1::Indicators do
   include Rack::Test::Methods
 
   let!(:indicator) { create(:indicator) }
-  let!(:region1) { create(:region) }
-  let!(:geometry1) { create(:geometry_polygon, region: region1) }
-  let!(:region2) { create(:region) }
-  let!(:geometry2) { create(:geometry_polygon, region: region2) }
+  let!(:region1) { create(:region_polygon) }
+  let!(:region2) { create(:region_polygon) }
   let!(:record) { create(:record, indicator: indicator, year: 2020, region: region1) }
   let!(:record2) { create(:record, indicator: indicator, year: 2021, region: region2) }
   sankey_test = {

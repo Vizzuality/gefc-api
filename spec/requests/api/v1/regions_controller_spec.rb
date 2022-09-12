@@ -4,10 +4,8 @@ RSpec.describe API::V1::Regions do
   # Rack-Test helper methods like get, post, etc
   include Rack::Test::Methods
 
-  let!(:region1) { create(:region) }
-  let!(:geometry1) { create(:geometry_polygon, region: region1) }
-  let!(:region2) { create(:region) }
-  let!(:geometry2) { create(:geometry_polygon, region: region2) }
+  let!(:region1) { create(:region_polygon) }
+  let!(:region2) { create(:region_polygon) }
 
   describe "GET Regions" do
     context "when requesting all regions" do
@@ -23,13 +21,13 @@ RSpec.describe API::V1::Regions do
           "id" => region1.id,
           "name" => region1.name,
           "region_type" => region1.region_type,
-          "geometry" => RGeo::GeoJSON.encode(region1.geometry.geometry)
+          "geometry" => RGeo::GeoJSON.encode(region1.geometry)
         }
         region2_data = {
           "id" => region2.id,
           "name" => region2.name,
           "region_type" => region2.region_type,
-          "geometry" => RGeo::GeoJSON.encode(region2.geometry.geometry)
+          "geometry" => RGeo::GeoJSON.encode(region2.geometry)
         }
 
         header "Content-Type", "application/json"
@@ -54,7 +52,7 @@ RSpec.describe API::V1::Regions do
           "id" => region1.id,
           "name" => region1.name,
           "region_type" => region1.region_type,
-          "geometry" => RGeo::GeoJSON.encode(region1.geometry.geometry)
+          "geometry" => RGeo::GeoJSON.encode(region1.geometry)
         }
 
         header "Content-Type", "application/json"

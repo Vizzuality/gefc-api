@@ -106,10 +106,8 @@ RSpec.describe API::V1::Groups do
   describe "GET indicator" do
     let!(:subgroup) { FactoryBot.create(:subgroup, group: group) }
     let!(:indicator) { FactoryBot.create(:indicator, subgroup: subgroup) }
-    let!(:region1) { create(:region) }
-    let!(:geometry1) { create(:geometry_polygon, region: region1) }
-    let!(:region2) { create(:region) }
-    let!(:geometry2) { create(:geometry_polygon, region: region2) }
+    let!(:region1) { create(:region_polygon) }
+    let!(:region2) { create(:region_polygon) }
     let!(:widget1) { create(:widget, name: "line") }
     let!(:widget2) { create(:widget, name: "choropleth") }
     let!(:unit) { create(:unit) }
@@ -138,10 +136,8 @@ RSpec.describe API::V1::Groups do
   describe "GET records" do
     let!(:subgroup) { FactoryBot.create(:subgroup, group: group) }
     let!(:indicator) { FactoryBot.create(:indicator, subgroup: subgroup) }
-    let!(:region1) { create(:region) }
-    let!(:geometry1) { create(:geometry_polygon, region: region1) }
-    let!(:region2) { create(:region) }
-    let!(:geometry2) { create(:geometry_polygon, region: region2) }
+    let!(:region1) { create(:region_polygon) }
+    let!(:region2) { create(:region_polygon) }
     let!(:widget1) { create(:widget, name: "line") }
     let!(:widget2) { create(:widget, name: "choropleth") }
     let!(:unit) { create(:unit) }

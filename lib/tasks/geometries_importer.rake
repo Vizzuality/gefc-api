@@ -1,15 +1,6 @@
 namespace :geometries do
-  namespace :points do
-    desc "Imports point geometries from json in local file system."
-    task import_geojson: :environment do
-      GeometryPointsImporter.new.import_from_json(ENV["file_name"])
-    end
-  end
-
-  namespace :polygons do
-    desc "Imports polygon geometries from json in local file system."
-    task import_geojson: :environment do
-      GeometryPolygonsImporter.new.import_from_json(ENV["file_name"])
-    end
+  desc "Imports geometries from json files in local file system."
+  task import_geojson: :environment do
+    GeometryImporter.new.import_from_folder(ENV["folder_name"])
   end
 end

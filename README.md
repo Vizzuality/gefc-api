@@ -40,10 +40,8 @@ This project includes multiple `rake` tasks to handle different data import and 
 - `sankeys:import_json`: Imports a .json file containing sankey Indicator data, extending existing Indicator data.
   Requires preexisting Indicator data (imported through either `groups:import_csv_file` or `groups:import_csv_folder`).
   Requires a `file_name` env var with the full path to the .json file.
-- `geometries:points:import_geojson`: Imports a .json containing geojson points data into the GeometryPoint table.
-  Associates geographic data with Regions.
-- `geometries:polygons:import_geojson`: Imports a .json containing geojson polygon data into the GeometryPolygon table.
-  Associates geographic data with Regions.
+- `geometries:import_geojson`: Imports all .geojson files contained in the provided `folder_name` env var.
+  Adds these geographic data to existing Regions, or creates new ones.
 
 ### Data transform
 
