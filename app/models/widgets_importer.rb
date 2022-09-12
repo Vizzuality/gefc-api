@@ -52,7 +52,7 @@ class WidgetsImporter
           data_source_cn: indicator_data["data_source_cn"]&.strip,
           description_en: indicator_data["description_en"]&.strip,
           description_cn: indicator_data["description_cn"]&.strip,
-          download_privilege: indicator_data["download_privilege"],
+          only_admins_can_download: (!indicator_data["download_privilege"]),
           subgroup_id: current_subgroup.id
         }
         indicator_attributes["by_default"] = indicator_data["default"] unless indicator_data["default"].nil?

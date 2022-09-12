@@ -28,10 +28,6 @@ class Indicator < ApplicationRecord
 
   translates :name, :description, :data_source
 
-  def accessible_by
-    %w[guest admin]
-  end
-
   def default_visualization
     default_widget&.name
   end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_12_120244) do
+ActiveRecord::Schema.define(version: 2022_09_12_121324) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -134,7 +134,7 @@ ActiveRecord::Schema.define(version: 2022_09_12_120244) do
     t.string "slug", null: false
     t.string "data_source_en"
     t.string "data_source_cn"
-    t.boolean "download_privilege"
+    t.boolean "only_admins_can_download"
     t.text "region_ids"
     t.text "visualization_types"
     t.text "default_visualization_name"
