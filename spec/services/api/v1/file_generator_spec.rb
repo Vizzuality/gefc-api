@@ -7,16 +7,14 @@ RSpec.describe API::V1::FileGenerator do
 
   context "when records and locale are provided" do
     before do
-      ENV["DOWNLOADS_PATH"] = "/tmp/gefc/"
+      ENV["DOWNLOADS_PATH"] = "/tmp/gefc_test/"
+      FileUtils.mkdir_p(ENV["DOWNLOADS_PATH"]) unless File.directory?(ENV["DOWNLOADS_PATH"])
     end
-    after do
-      dir_path = "#{ENV["DOWNLOADS_PATH"]}"
-      FileUtils.mkdir_p(dir_path) unless File.directory?(dir_path)
-      Dir.foreach(dir_path) do |f|
-        fn = File.join(dir_path, f)
+    after(:each) do
+      Dir.foreach(ENV["DOWNLOADS_PATH"]) do |f|
+        fn = File.join(ENV["DOWNLOADS_PATH"], f)
         File.delete(fn) if f != "." && f != ".." && f != ".keep"
       end
-      ENV["DOWNLOADS_PATH"] = nil
     end
 
     it "returns a file name" do
@@ -29,8 +27,9 @@ RSpec.describe API::V1::FileGenerator do
       file_format = "csv"
       file_generator = API::V1::FileGenerator.new(indicator.records, file_format, :en)
 
-      file_name, extension_in_file_name = file_generator.call.split(".")
-      puts file_name
+      file_full_path = file_generator.call
+      file_name = File.basename file_full_path
+      extension_in_file_name = File.extname file_full_path
       elements_of_the_file_name = file_name.split("_")
       indicator_in_file_name = elements_of_the_file_name.first
       date_time_in_file_name = elements_of_the_file_name.last
@@ -38,7 +37,7 @@ RSpec.describe API::V1::FileGenerator do
       expect(elements_of_the_file_name.count).to eq(2)
       expect(indicator_in_file_name.include?(Slugable.sanitize_name(indicator.name_en))).to eq(true)
       expect(DateTime.strptime(date_time_in_file_name).class).to eq(DateTime)
-      expect(extension_in_file_name).to eq(file_format)
+      expect(extension_in_file_name).to eq(".#{file_format}")
     end
     it "generates a csv file with the proper extension" do
       file_format = "csv"

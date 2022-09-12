@@ -2,6 +2,9 @@ module API
   module V1
     class FileGenerator
       def initialize(records, file_format, current_locale)
+        dir_path = "#{ENV["DOWNLOADS_PATH"]}"
+        FileUtils.mkdir_p(dir_path) unless File.directory?(dir_path)
+
         @records = records
         @file_format = file_format
         @current_locale = current_locale

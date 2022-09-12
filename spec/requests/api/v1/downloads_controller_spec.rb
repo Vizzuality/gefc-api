@@ -10,6 +10,17 @@ RSpec.describe API::V1::Downloads do
 
   describe "GET downloads" do
     let!(:admin) { create(:user, :admin) }
+    before do
+      ENV["DOWNLOADS_PATH"] = "/tmp/gefc_test/"
+      FileUtils.mkdir_p(ENV["DOWNLOADS_PATH"]) unless File.directory?(ENV["DOWNLOADS_PATH"])
+    end
+    after do
+      dir_path = ENV["DOWNLOADS_PATH"]
+      Dir.foreach(dir_path) do |f|
+        fn = File.join(dir_path, f)
+        File.delete(fn) if f != "." && f != ".." && f != ".keep"
+      end
+    end
 
     context "When logged in as a user with valid role" do
       it "returns 200 and status ok" do
