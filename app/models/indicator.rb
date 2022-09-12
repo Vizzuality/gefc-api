@@ -9,7 +9,6 @@ class Indicator < ApplicationRecord
   serialize :categories, Array
   serialize :scenarios, Array
   serialize :category_filters, Hash
-  serialize :meta, Hash
   serialize :sankey, Hash
 
   validates_uniqueness_of :by_default, scope: :subgroup_id, if: :by_default?
@@ -146,7 +145,7 @@ class Indicator < ApplicationRecord
       meta_object[visualization_type]["units"] = units
 
       scenarios = []
-      records.where.not(scenario: nil).each do |record|
+      records.where.not(scenario_info: nil).each do |record|
         scenarios.push(record.scenario_info)
       end
       meta_object[visualization_type]["scenarios"] = scenarios.uniq
