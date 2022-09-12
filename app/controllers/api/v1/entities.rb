@@ -43,7 +43,6 @@ module API
         expose :slug, documentation: {type: "String", desc: "Indicator's slug."}
         expose :name, documentation: {type: "String", desc: "Indicator's name."}
         expose :description, documentation: {type: "String", desc: "Indicator's description."}
-        expose :published, documentation: {type: "Boolean", desc: "Indicator's published status."}
         expose :default_visualization_name, as: :default_visualization
         expose :accessible_by, as: :accessible_by
         expose :visualization_types, as: :visualization_types
@@ -61,7 +60,6 @@ module API
         expose :slug, documentation: {type: "String", desc: "Indicator's slug."}
         expose :name, documentation: {type: "String", desc: "Indicator's name."}
         expose :description, documentation: {type: "String", desc: "Indicator's description."}
-        expose :published, documentation: {type: "Boolean", desc: "Indicator's published status."}
         expose :default_visualization_name, as: :default_visualization
         expose :accessible_by, as: :accessible_by
         expose :visualization_types, as: :visualization_types
@@ -81,7 +79,6 @@ module API
         expose :slug, documentation: {type: "String", desc: "Subgroup's slug."}
         expose :name, documentation: {type: "String", desc: "Subgroup's name."}
         expose :description, documentation: {type: "String", desc: "Subgroup's description."}
-        expose :published, documentation: {type: "Boolean", desc: "Subgroup's published status."}
         expose :cached_indicators, as: :indicators, using: API::V1::Entities::Indicator
         expose :cached_default_indicator, as: :default_indicator, using: API::V1::Entities::Indicator
       end
@@ -105,7 +102,6 @@ module API
         expose :name, documentation: {type: "String", desc: "Group's name."}
         expose :subtitle, documentation: {type: "String", desc: "Group's name."}
         expose :description, documentation: {type: "String", desc: "Group's description."}
-        expose :published, documentation: {type: "Boolean", desc: "Group's published status."}, as: :status
         expose :default_subgroup_slug, as: :default_subgroup
         expose :cached_subgroups, as: :subgroups, using: API::V1::Entities::BasicSubgroup
         expose :cached_header_image_url, as: :header_image

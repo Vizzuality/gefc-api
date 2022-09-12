@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_09_152516) do
+ActiveRecord::Schema.define(version: 2022_09_12_120244) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -98,7 +98,6 @@ ActiveRecord::Schema.define(version: 2022_09_09_152516) do
     t.string "name_en"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.boolean "published", default: false, null: false
     t.text "description_en"
     t.string "slug", null: false
     t.string "subtitle_en"
@@ -128,7 +127,6 @@ ActiveRecord::Schema.define(version: 2022_09_09_152516) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "widget_id"
-    t.boolean "published", default: false, null: false
     t.text "description_en"
     t.boolean "by_default", default: false, null: false
     t.string "name_cn"
@@ -208,7 +206,6 @@ ActiveRecord::Schema.define(version: 2022_09_09_152516) do
     t.string "name_en"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.boolean "published", default: false, null: false
     t.text "description_en"
     t.boolean "by_default", default: false, null: false
     t.string "name_cn"
