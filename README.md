@@ -101,7 +101,6 @@ variables used. More, like the standard Rails env vars, are available.
 
 | Variable name          | Description                                                                                       | Default value |
 |------------------------|---------------------------------------------------------------------------------------------------|--------------:|
-| SECRET_KEY_BASE        | Random value used to hash sessions cookies and JWT tokens. Should be an high entropy random value |               |
 | POSTGRES_DATABASE      | Name of the Postgres database to use.                                                             |      gefc_api |
 | POSTGRES_USERNAME      | Postgres username to use.                                                                         |      postgres |
 | POSTGRES_PASSWORD      | Postgres password to use.                                                                         |               |
@@ -109,4 +108,6 @@ variables used. More, like the standard Rails env vars, are available.
 | POSTGRES_PORT          | Postgres server port                                                                              |          5432 |
 | DOWNLOADS_PATH         | Path under the local file system where the generated download files are stored                    |               |
 | API_BASE_URL           | Base URL (inc protocol) under which the API is hosted                                             |               |
+| SITE_BASE_URL          | Base URL (inc protocol) under which the site is hosted                                            |               |
+| FROM_EMAIL_ADDRESS     | Email address from which to send system emails (like "reset password")                            |               |
 | APPSIGNAL_PUSH_API_KEY | AppSignal API Key for error and metric logging                                                    |               |

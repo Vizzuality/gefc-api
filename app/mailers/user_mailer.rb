@@ -1,10 +1,8 @@
 class UserMailer < ApplicationMailer
-  default from: "ibrahim.lachguer@vizzuality.com"
+  default from: ENV['FROM_EMAIL_ADDRESS']
 
   def restore_password_email(user, recover_password_token)
-    @user = user
-    @recover_url = "https://green-energy-data-platform.vercel.app/recover-password?token=#{recover_password_token}"
-    @url = "http://www.gmail.com"
+    @recover_url = "#{ENV['SITE_BASE_URL'] || 'http://localhost:3001' }/recover-password?token=#{recover_password_token}"
     mail(to: user.email, subject: "Restore your password")
   end
 end

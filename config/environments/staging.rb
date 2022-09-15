@@ -67,7 +67,7 @@ Rails.application.configure do
   # config.active_job.queue_adapter     = :resque
   # config.active_job.queue_name_prefix = "gefc_api_production"
   config.action_mailer.smtp_settings = {
-    address: "email-smtp.ap-southeast-1.amazonaws.com",
+    address: "email-smtp.#{Rails.application.credentials.aws_region}.amazonaws.com",
     port: 587,
     user_name: Rails.application.credentials.aws_smtp_user_name,
     password: Rails.application.credentials.aws_smtp_password,
@@ -97,7 +97,7 @@ Rails.application.configure do
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
 
-  config.secret_key_base = ENV["SECRET_KEY_BASE"]
+  config.secret_key_base = Rails.application.credentials.secret_key_base
 
   # Use a different logger for distributed setups.
   # require "syslog/logger"

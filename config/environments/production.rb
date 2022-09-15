@@ -71,8 +71,8 @@ Rails.application.configure do
   config.action_mailer.smtp_settings = {
     address: "email-smtp.ap-southeast-1.amazonaws.com",
     port: 587,
-    user_name: Rails.application.credentials.aws_smtp_user_name,
-    password: Rails.application.credentials.aws_smtp_password,
+    user_name: Rails.application.credentials.aws_access_key_id,
+    password: Rails.application.credentials.aws_secret_access_key,
     authentication: :login,
     enable_starttls_auto: true
   }
@@ -99,7 +99,7 @@ Rails.application.configure do
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
 
-  config.secret_key_base = ENV["SECRET_KEY_BASE"]
+  config.secret_key_base = Rails.application.credentials.secret_key_base
 
   # Use a different logger for distributed setups.
   # require "syslog/logger"
