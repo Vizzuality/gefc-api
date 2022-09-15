@@ -63,18 +63,6 @@ Rails.application.configure do
   # Use a different cache store in production.
   config.cache_store = :mem_cache_store
 
-  # Use a real queuing backend for Active Job (and separate queues per environment).
-  # config.active_job.queue_adapter     = :resque
-  # config.active_job.queue_name_prefix = "gefc_api_production"
-  config.action_mailer.smtp_settings = {
-    address: "email-smtp.#{Rails.application.credentials.aws_region}.amazonaws.com",
-    port: 587,
-    user_name: Rails.application.credentials.aws_smtp_user_name,
-    password: Rails.application.credentials.aws_smtp_password,
-    authentication: :login,
-    enable_starttls_auto: true
-  }
-
   config.action_mailer.perform_caching = false
 
   # Ignore bad email addresses and do not raise email delivery errors.

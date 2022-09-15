@@ -65,6 +65,7 @@ gem "traco"
 gem "ox"
 # AWS SDK for Ruby. Read more: https://github.com/aws/aws-sdk-ruby
 gem "aws-sdk-s3", require: false
+gem "aws-sdk-ses"
 
 gem "parallel"
 
