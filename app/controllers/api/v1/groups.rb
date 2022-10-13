@@ -14,6 +14,12 @@ module API
           present groups_collection, with: API::V1::Entities::Group
         end
 
+        desc "Return the Energy Balance group"
+        get "energy-balance", root: "group" do
+          content_type 'application/json'
+          sendfile "#{Rails.root}/public/data/energy_balance.json"
+        end
+
         desc "Return a group"
         params do
           requires :id, type: String, desc: "ID / slug of the group"
