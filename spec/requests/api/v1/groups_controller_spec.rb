@@ -35,6 +35,16 @@ RSpec.describe API::V1::Groups do
   end
 
   describe "GET group" do
+    context "when requesting the special \"energy balance\" group" do
+      it "returns 200 and status ok" do
+        header "Content-Type", "application/json"
+        get "/api/v1/groups/energy-balance"
+        expect(last_response.status).to eq 200
+        expected_data = File.read("#{Rails.root}/public/data/energy_balance.json")
+        expect(last_response.body).to eq expected_data
+      end
+    end
+
     context "when requesting group with no subgroups" do
       it "returns 200 and status ok" do
         header "Content-Type", "application/json"
