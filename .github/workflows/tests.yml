@@ -2,7 +2,6 @@ env:
   POSTGRES_DB: gefc_api_test
   POSTGRES_PASSWORD: postgres
   POSTGRES_USER: postgres
-  RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
   DOWNLOADS_PATH: /tmp/gefc/
 
 
@@ -56,9 +55,10 @@ jobs:
           PGUSER: ${{ env.POSTGRES_USER }}
           PGPASSWORD: ${{ env.POSTGRES_PASSWORD }}
           RAILS_ENV: test
+          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
         run: |
-          bundle exec rails db:create RAILS_ENV=test
-          bundler exec rails db:schema:load RAILS_ENV=test
+          bundle exec rails db:create
+          bundler exec rails db:schema:load
 
       - name: Run tests 🔧
         env:
@@ -66,4 +66,5 @@ jobs:
           PGUSER: ${{ env.POSTGRES_USER }}
           PGPASSWORD: ${{ env.POSTGRES_PASSWORD }}
           RAILS_ENV: test
+          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
         run: bundle exec rspec spec --fail-fast
