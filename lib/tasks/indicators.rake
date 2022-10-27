@@ -22,8 +22,12 @@ namespace :indicators do
     meta_object["default_visualization"] = "sankey"
     energy_flows = Indicator.find_by_id_or_slug!("energy-flows-energy-flows", {}, [])
     years = []
-    energy_flows.sankey["data"].each { |data_item| years.push(data_item["year"]) }
-    years = years.uniq.sort
+
+    unless energy_flows.sankey["data"].nil?
+      energy_flows.sankey["data"].each { |data_item| years.push(data_item["year"]) }
+      years = years.uniq.sort
+    end
+
     china = Region.where(name_en: "China").first
     regions = []
     region = {}
@@ -54,8 +58,11 @@ namespace :indicators do
     meta_object["default_visualization"] = "sankey"
     emission_flows = Indicator.find_by_id_or_slug!("energy-flows-emission-flows", {}, [])
     years = []
-    emission_flows.sankey["data"].each { |data_item| years.push(data_item["year"]) }
-    years = years.uniq.sort
+
+    unless emission_flows.sankey["data"].nil?
+      emission_flows.sankey["data"].each { |data_item| years.push(data_item["year"]) }
+      years = years.uniq.sort
+    end
 
     current_unit = API::V1::FindOrUpsertUnit.call({name_en: "10000tce"})
 
