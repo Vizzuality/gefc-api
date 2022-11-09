@@ -29,7 +29,7 @@ This project includes multiple `rake` tasks to handle different data import and 
 `folder_name=<full path to the folder containing the data>  bundle exec rake import:all`
 
 This assumes the following:
-- All the files, except the sankey .json, must be in the root of that folder.
+- All the files (`*.csv`, `*.json`, `*.geojson`), except the sankey `.json`, must be in the root of that folder.
 - There can only be one subfolder, named `sankey`. In it, there can only be a single `.json` file that contains the sankey data.
 
 This command is a simple aggregate of all the commands below, executed back to back in the correct order. The operation

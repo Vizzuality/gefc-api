@@ -18,7 +18,8 @@ module API
       end
 
       class Scenario < Grape::Entity
-        expose :name, documentation: {type: "String", desc: "Region's name."}
+        expose :id, documentation: {type: "String", desc: "Scenario's unique id"}
+        expose :name, documentation: {type: "String", desc: "Scenario's name."}
       end
 
       class Unit < Grape::Entity
@@ -32,9 +33,9 @@ module API
         expose :year, documentation: {type: "String", desc: "Record's year."}
         expose :category_1, documentation: {type: "String", desc: "Record's category."}
         expose :category_2, documentation: {type: "String", desc: "Record's category."}
-        expose :unit_info, as: :unit
+        expose :unit, using: API::V1::Entities::Unit
         expose :region_id
-        expose :scenario_info, as: :scenario
+        expose :scenario, using: API::V1::Entities::Scenario
         expose :visualization_types, as: :visualization_types
       end
 

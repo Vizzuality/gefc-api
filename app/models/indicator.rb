@@ -107,7 +107,7 @@ class Indicator < ApplicationRecord
     meta_object["default_visualization"] = if default_visualization_name.present?
       default_visualization_name
     else
-                                             visualization_types.first
+      visualization_types.first
     end
 
     visualization_types.each do |visualization_type|
@@ -140,8 +140,8 @@ class Indicator < ApplicationRecord
       meta_object[visualization_type]["units"] = units
 
       scenarios = []
-      records.where.not(scenario_info: nil).each do |record|
-        scenarios.push(record.scenario_info)
+      records.where.not(scenario_id: nil).each do |record|
+        scenarios.push({ id: record.scenario.id, name: record.scenario.name })
       end
       meta_object[visualization_type]["scenarios"] = scenarios.uniq
     end
