@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_12_131613) do
+ActiveRecord::Schema.define(version: 2022_11_09_165430) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -118,8 +118,8 @@ ActiveRecord::Schema.define(version: 2022_09_12_131613) do
     t.integer "start_date"
     t.integer "end_date"
     t.json "meta"
-    t.text "sankey"
     t.text "scenarios"
+    t.json "sankey"
     t.index ["name_en", "name_cn", "subgroup_id"], name: "index_indicators_on_name_en_and_name_cn_and_subgroup_id", unique: true
     t.index ["slug"], name: "index_indicators_on_slug", unique: true
     t.index ["subgroup_id", "by_default"], name: "index_indicators_on_subgroup_id_and_by_default", unique: true, where: "by_default"

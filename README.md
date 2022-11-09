@@ -24,6 +24,21 @@ After running the test suit, you will find a coverage report at `coverage/index.
 
 This project includes multiple `rake` tasks to handle different data import and transformation tasks.
 
+### All-in-one task
+
+`folder_name=<full path to the folder containing the data>  bundle exec rake import:all`
+
+This assumes the following:
+- All the files, except the sankey .json, must be in the root of that folder.
+- There can only be one subfolder, named `sankey`. In it, there can only be a single `.json` file that contains the sankey data.
+
+This command is a simple aggregate of all the commands below, executed back to back in the correct order. The operation
+is not atomic. For details on what exactly this command does, check the documentation for each of the subtasks it executes.
+
+### Step by step / details
+
+The above command combines all the 
+
 ### Data import
 
 - `groups:import_csv_file`: Imports a .csv file containing Records. Creates associated Indicator, Groups, Subgroups,
@@ -50,6 +65,7 @@ This project includes multiple `rake` tasks to handle different data import and 
 - `indicators:populate_sankey_meta`: For existing indicators that are visualized in a sankey diagram, recalculates the
   visualisation metadata that is used to configure frontend visualisations. Should only be executed
   after `widgets:import_json_file` or `widgets:import_json_folder`
+- `regions:populate_extra_info`: <TBD>
 
 ## Updating datasets
 

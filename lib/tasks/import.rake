@@ -4,22 +4,17 @@ namespace :import do
 
     Rake::Task["groups:import_csv_folder"].invoke
     Rake::Task["widgets:import_json_folder"].invoke
-    ENV["file_name"] = "#{ENV["folder_name"]}/sankey/sankey.json"
-    Rake::Task["sankeys:import_json"].invoke
+
+    records = Dir.glob("#{ENV["folder_name"]}/sankey/*.json")
+    records.each do |file_path|
+      ENV["file_name"] = file_path
+      Rake::Task["sankeys:import_json"].invoke
+    end
+
+    Rake::Task["geometries:import_geojson"].invoke
 
     Rake::Task["indicators:populate_extra_info"].invoke
-    Rake::Task["indicators:populate_meta"].invoke
     Rake::Task["indicators:populate_sankey_meta"].invoke
-
-
-    ## TODO: configure these with the updated import stuff
-    # points_file_name = ENV["points_file_name"]
-    # ENV["file_name"] = points_file_name
-    # Rake::Task["geometries:points:import_geojson"].invoke if points_file_name
-    # polygons_file_name = ENV["polygons_file_name"]
-    # ENV["file_name"] = polygons_file_name
-    # Rake::Task["geometries:polygons:import_geojson"].invoke if polygons_file_name
-
     Rake::Task["regions:populate_extra_info"].invoke
   end
 end

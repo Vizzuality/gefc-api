@@ -9,7 +9,6 @@ class Indicator < ApplicationRecord
   serialize :categories, Array
   serialize :scenarios, Array
   serialize :category_filters, Hash
-  serialize :sankey, Hash
 
   validates_uniqueness_of :by_default, scope: :subgroup_id, if: :by_default?
   validates_uniqueness_of :name_en, scope: :subgroup_id
@@ -44,9 +43,9 @@ class Indicator < ApplicationRecord
     category_filters = {}
     category_1.each do |category_1|
       category_filters[category_1] = records
-        .where(Record.current_locale_column(:category_1) => category_1)
-        .pluck(Record.current_locale_column(:category_2))
-        .uniq
+                                       .where(Record.current_locale_column(:category_1) => category_1)
+                                       .pluck(Record.current_locale_column(:category_2))
+                                       .uniq
     end
     category_filters
   end
@@ -108,7 +107,7 @@ class Indicator < ApplicationRecord
     meta_object["default_visualization"] = if default_visualization_name.present?
       default_visualization_name
     else
-      visualization_types.first
+                                             visualization_types.first
     end
 
     visualization_types.each do |visualization_type|
@@ -184,23 +183,15 @@ class Indicator < ApplicationRecord
 
   # TODO: Grappe is calling this method twice every time that is exposed
   def sankey_by_locale(locale, year, unit, region)
-    sankey_by_locale = if [year, unit, region].any?
+    # sankey_filtered_data = sankey_filter(year, unit, region)
+
+    sankey_filtered_data = if [year, unit, region].any?
       sankey_filter(year, unit, region)
     else
       sankey
     end
 
-    sankey_by_locale["nodes"].each do |node|
-      if (locale == "cn") && node["name_cn"].present?
-        node["name"] = node["name_cn"]
-      elsif node["name_en"].present?
-        node["name"] = node["name_en"]
-      end
-      node.delete("name_en")
-      node.delete("name_cn")
-    end
-
-    sankey_by_locale["data"].each do |data|
+    sankey_filtered_data["data"].each do |data|
       if (locale == "cn") && data["region_cn"].present?
         data["region"] = data["region_cn"]
       elsif data["region_en"].present?
@@ -226,16 +217,29 @@ class Indicator < ApplicationRecord
         link.delete("class_en")
         link.delete("class_cn")
       end
+
+      data["nodes"].each do |node|
+        if (locale == "cn") && node["name_cn"].present?
+          node["name"] = node["name_cn"]
+        elsif node["name_en"].present?
+          node["name"] = node["name_en"]
+        end
+        node.delete("name_en")
+        node.delete("name_cn")
+      end
     end
 
-    sankey_by_locale
+    sankey_filtered_data
   end
 
   def sankey_filter(year, unit, region)
     filtered_sankey = {}
-    filtered_sankey["nodes"] = sankey["nodes"]
     filtered_sankey["data"] = []
     sankey_to_filter = sankey["data"]
+
+    # if [year, unit, region].all? { |str| str.nil? }
+    #   year = (sankey["data"].map { |data| data.with_indifferent_access["year"] }).max
+    # end
 
     if year.present?
       sankey_to_filter.each do |data|

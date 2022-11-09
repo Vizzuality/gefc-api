@@ -23,7 +23,7 @@ namespace :indicators do
     energy_flows = Indicator.find_by_id_or_slug!("energy-flows-energy-flows", {}, [])
     years = []
 
-    unless energy_flows.sankey["data"].nil?
+    unless energy_flows.sankey.nil? || energy_flows.sankey["data"].nil?
       energy_flows.sankey["data"].each { |data_item| years.push(data_item["year"]) }
       years = years.uniq.sort
     end
@@ -59,7 +59,7 @@ namespace :indicators do
     emission_flows = Indicator.find_by_id_or_slug!("energy-flows-emission-flows", {}, [])
     years = []
 
-    unless emission_flows.sankey["data"].nil?
+    unless emission_flows.sankey.nil? || emission_flows.sankey["data"].nil?
       emission_flows.sankey["data"].each { |data_item| years.push(data_item["year"]) }
       years = years.uniq.sort
     end

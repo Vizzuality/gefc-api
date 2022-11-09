@@ -14,11 +14,9 @@ class SankeysImporter
       current_indicator = Indicator.where(name_en: indicator_data["indicator_en"]).first
       puts current_indicator.id
 
-      raise SankeyException.new('Sankey input data is missing the "nodes" property') if indicator_data["nodes"].nil?
       raise SankeyException.new('Sankey input data is missing the "data" property') if indicator_data["data"].nil?
 
       current_sankey = {
-        "nodes" => indicator_data["nodes"],
         "data" => indicator_data["data"]
       }
       current_indicator.sankey = current_sankey

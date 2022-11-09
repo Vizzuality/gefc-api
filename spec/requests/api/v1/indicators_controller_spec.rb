@@ -10,12 +10,7 @@ RSpec.describe API::V1::Indicators do
   let!(:record) { create(:record, indicator: indicator, year: 2020, region: region1) }
   let!(:record2) { create(:record, indicator: indicator, year: 2021, region: region2) }
   sankey_test = {
-    "nodes" => [
-      {
-        "name_en" => "Industry",
-        "name_cn" => "工业"
-      }
-    ],
+
     "data" => [
       {
         "region_en" => "Kenya",
@@ -23,6 +18,12 @@ RSpec.describe API::V1::Indicators do
         "year" => 2006,
         "units_en" => "10000km",
         "units_cn" => "10000km",
+        "nodes" => [
+          {
+            "name_en" => "Industry",
+            "name_cn" => "工业"
+          }
+        ],
         "links" => [
           {
             "source" => 0,
@@ -46,6 +47,12 @@ RSpec.describe API::V1::Indicators do
         "year" => 2007,
         "units_en" => "10000t",
         "units_cn" => "10000t",
+        "nodes" => [
+          {
+            "name_en" => "Industry",
+            "name_cn" => "工业"
+          }
+        ],
         "links" => [
           {
             "source" => 0,
@@ -69,6 +76,12 @@ RSpec.describe API::V1::Indicators do
         "year" => 2009,
         "units_en" => "10000t",
         "units_cn" => "10000t",
+        "nodes" => [
+          {
+            "name_en" => "Industry",
+            "name_cn" => "工业"
+          }
+        ],
         "links" => [
           {
             "source" => 0,
@@ -189,12 +202,13 @@ RSpec.describe API::V1::Indicators do
 
         expect(last_response.body).to look_like_json
         expect(body_as_json.keys).to match_array(["sankey"])
-        expect(body_as_json[:sankey].keys).to match_array(["nodes", "data"])
-        body_as_json[:sankey][:nodes].each do |node|
-          expect(node.keys).to match_array(["name"])
-        end
+        expect(body_as_json[:sankey].keys).to match_array(["data"])
+
         body_as_json[:sankey][:data].each do |data_item|
-          expect(data_item.keys).to match_array(["region", "year", "units", "links"])
+          expect(data_item.keys).to match_array(["region", "year", "units", "links", "nodes"])
+          data_item[:nodes].each do |node|
+            expect(node.keys).to match_array(["name"])
+          end
           data_item[:links].each do |link|
             expect(link.keys).to match_array(["source", "target", "value", "class"])
           end
@@ -222,12 +236,13 @@ RSpec.describe API::V1::Indicators do
 
         expect(last_response.body).to look_like_json
         expect(body_as_json.keys).to match_array(["sankey"])
-        expect(body_as_json[:sankey].keys).to match_array(["nodes", "data"])
-        body_as_json[:sankey][:nodes].each do |node|
-          expect(node.keys).to match_array(["name"])
-        end
+        expect(body_as_json[:sankey].keys).to match_array(["data"])
+
         body_as_json[:sankey][:data].each do |data_item|
-          expect(data_item.keys).to match_array(["region", "year", "units", "links"])
+          expect(data_item.keys).to match_array(["region", "year", "units", "links", "nodes"])
+          data_item[:nodes].each do |node|
+            expect(node.keys).to match_array(["name"])
+          end
           data_item[:links].each do |link|
             expect(link.keys).to match_array(["source", "target", "value", "class"])
           end
@@ -263,12 +278,12 @@ RSpec.describe API::V1::Indicators do
 
         expect(last_response.body).to look_like_json
         expect(body_as_json.keys).to match_array(["sankey"])
-        expect(body_as_json[:sankey].keys).to match_array(["nodes", "data"])
-        body_as_json[:sankey][:nodes].each do |node|
-          expect(node.keys).to match_array(["name"])
-        end
+        expect(body_as_json[:sankey].keys).to match_array(["data"])
         body_as_json[:sankey][:data].each do |data_item|
-          expect(data_item.keys).to match_array(["region", "year", "units", "links"])
+          expect(data_item.keys).to match_array(["region", "year", "units", "links", "nodes"])
+          data_item[:nodes].each do |node|
+            expect(node.keys).to match_array(["name"])
+          end
           data_item[:links].each do |link|
             expect(link.keys).to match_array(["source", "target", "value", "class"])
           end
@@ -305,12 +320,12 @@ RSpec.describe API::V1::Indicators do
 
         expect(last_response.body).to look_like_json
         expect(body_as_json.keys).to match_array(["sankey"])
-        expect(body_as_json[:sankey].keys).to match_array(["nodes", "data"])
-        body_as_json[:sankey][:nodes].each do |node|
-          expect(node.keys).to match_array(["name"])
-        end
+        expect(body_as_json[:sankey].keys).to match_array(["data"])
         body_as_json[:sankey][:data].each do |data_item|
-          expect(data_item.keys).to match_array(["region", "year", "units", "links"])
+          expect(data_item.keys).to match_array(["region", "year", "units", "links", "nodes"])
+          data_item[:nodes].each do |node|
+            expect(node.keys).to match_array(["name"])
+          end
           data_item[:links].each do |link|
             expect(link.keys).to match_array(["source", "target", "value", "class"])
           end
@@ -347,12 +362,12 @@ RSpec.describe API::V1::Indicators do
 
         expect(last_response.body).to look_like_json
         expect(body_as_json.keys).to match_array(["sankey"])
-        expect(body_as_json[:sankey].keys).to match_array(["nodes", "data"])
-        body_as_json[:sankey][:nodes].each do |node|
-          expect(node.keys).to match_array(["name"])
-        end
+        expect(body_as_json[:sankey].keys).to match_array(["data"])
         body_as_json[:sankey][:data].each do |data_item|
-          expect(data_item.keys).to match_array(["region", "year", "units", "links"])
+          expect(data_item.keys).to match_array(["region", "year", "units", "links", "nodes"])
+          data_item[:nodes].each do |node|
+            expect(node.keys).to match_array(["name"])
+          end
           data_item[:links].each do |link|
             expect(link.keys).to match_array(["source", "target", "value", "class"])
           end
