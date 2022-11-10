@@ -2,7 +2,7 @@ class Subgroup < ApplicationRecord
   include Slugable
 
   validates_uniqueness_of :by_default, scope: :group_id, if: :by_default?
-  validates_uniqueness_of :name_en
+  validates_uniqueness_of :name_en, scope: :group_id
   validates_presence_of :name_en
 
   belongs_to :group
