@@ -35,6 +35,22 @@ This assumes the following:
 This command is a simple aggregate of all the commands below, executed back to back in the correct order. The operation
 is not atomic. For details on what exactly this command does, check the documentation for each of the subtasks it executes.
 
+> Example
+
+```
+<root folder>
+├── <data_file_1>.csv
+├── <data_file_1>.json
+├── <data_file_2>.csv
+├── <data_file_2>.json
+├── <data_file_3>.csv
+├── <data_file_3>.json
+├── <geometries_file_1>.geojson
+├── <geometries_file_2>.geojson
+├── sankey
+   └── <sankey_file>.json
+```
+
 ### Step by step / details
 
 The above command combines all the 
