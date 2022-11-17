@@ -1,9 +1,6 @@
 module API
   module V1
     class FetchIndicator
-      def initialize
-      end
-
       def all
         Indicator.all.order(:name_en)
       end

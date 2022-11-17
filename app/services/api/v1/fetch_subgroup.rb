@@ -1,9 +1,6 @@
 module API
   module V1
     class FetchSubgroup
-      def initialize
-      end
-
       def all
         Subgroup.all.order(:name_en)
       end
@@ -20,11 +17,11 @@ module API
         default_by_group(group)&.slug
       end
 
-      def by_id_or_slug(slug_or_id, filters)
+      def by_group_id_and_id_or_slug(group_id, slug_or_id)
         Subgroup
-          .where("id::TEXT = :id OR slug = :id", id: slug_or_id).
-          # where(filters).
-          first!
+          .where(group_id: group_id)
+          .where("id::TEXT = :id OR slug = :id", id: slug_or_id)
+          .first!
       end
     end
   end

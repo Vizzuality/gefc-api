@@ -94,21 +94,32 @@ RSpec.describe API::V1::Groups do
   end
 
   describe "GET indicators" do
-    let!(:subgroup) { FactoryBot.create(:subgroup, group: group) }
-    let!(:indicators) { FactoryBot.create_list(:indicator, 3, subgroup: subgroup) }
+    let!(:other_group) { FactoryBot.create(:group) }
+    let!(:named_subgroup_one) { FactoryBot.create(:subgroup, name_en: "named subgroup", group: group) }
+    let!(:named_subgroup_two) { FactoryBot.create(:subgroup, name_en: "named subgroup", group: other_group) }
+    let!(:indicators_subgroup_one) { FactoryBot.create_list(:indicator, 3, subgroup: named_subgroup_one) }
+    let!(:indicators_subgroup_two) { FactoryBot.create_list(:indicator, 3, subgroup: named_subgroup_two) }
     context "when requesting list of indicators" do
       it "returns 200 and status ok" do
         header "Content-Type", "application/json"
-        get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators"
+        get "/api/v1/groups/#{group.id}/subgroups/#{named_subgroup_one.id}/indicators"
         expect(last_response.status).to eq 200
       end
       it "returns a list of indicators ordered by english name" do
         header "Content-Type", "application/json"
-        get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators"
+        get "/api/v1/groups/#{group.id}/subgroups/#{named_subgroup_one.id}/indicators"
 
-        expect(parsed_body.first["id"]).to eq Indicator.all.order(:name_en).first.id
-        expect(parsed_body.count).to eq Indicator.all.order(:name_en).count
-        expect(parsed_body.last["id"]).to eq Indicator.all.order(:name_en).last.id
+        expect(parsed_body.first["id"]).to eq Indicator.where(subgroup_id: named_subgroup_one.id).order(:name_en).first.id
+        expect(parsed_body.count).to eq Indicator.where(subgroup_id: named_subgroup_one.id).order(:name_en).count
+        expect(parsed_body.last["id"]).to eq Indicator.where(subgroup_id: named_subgroup_one.id).order(:name_en).last.id
+      end
+      it "does not return indicators for subgroups with the same name but different group" do
+        header "Content-Type", "application/json"
+        get "/api/v1/groups/#{group.id}/subgroups/#{named_subgroup_one.id}/indicators"
+
+        expect(parsed_body.map { |indicator| indicator["subgroup"]["id"] }).to eq indicators_subgroup_one.map{ |indicator| indicator.subgroup_id }
+        expect(parsed_body.count).not_to eq Indicator.all.count
+        expect(parsed_body.count).to eq Indicator.where(subgroup_id: named_subgroup_one.id).count
       end
     end
   end
@@ -173,13 +184,13 @@ RSpec.describe API::V1::Groups do
         get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators/#{indicator.id}/records"
 
         expect(find_by_id(record.id)["scenario"]).to eq(nil)
-        expect(find_by_id(record2.id)["scenario"]).to eq({"id" => scenario.id, "name" => scenario.name})
+        expect(find_by_id(record2.id)["scenario"]).to eq({ "id" => scenario.id, "name" => scenario.name })
       end
       it "display the unit_info for the records" do
         header "Content-Type", "application/json"
         get "/api/v1/groups/#{group.id}/subgroups/#{subgroup.id}/indicators/#{indicator.id}/records"
 
-        expect(find_by_id(record2.id)["unit"]).to eq({"id" => unit.id, "name" => unit.name})
+        expect(find_by_id(record2.id)["unit"]).to eq({ "id" => unit.id, "name" => unit.name })
       end
       it "display the region_id for the records" do
         header "Content-Type", "application/json"

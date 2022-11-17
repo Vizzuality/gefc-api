@@ -46,9 +46,8 @@ module API
           requires :subgroup_id, type: String, desc: "ID / slug of the subgroup"
         end
         get ":id/subgroups/:subgroup_id" do
-          # we are sending the indicators info here.
-          # do we really need the /indicators and /indicators/:id ?
-          subgroup_object = FetchSubgroup.new.by_id_or_slug(permitted_params[:subgroup_id], {})
+          group_object = FetchGroup.new.by_id_or_slug(permitted_params[:id])
+          subgroup_object = FetchSubgroup.new.by_group_id_and_id_or_slug(group_object.id, permitted_params[:subgroup_id])
           present subgroup_object, with: API::V1::Entities::FullSubgroup
         end
 
@@ -59,7 +58,8 @@ module API
           use :pagination
         end
         get ":id/subgroups/:subgroup_id/indicators" do
-          subgroup_object = FetchSubgroup.new.by_id_or_slug(permitted_params[:subgroup_id], {})
+          group_object = FetchGroup.new.by_id_or_slug(permitted_params[:id])
+          subgroup_object = FetchSubgroup.new.by_group_id_and_id_or_slug(group_object.id, permitted_params[:subgroup_id])
           indicators_collection = FetchIndicator.new.by_subgroup(subgroup_object)
           present indicators_collection, with: API::V1::Entities::FullIndicator
         end
