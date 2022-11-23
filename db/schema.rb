@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_23_160442) do
+ActiveRecord::Schema.define(version: 2022_11_23_160441) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -46,10 +46,10 @@ ActiveRecord::Schema.define(version: 2022_11_23_160442) do
     t.string "filename", null: false
     t.string "content_type"
     t.text "metadata"
+    t.string "service_name", null: false
     t.bigint "byte_size", null: false
     t.string "checksum", null: false
     t.datetime "created_at", null: false
-    t.string "service_name", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
@@ -109,8 +109,8 @@ ActiveRecord::Schema.define(version: 2022_11_23_160442) do
     t.text "category_filters"
     t.integer "start_date"
     t.integer "end_date"
-    t.json "meta"
     t.text "scenarios"
+    t.json "meta"
     t.json "sankey"
     t.index ["name_en", "name_cn", "subgroup_id"], name: "index_indicators_on_name_en_and_name_cn_and_subgroup_id", unique: true
     t.index ["slug"], name: "index_indicators_on_slug", unique: true
@@ -122,8 +122,8 @@ ActiveRecord::Schema.define(version: 2022_11_23_160442) do
   create_table "record_widgets", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "record_id"
     t.uuid "widget_id"
-    t.datetime "created_at", default: "2022-09-09 15:26:45", null: false
-    t.datetime "updated_at", default: "2022-09-09 15:26:45", null: false
+    t.datetime "created_at", default: "2022-11-23 18:59:17", null: false
+    t.datetime "updated_at", default: "2022-11-23 18:59:17", null: false
   end
 
   create_table "records", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -132,8 +132,8 @@ ActiveRecord::Schema.define(version: 2022_11_23_160442) do
     t.integer "year"
     t.string "category_1_en"
     t.string "category_2_en"
-    t.datetime "created_at", default: "2022-09-09 15:26:45", null: false
-    t.datetime "updated_at", default: "2022-09-09 15:26:45", null: false
+    t.datetime "created_at", default: "2022-11-23 18:59:17", null: false
+    t.datetime "updated_at", default: "2022-11-23 18:59:17", null: false
     t.uuid "unit_id"
     t.uuid "region_id"
     t.json "original_categories"
