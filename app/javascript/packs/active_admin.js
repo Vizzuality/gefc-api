@@ -3,3 +3,4 @@
 import "../stylesheets/active_admin";
 
 import "@activeadmin/activeadmin";
+import "activeadmin_addons"

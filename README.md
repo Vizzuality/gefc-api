@@ -131,15 +131,16 @@ You will need SSH access to the server, which you can get from the server's admi
 High-level application configuration is done using environment variables. The list below covers the application-specific
 variables used. More, like the standard Rails env vars, are available.
 
-| Variable name          | Description                                                                                       | Default value |
-|------------------------|---------------------------------------------------------------------------------------------------|--------------:|
-| POSTGRES_DATABASE      | Name of the Postgres database to use.                                                             |      gefc_api |
-| POSTGRES_USERNAME      | Postgres username to use.                                                                         |      postgres |
-| POSTGRES_PASSWORD      | Postgres password to use.                                                                         |               |
-| POSTGRES_HOST          | Postgres server hostname                                                                          |     localhost |
-| POSTGRES_PORT          | Postgres server port                                                                              |          5432 |
-| DOWNLOADS_PATH         | Path under the local file system where the generated download files are stored                    |               |
-| API_BASE_URL           | Base URL (inc protocol) under which the API is hosted                                             |               |
-| SITE_BASE_URL          | Base URL (inc protocol) under which the site is hosted                                            |               |
-| FROM_EMAIL_ADDRESS     | Email address from which to send system emails (like "reset password")                            |               |
-| APPSIGNAL_PUSH_API_KEY | AppSignal API Key for error and metric logging                                                    |               |
+| Variable name          | Description                                                                                               | Default value |
+|------------------------|-----------------------------------------------------------------------------------------------------------|--------------:|
+| POSTGRES_DATABASE      | Name of the Postgres database to use.                                                                     |      gefc_api |
+| POSTGRES_USERNAME      | Postgres username to use.                                                                                 |      postgres |
+| POSTGRES_PASSWORD      | Postgres password to use.                                                                                 |               |
+| POSTGRES_HOST          | Postgres server hostname                                                                                  |     localhost |
+| POSTGRES_PORT          | Postgres server port                                                                                      |          5432 |
+| REDIS_URL              | Full Redis URL, including protocol, host, port and database, for the Redis server for Sidekiq async tasks |               |
+| DOWNLOADS_PATH         | Path under the local file system where the generated download files are stored                            |               |
+| API_BASE_URL           | Base URL (inc protocol) under which the API is hosted                                                     |               |
+| SITE_BASE_URL          | Base URL (inc protocol) under which the site is hosted                                                    |               |
+| FROM_EMAIL_ADDRESS     | Email address from which to send system emails (like "reset password")                                    |               |
+| APPSIGNAL_PUSH_API_KEY | AppSignal API Key for error and metric logging                                                            |               |

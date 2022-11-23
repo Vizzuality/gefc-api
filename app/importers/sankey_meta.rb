@@ -1,23 +1,5 @@
-namespace :indicators do
-  desc "populate_extra_info"
-  task populate_extra_info: :environment do
-    Parallel.map(Indicator.all) do |indicator|
-      puts indicator.id
-      indicator.region_ids = Region.where(id: indicator.records.select(:region_id)).pluck(:id)
-      indicator.visualization_types = indicator.widgets_list
-      indicator.default_visualization_name = indicator.default_visualization
-      indicator.categories = indicator.category_1
-      indicator.category_filters = indicator.get_category_filters
-      indicator.start_date = indicator.get_start_date
-      indicator.end_date = indicator.get_end_date
-      indicator.scenarios = indicator.get_scenarios
-      indicator.meta = indicator.get_meta_object unless indicator.visualization_types.include?("sankey")
-      indicator.save!
-    end
-  end
-
-  desc "populate meta for sankey"
-  task populate_sankey_meta: :environment do
+class SankeyMeta
+  def populate
     meta_object = {}
     meta_object["default_visualization"] = "sankey"
     energy_flows = Indicator.find_by_id_or_slug!("energy-flows-energy-flows", {}, [])
@@ -36,7 +18,7 @@ namespace :indicators do
     region["name_cn"] = china.name_cn
     regions.push(region)
 
-    current_unit = API::V1::FindOrUpsertUnit.call({name_en: "10000t"})
+    current_unit = API::V1::FindOrUpsertUnit.call({ name_en: "10000t" })
 
     units = []
     unit = {}
@@ -64,7 +46,7 @@ namespace :indicators do
       years = years.uniq.sort
     end
 
-    current_unit = API::V1::FindOrUpsertUnit.call({name_en: "10000tce"})
+    current_unit = API::V1::FindOrUpsertUnit.call({ name_en: "10000tce" })
 
     units = []
     unit = {}

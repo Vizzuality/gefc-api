@@ -40,6 +40,7 @@ gem "devise"
 gem "jwt"
 # A Ruby on Rails framework for creating elegant backends for website administration. Read more: https://github.com/activeadmin/activeadmin
 gem "activeadmin"
+gem 'activeadmin_addons'
 # access to features of the PostGIS geospatial database from ActiveRecord
 gem "activerecord-postgis-adapter"
 # Exception tracking
@@ -68,6 +69,10 @@ gem "aws-sdk-s3", require: false
 gem "aws-sdk-ses"
 
 gem "parallel"
+
+gem 'sidekiq', '~> 6.5.5'
+gem 'sidekiq-unique-jobs'
+gem 'rubyzip'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

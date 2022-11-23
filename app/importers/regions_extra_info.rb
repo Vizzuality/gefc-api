@@ -1,6 +1,5 @@
-namespace :regions do
-  desc "Populate geometry encoded"
-  task populate_extra_info: :environment do
+class RegionsExtraInfo
+  def populate
     Parallel.map(Region.all) do |region|
       puts region.id
       region.geometry_encoded = region.get_geometry_encoded
