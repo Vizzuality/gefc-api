@@ -18,6 +18,10 @@ ActiveAdmin.register DataImportAttempt do
   end
 
   form do |f|
+    panel 'Instructions' do
+      render 'folder_structure.html.erb', { data_import_attempt: data_import_attempt }
+    end
+
     f.semantic_errors # shows errors on :base
     f.inputs do
       f.input :original_file, as: :file
