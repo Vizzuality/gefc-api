@@ -69,6 +69,7 @@ jobs:
 
       - name: Run tests 🔧
         env:
+          REDIS_URL: redis://localhost:6379/0
           PGHOST: localhost
           PGUSER: ${{ env.POSTGRES_USER }}
           PGPASSWORD: ${{ env.POSTGRES_PASSWORD }}
