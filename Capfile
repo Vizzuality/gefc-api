@@ -5,6 +5,7 @@ require "capistrano/deploy"
 require "capistrano/rbenv"
 require "capistrano/bundler"
 require "capistrano/scm/git"
+require "capistrano/sidekiq"
 
 set :rbenv_prefix,
   "RBENV_ROOT=#{fetch(:rbenv_path)} RBENV_VERSION=#{fetch(:rbenv_ruby)} #{fetch(:rbenv_path)}/bin/rbenv exec"
@@ -18,6 +19,10 @@ require "capistrano/rails"
 require "capistrano/passenger"
 require "capistrano-yarn"
 # require "capistrano/rails/migrations"
+
+install_plugin Capistrano::Sidekiq  # Default sidekiq tasks
+# Then select your service manager
+install_plugin Capistrano::Sidekiq::Systemd
 
 Dir.glob("lib/capistrano/tasks/*.rake").each { |r| import r }
 

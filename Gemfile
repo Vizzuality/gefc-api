@@ -103,6 +103,7 @@ group :development do
   gem "capistrano-rails", "~> 1.6", require: false
   gem "capistrano-rbenv", "~> 2.2"
   gem "capistrano-yarn"
+  gem "capistrano-sidekiq"
   gem "rubocop"
   gem "rubocop-rails"
   gem "spring"

@@ -13,6 +13,8 @@ set :rbenv_prefix, "RBENV_ROOT=#{fetch(:rbenv_path)} RBENV_VERSION=#{fetch(:rben
 set :rbenv_map_bins, %w[rake gem bundle ruby rails]
 set :rbenv_roles, :all
 
+set :sidekiq_service_unit_user, :system
+
 set :default_env, {
   PATH: '$HOME/.nvm/versions/node/v12.16.3/bin/:$PATH',
   NODE_ENVIRONMENT: 'production'
