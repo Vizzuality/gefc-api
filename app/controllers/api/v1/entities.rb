@@ -103,7 +103,6 @@ module API
         expose :description, documentation: {type: "String", desc: "Group's description."}
         expose :default_subgroup_slug, as: :default_subgroup
         expose :cached_subgroups, as: :subgroups, using: API::V1::Entities::BasicSubgroup
-        expose :cached_header_image_url, as: :header_image
       end
 
       class MinimumGroup < Grape::Entity

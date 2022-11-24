@@ -29,7 +29,6 @@ namespace :memcached do
       API::V1::FetchSubgroup.new.by_group(group)
       API::V1::FetchSubgroup.new.default_by_group(group)
       API::V1::FetchSubgroup.new.default_slug_by_group(group)
-      API::V1::FetchGroup.new.header_image_url(group)
     end
 
     Subgroup.all.each do |subgroup|
@@ -62,7 +61,6 @@ namespace :memcached do
       API::V1::FetchSubgroup.new.by_group(group)
       API::V1::FetchSubgroup.new.default_by_group(group)
       API::V1::FetchSubgroup.new.default_slug_by_group(group)
-      API::V1::FetchGroup.new.header_image_url(group)
     end
 
     Subgroup.all.each do |subgroup|

@@ -11,10 +11,6 @@ module API
       def by_id_or_slug(slug_or_id)
         Group.where("id::TEXT = :id OR slug = :id", id: slug_or_id).first!
       end
-
-      def header_image_url(group)
-        group.header_image.attachment&.service_url
-      end
     end
   end
 end

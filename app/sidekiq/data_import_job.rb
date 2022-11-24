@@ -16,35 +16,23 @@ class DataImportJob
 
     return if data_import_id.nil?
 
-    temp = File.join(Dir.tmpdir, (0...8).map { rand(65..90).chr }.join)
+    temp_folder_path = File.join(Dir.tmpdir, (0...8).map { rand(65..90).chr }.join)
 
     begin
       data_import_attempt.update!(status: :running)
 
       if data_import_attempt.original_file&.attachment
-        file_path = if Rails.env.development? || Rails.env.test?
-          ActiveStorage::Blob.service.path_for(data_import_attempt.original_file.key)
+        if Rails.application.config.active_storage.service.eql? :amazon
+          data_import_attempt.original_file.open do |file|
+            handle_zip(file, temp_folder_path)
+          end
         else
-          data_import_attempt.original_file&.service_url&.split("?")&.first
+          handle_zip(ActiveStorage::Blob.service.path_for(data_import_attempt.original_file.key), temp_folder_path)
         end
       end
 
-      Zip::File.open(file_path) do |zip_file|
-        zip_file.each do |f|
-
-          f_path = File.join(temp, f.name)
-
-          puts "Extracting #{f.name} to #{f_path}"
-
-          FileUtils.mkdir_p(File.dirname(f_path))
-          zip_file.extract(f, f_path) unless File.exist?(f_path)
-        end
-
-        DataImporter.new.import(temp)
-        data_import_attempt.done!
-      end
-
-      FileUtils.rm_rf(temp)
+      data_import_attempt.done!
+      FileUtils.rm_rf(temp_folder_path)
       puts "Cleaning up and saving status..."
       data_import_attempt.done!
       puts "Done!"
@@ -53,7 +41,25 @@ class DataImportJob
       data_import_attempt.status = "error"
       data_import_attempt.message = "Error importing data: #{error}"
       data_import_attempt.save
-      FileUtils.rm_rf(temp) if File.directory?(temp)
+      FileUtils.rm_rf(temp_folder_path) if File.directory?(temp_folder_path)
+    end
+  end
+
+  private
+
+  def handle_zip(zip_file_path, temp_folder_path)
+    Zip::File.open(zip_file_path) do |zip_file|
+      zip_file.each do |file|
+
+        file_path = File.join(temp_folder_path, file.name)
+
+        puts "Extracting #{file.name} to #{file_path}"
+
+        FileUtils.mkdir_p(File.dirname(file_path))
+        zip_file.extract(file, file_path) unless File.exist?(file_path)
+      end
+
+      DataImporter.new.import(temp_folder_path)
     end
   end
 end

@@ -5,7 +5,6 @@ class Group < ApplicationRecord
   validates_presence_of :name_en
   has_many :subgroups
   has_one :default_subgroup, -> { by_default }, class_name: "Subgroup"
-  has_one_attached :header_image
   translates :name, :description, :subtitle
 
   def default_subgroup_slug
@@ -16,15 +15,7 @@ class Group < ApplicationRecord
     API::V1::FetchGroup.new.by_id_or_slug(slug_or_id)
   end
 
-  def header_image_url
-    header_image.attachment&.service_url
-  end
-
   def cached_subgroups
     API::V1::FetchSubgroup.new.by_group(self)
-  end
-
-  def cached_header_image_url
-    API::V1::FetchGroup.new.header_image_url(self)
   end
 end

@@ -1,6 +1,6 @@
 ActiveAdmin.register Group do
   permit_params do
-    permitted = [:name, :description, :header_image]
+    permitted = [:name, :description]
     permitted
   end
 
@@ -9,9 +9,6 @@ ActiveAdmin.register Group do
     id_column
     column :name
     column :description
-    column "Header Image" do |group|
-      group.header_image.filename
-    end
     actions
   end
 
@@ -19,12 +16,6 @@ ActiveAdmin.register Group do
     f.inputs do
       f.input :name
       f.input :description
-      f.input :header_image, as: :file, input_html: {multiple: false}
-      if f.object.header_image.attached?
-        span do
-          image_tag(f.object.header_image)
-        end
-      end
     end
     f.actions
   end
