@@ -4,23 +4,14 @@ class GroupsImporter
   class InvalidFileException < StandardError; end
 
   def import_from_folder(folder_path)
-    clear_all
+    create_widgets
+    reset_dictionaries
     RecordWidget.skip_callback(:create, :after, :update_visualization_types)
 
     records = Dir.glob("#{folder_path}/*.csv")
     records.each do |file_path|
       import_from_csv(file_path)
     end
-
-    RecordWidget.set_callback(:create, :after, :update_visualization_types)
-    puts "Records count: #{Record.all.count}"
-  end
-
-  def import_from_file(file_path)
-    clear_all
-    RecordWidget.skip_callback(:create, :after, :update_visualization_types)
-
-    import_from_csv(file_path)
 
     RecordWidget.set_callback(:create, :after, :update_visualization_types)
     puts "Records count: #{Record.all.count}"
@@ -33,6 +24,15 @@ class GroupsImporter
     API::V1::FindOrUpsertWidget.call(name: "line")
     API::V1::FindOrUpsertWidget.call(name: "bar")
     API::V1::FindOrUpsertWidget.call(name: "choropleth")
+  end
+
+  def reset_dictionaries
+    API::V1::FindOrUpsertGroup.reload
+    API::V1::FindOrUpsertSubgroup.reload
+    API::V1::FindOrUpsertIndicator.reload
+    API::V1::FindOrUpsertUnit.reload
+    API::V1::FindOrUpsertRegion.reload
+    API::V1::FindOrUpsertWidget.reload
   end
 
   # TO DO Use the FileValidator and handle_invalid_file_exception
@@ -113,34 +113,13 @@ class GroupsImporter
       end
 
       Record.insert_all(records) unless records.empty?
-      RecordWidget.insert_all(record_widgets) unless record_widgets.empty?
+      if record_widgets.empty?
+        puts "No record-widget associations to save"
+      else
+        puts "Saving #{record_widgets.count} record-widget associations..."
+        RecordWidget.insert_all(record_widgets)
+      end
     end
-  end
-
-  def clear_all
-    puts "Clearing data prior to import"
-    RecordWidget.delete_all
-    IndicatorWidget.delete_all
-    ActiveRecord::Base.connection.execute("TRUNCATE records CASCADE")
-    Indicator.delete_all
-    Subgroup.delete_all
-    Group.delete_all
-    Unit.delete_all
-    Region.delete_all
-    Scenario.delete_all
-    Widget.delete_all
-    puts "Data cleared!"
-    create_widgets
-    reset_dictionaries
-  end
-
-  def reset_dictionaries
-    API::V1::FindOrUpsertGroup.reload
-    API::V1::FindOrUpsertSubgroup.reload
-    API::V1::FindOrUpsertIndicator.reload
-    API::V1::FindOrUpsertUnit.reload
-    API::V1::FindOrUpsertRegion.reload
-    API::V1::FindOrUpsertWidget.reload
   end
 
   # Validates that values with headers containing '_en' are not Chinese characters.
