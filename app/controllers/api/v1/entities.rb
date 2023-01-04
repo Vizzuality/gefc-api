@@ -45,6 +45,7 @@ module API
         expose :name, documentation: {type: "String", desc: "Indicator's name."}
         expose :description, documentation: {type: "String", desc: "Indicator's description."}
         expose :default_visualization_name, as: :default_visualization
+        expose :only_admins_can_download
         expose :visualization_types, as: :visualization_types
         expose :category_1, as: :categories
         expose :category_filters, as: :category_filters
@@ -61,6 +62,7 @@ module API
         expose :name, documentation: {type: "String", desc: "Indicator's name."}
         expose :description, documentation: {type: "String", desc: "Indicator's description."}
         expose :default_visualization_name, as: :default_visualization
+        expose :only_admins_can_download
         expose :visualization_types, as: :visualization_types
         expose :categories, as: :categories
         expose :category_filters, as: :category_filters
