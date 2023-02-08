@@ -30,7 +30,8 @@ This project includes multiple `rake` tasks to handle different data import and 
 
 This assumes the following:
 - All the files (`*.csv`, `*.json`, `*.geojson`), except the sankey `.json`, must be in the root of that folder.
-- There can only be one subfolder, named `sankey`. In it, there can only be a single `.json` file that contains the sankey data.
+- There can only be two subfolders named `sankey` and `energy_balance` respectively. In each, there can only be a single `.json` file that contains the corresponding data.
+
 
 This command is a simple aggregate of all the commands below, executed back to back in the correct order. The operation
 is not atomic. For details on what exactly this command does, check the documentation for each of the subtasks it executes.
@@ -49,6 +50,8 @@ is not atomic. For details on what exactly this command does, check the document
 ├── <geometries_file_2>.geojson
 ├── sankey
    └── <sankey_file>.json
+├── energy_balance
+   └── <energy_balance>.json
 ```
 
 ### Step by step / details

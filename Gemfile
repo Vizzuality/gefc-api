@@ -84,6 +84,8 @@ group :development, :test do
   # This gem is a port of Perl's Data::Faker library that generates fake data. Read more: https://github.com/faker-ruby/faker
   gem "faker"
   gem "standard", "~> 1"
+  gem "vcr"
+  gem "webmock"
 end
 
 group :development do

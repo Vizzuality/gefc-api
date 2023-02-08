@@ -122,8 +122,8 @@ ActiveRecord::Schema.define(version: 2022_11_23_160441) do
   create_table "record_widgets", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "record_id"
     t.uuid "widget_id"
-    t.datetime "created_at", default: "2022-11-23 18:59:17", null: false
-    t.datetime "updated_at", default: "2022-11-23 18:59:17", null: false
+    t.datetime "created_at", default: "2023-02-08 13:25:00", null: false
+    t.datetime "updated_at", default: "2023-02-08 13:25:00", null: false
   end
 
   create_table "records", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -132,8 +132,8 @@ ActiveRecord::Schema.define(version: 2022_11_23_160441) do
     t.integer "year"
     t.string "category_1_en"
     t.string "category_2_en"
-    t.datetime "created_at", default: "2022-11-23 18:59:17", null: false
-    t.datetime "updated_at", default: "2022-11-23 18:59:17", null: false
+    t.datetime "created_at", default: "2023-02-08 13:25:00", null: false
+    t.datetime "updated_at", default: "2023-02-08 13:25:00", null: false
     t.uuid "unit_id"
     t.uuid "region_id"
     t.json "original_categories"

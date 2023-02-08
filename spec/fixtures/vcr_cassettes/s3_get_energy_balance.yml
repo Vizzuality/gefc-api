@@ -1,0 +1,59 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://gefc-bucket.s3.ap-southeast-1.amazonaws.com/energy_balance.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - ''
+      User-Agent:
+      - aws-sdk-ruby3/3.143.0 ruby/3.0.0 x86_64-linux aws-sdk-s3/1.114.0
+      Host:
+      - gefc-bucket.s3.ap-southeast-1.amazonaws.com
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 08 Feb 2023 15:44:12 GMT
+      Last-Modified:
+      - Wed, 08 Feb 2023 15:42:56 GMT
+      Etag:
+      - '"257344934b83486610ac1f5f25286401"'
+      X-Amz-Server-Side-Encryption:
+      - AES256
+      Accept-Ranges:
+      - bytes
+      Content-Type:
+      - binary/octet-stream
+      Server:
+      - AmazonS3
+      Content-Length:
+      - '470'
+    body:
+      encoding: UTF-8
+      string: |
+        [
+          {
+            "group_en": "Energy Balance",
+            "subgroup_en": "National Energy Balance",
+            "indicator_en": "Overall Energy Balance",
+            "category_1_en": "",
+            "file_name": "Overall Energy Balance Sheet.xlsx"
+          },
+          {
+            "group_en": "Energy Balance",
+            "subgroup_en": "National Energy Balance",
+            "indicator_en": "Energy Balance of China (Physical Quantity)",
+            "category_1_en": "",
+            "file_name": "Energy Balance of China (Physical Quantity)-2019.xlsx"
+          }
+        ]
+  recorded_at: Wed, 08 Feb 2023 15:44:12 GMT
+recorded_with: VCR 6.1.0

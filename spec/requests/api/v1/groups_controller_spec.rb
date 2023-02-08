@@ -37,11 +37,13 @@ RSpec.describe API::V1::Groups do
   describe "GET group" do
     context "when requesting the special \"energy balance\" group" do
       it "returns 200 and status ok" do
-        header "Content-Type", "application/json"
-        get "/api/v1/groups/energy-balance"
-        expect(last_response.status).to eq 200
-        expected_data = File.read("#{Rails.root}/public/data/energy_balance.json")
-        expect(last_response.body).to eq expected_data
+        VCR.use_cassette("s3_get_energy_balance") do
+          expected_data = File.read("#{Rails.root}/spec/files/energy_balance_sample.json")
+          header "Content-Type", "application/json"
+          get "/api/v1/groups/energy-balance"
+          expect(last_response.status).to eq 200
+          expect(JSON.parse!(last_response.body)).to eq JSON.parse!(expected_data)
+        end
       end
     end
 
