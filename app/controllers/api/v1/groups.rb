@@ -16,8 +16,7 @@ module API
 
         desc "Return the Energy Balance group"
         get "energy-balance", root: "group" do
-          content_type 'application/json'
-          sendfile "#{Rails.root}/public/data/energy_balance.json"
+          present JSON.parse!(present API::V1::EnergyBalance.new.get_file.string)
         end
 
         desc "Return a group"

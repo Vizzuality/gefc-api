@@ -20,6 +20,13 @@ class DataImporter
       puts "Sankey imported"
     end
 
+    records = Dir.glob("#{folder_path}/energy_balance/*.json")
+    records.each do |file_path|
+      puts "Importing energy balance..."
+      EnergyBalanceImporter.new.import_from_json(file_path)
+      puts "Energy balance imported"
+    end
+
     puts "Importing geometries..."
     GeometryImporter.new.import_from_folder(folder_path)
     puts "Geometries imported"
