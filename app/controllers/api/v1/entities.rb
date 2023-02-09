@@ -31,12 +31,31 @@ module API
         expose :id, documentation: {type: "String", desc: "Record's unique id"}
         expose :value, documentation: {type: "String", desc: "Record's name."}
         expose :year, documentation: {type: "String", desc: "Record's year."}
+        expose :file, documentation: {type: "String", desc: "Record's file name."}
         expose :category_1, documentation: {type: "String", desc: "Record's category."}
         expose :category_2, documentation: {type: "String", desc: "Record's category."}
         expose :unit, using: API::V1::Entities::Unit
         expose :region_id
         expose :scenario, using: API::V1::Entities::Scenario
         expose :visualization_types, as: :visualization_types
+      end
+
+      class IndicatorWithNestedData < Grape::Entity
+        expose :id, documentation: {type: "String", desc: "Indicator's unique id"}
+        expose :slug, documentation: {type: "String", desc: "Indicator's slug."}
+        expose :name, documentation: {type: "String", desc: "Indicator's name."}
+        expose :description, documentation: {type: "String", desc: "Indicator's description."}
+        expose :default_visualization_name, as: :default_visualization
+        expose :only_admins_can_download
+        expose :visualization_types, as: :visualization_types
+        expose :category_1, as: :categories
+        expose :category_filters, as: :category_filters
+        expose :start_date, as: :start_date
+        expose :end_date, as: :end_date
+        expose :scenarios, as: :scenarios
+        expose :data_source, as: :data_source
+        expose :region_ids, as: :region_ids
+        expose :records, using: API::V1::Entities::Record
       end
 
       class Indicator < Grape::Entity
@@ -75,6 +94,15 @@ module API
         expose :region_ids, as: :region_ids
       end
 
+      class SubgroupWithNestedData < Grape::Entity
+        expose :id, documentation: {type: "String", desc: "Subgroup's unique id."}
+        expose :slug, documentation: {type: "String", desc: "Subgroup's slug."}
+        expose :name, documentation: {type: "String", desc: "Subgroup's name."}
+        expose :description, documentation: {type: "String", desc: "Subgroup's description."}
+        expose :cached_indicators, as: :indicators, using: API::V1::Entities::IndicatorWithNestedData
+        expose :cached_default_indicator, as: :default_indicator, using: API::V1::Entities::IndicatorWithNestedData
+      end
+
       class FullSubgroup < Grape::Entity
         expose :id, documentation: {type: "String", desc: "Subgroup's unique id."}
         expose :slug, documentation: {type: "String", desc: "Subgroup's slug."}
@@ -105,6 +133,16 @@ module API
         expose :description, documentation: {type: "String", desc: "Group's description."}
         expose :default_subgroup_slug, as: :default_subgroup
         expose :cached_subgroups, as: :subgroups, using: API::V1::Entities::BasicSubgroup
+      end
+
+      class GroupWithNestedData < Grape::Entity
+        expose :id, documentation: {type: "String", desc: "Group's unique id."}
+        expose :slug, documentation: {type: "String", desc: "Group's slug."}
+        expose :name, documentation: {type: "String", desc: "Group's name."}
+        expose :subtitle, documentation: {type: "String", desc: "Group's name."}
+        expose :description, documentation: {type: "String", desc: "Group's description."}
+        expose :default_subgroup_slug, as: :default_subgroup
+        expose :cached_subgroups, as: :subgroups, using: API::V1::Entities::SubgroupWithNestedData
       end
 
       class MinimumGroup < Grape::Entity

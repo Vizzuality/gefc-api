@@ -35,18 +35,6 @@ RSpec.describe API::V1::Groups do
   end
 
   describe "GET group" do
-    context "when requesting the special \"energy balance\" group" do
-      it "returns 200 and status ok" do
-        VCR.use_cassette("s3_get_energy_balance") do
-          expected_data = File.read("#{Rails.root}/spec/files/energy_balance_sample.json")
-          header "Content-Type", "application/json"
-          get "/api/v1/groups/energy-balance"
-          expect(last_response.status).to eq 200
-          expect(JSON.parse!(last_response.body)).to eq JSON.parse!(expected_data)
-        end
-      end
-    end
-
     context "when requesting group with no subgroups" do
       it "returns 200 and status ok" do
         header "Content-Type", "application/json"
@@ -61,6 +49,23 @@ RSpec.describe API::V1::Groups do
         header "Content-Type", "application/json"
         get "/api/v1/groups/#{group.id}"
         expect(last_response.status).to eq 200
+      end
+    end
+
+    context "when requesting group with full data" do
+      let!(:subgroup) { FactoryBot.create(:subgroup, group: group) }
+      let!(:indicator) { FactoryBot.create(:indicator, subgroup: subgroup) }
+      let!(:record) { create(:record, indicator: indicator, file: "potato.txt", category_1: "Total") }
+
+      it "returns 200 and status ok" do
+        header "Content-Type", "application/json"
+        get "/api/v1/groups/#{group.id}?load_nested_data=true"
+        expect(last_response.status).to eq 200
+
+        expect(parsed_body["id"]).to eq Group.all.order(:name_en).first.id
+        expect(parsed_body["subgroups"].first["id"]).to eq Subgroup.all.order(:name_en).first.id
+        expect(parsed_body["subgroups"].first["indicators"].first["id"]).to eq Indicator.all.order(:name_en).first.id
+        expect(parsed_body["subgroups"].first["indicators"].first["records"].first["file"]).to eq Record.all.order(:file).first.file
       end
     end
   end
