@@ -17,11 +17,11 @@ module API
         desc "Return a group"
         params do
           requires :id, type: String, desc: "ID / slug of the group"
-          optional :load_nested_data, type: String, desc: "If full nested data should be loaded as well. This may cause very slow response times for large datasets"
+          optional :load_nested_data, type: Boolean, desc: "If full nested data should be loaded as well. This may cause very slow response times for large datasets", default: false
         end
         get ":id", root: "group" do
           group_object = FetchGroup.new.by_id_or_slug(permitted_params[:id])
-          if :load_nested_data
+          if params["load_nested_data"]
             present group_object, with: API::V1::Entities::GroupWithNestedData
           else
             present group_object, with: API::V1::Entities::Group
