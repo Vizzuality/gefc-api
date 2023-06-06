@@ -20,6 +20,8 @@ class GroupsImporter
   private
 
   def create_widgets
+    puts "Creating widgets..."
+    API::V1::FindOrUpsertWidget.reload
     API::V1::FindOrUpsertWidget.call(name: "pie")
     API::V1::FindOrUpsertWidget.call(name: "line")
     API::V1::FindOrUpsertWidget.call(name: "bar")
