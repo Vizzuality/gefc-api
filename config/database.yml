@@ -10,11 +10,11 @@ default: &default
 
 development:
   <<: *default
-  database: gefc_api_development
+  database: <%= ENV.fetch('POSTGRES_DATABASE') { "gefc_api_development" } %>
 
 test:
   <<: *default
-  database: gefc_api_test
+  database: <%= ENV.fetch('POSTGRES_DATABASE') { "gefc_api_test" } %>
 
 staging:
   <<: *default
