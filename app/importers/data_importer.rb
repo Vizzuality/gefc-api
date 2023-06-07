@@ -4,6 +4,7 @@ class DataImporter
 
     puts "Clearing existing data"
     clear_all
+    reset_dictionaries
 
     puts "Importing groups..."
     GroupsImporter.new.import_from_folder(folder_path)
@@ -42,6 +43,8 @@ class DataImporter
     puts "Populating extra region info..."
     RegionsExtraInfo.new.populate
     puts "Extra region info populated"
+
+    reset_dictionaries
   end
 
   private
@@ -59,5 +62,18 @@ class DataImporter
     Scenario.delete_all
     Widget.delete_all
     puts "Data cleared!"
+  end
+
+  def reset_dictionaries
+    API::V1::FindOrUpsertGroup.reload
+    API::V1::FindOrUpsertEntity.reload
+    API::V1::FindOrUpsertIndicatorWidget.reload
+    API::V1::FindOrUpsertScenario.reload
+    API::V1::FindOrUpsertSubgroup.reload
+    API::V1::FindOrUpsertIndicator.reload
+    API::V1::FindOrUpsertUnit.reload
+    API::V1::FindOrUpsertRegion.reload
+    API::V1::FindOrUpsertWidget.reload
+    puts "Dictionaries cleared!"
   end
 end

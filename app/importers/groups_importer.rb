@@ -5,7 +5,6 @@ class GroupsImporter
 
   def import_from_folder(folder_path)
     create_widgets
-    reset_dictionaries
     RecordWidget.skip_callback(:create, :after, :update_visualization_types)
 
     records = Dir.glob("#{folder_path}/*.csv")
@@ -26,15 +25,6 @@ class GroupsImporter
     API::V1::FindOrUpsertWidget.call(name: "line")
     API::V1::FindOrUpsertWidget.call(name: "bar")
     API::V1::FindOrUpsertWidget.call(name: "choropleth")
-  end
-
-  def reset_dictionaries
-    API::V1::FindOrUpsertGroup.reload
-    API::V1::FindOrUpsertSubgroup.reload
-    API::V1::FindOrUpsertIndicator.reload
-    API::V1::FindOrUpsertUnit.reload
-    API::V1::FindOrUpsertRegion.reload
-    API::V1::FindOrUpsertWidget.reload
   end
 
   # TO DO Use the FileValidator and handle_invalid_file_exception

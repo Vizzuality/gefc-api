@@ -2,6 +2,7 @@ class IndicatorExtraInfo
   def populate
     Parallel.map(Indicator.all) do |indicator|
       puts indicator.id
+      puts indicator.name_en
       indicator.region_ids = Region.where(id: indicator.records.select(:region_id)).pluck(:id)
       indicator.visualization_types = indicator.widgets_list
       indicator.default_visualization_name = indicator.default_visualization
