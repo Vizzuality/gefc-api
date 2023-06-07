@@ -66,7 +66,6 @@ class DataImporter
 
   def reset_dictionaries
     API::V1::FindOrUpsertGroup.reload
-    API::V1::FindOrUpsertEntity.reload
     API::V1::FindOrUpsertIndicatorWidget.reload
     API::V1::FindOrUpsertScenario.reload
     API::V1::FindOrUpsertSubgroup.reload

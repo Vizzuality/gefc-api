@@ -1,5 +1,7 @@
 class WidgetsImporter
   def import_from_folder(folder_path)
+    clear_all
+
     records = Dir.glob("#{folder_path}/*.json")
     records.each do |file_path|
       import_from_json(file_path)
@@ -9,6 +11,8 @@ class WidgetsImporter
   end
 
   def import_from_file(file_path)
+    clear_all
+
     import_from_json(file_path)
 
     puts "Data imported successfully"
@@ -69,5 +73,20 @@ class WidgetsImporter
         end
       end
     end
+  end
+
+  def clear_all
+    IndicatorWidget.delete_all
+    reset_dictionaries
+  end
+
+  def reset_dictionaries
+    API::V1::FindOrUpsertGroup.reload
+    API::V1::FindOrUpsertSubgroup.reload
+    API::V1::FindOrUpsertIndicator.reload
+    API::V1::FindOrUpsertUnit.reload
+    API::V1::FindOrUpsertRegion.reload
+    API::V1::FindOrUpsertWidget.reload
+    API::V1::FindOrUpsertIndicatorWidget.reload
   end
 end
