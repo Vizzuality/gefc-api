@@ -63,11 +63,12 @@ class GroupsImporter
         current_subgroup = API::V1::FindOrUpsertSubgroup.call(subgroup_attributes, current_group)
         indicator_attributes = { name_en: row_data["indicator_en"]&.strip, name_cn: row_data["indicator_cn"]&.strip, subgroup_id: current_subgroup.id }
         current_indicator = API::V1::FindOrUpsertIndicator.call(indicator_attributes)
-        unit_name = row_data["units_en"]&.strip
-        current_unit = if unit_name.blank?
+        unit_name_en = row_data["units_en"]&.strip
+        unit_name_cn = row_data["units_cn"]&.strip
+        current_unit = if unit_name_en.blank?
                          nil
                        else
-                         API::V1::FindOrUpsertUnit.call({ name_en: unit_name })
+                         API::V1::FindOrUpsertUnit.call({ name_en: unit_name_en, name_cn: unit_name_cn })
                        end
 
         region_attributes = {
