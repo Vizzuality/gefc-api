@@ -26,7 +26,7 @@ module API
         rel = Indicator.where("id::TEXT = :id OR slug = :id", id: slug_or_id)
         rel = rel.includes(*includes) if includes.any?
         rel = rel.where(filters) if filters.any?
-        raise ActiveRecord::RecordNotFound.new("Indicator not found") if rel.count == 0
+        raise ActiveRecord::RecordNotFound.new("Indicator #{slug_or_id} not found") if rel.count == 0
         rel.first!
       end
     end
