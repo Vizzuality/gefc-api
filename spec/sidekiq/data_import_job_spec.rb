@@ -11,7 +11,7 @@ RSpec.describe DataImportJob, type: :job do
       update_data_import = DataImportAttempt.find(data_import_attempt.id)
 
       expect(update_data_import.status).to eq('error')
-      expect(update_data_import.message).to eq("Error importing data: Indicator not found")
+      expect(update_data_import.message).to eq("Error importing data: Indicator energy-flows-energy-flows not found")
     end
   end
 end
