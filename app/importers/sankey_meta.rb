@@ -2,7 +2,7 @@ class SankeyMeta
   def populate
     meta_object = {}
     meta_object["default_visualization"] = "sankey"
-    energy_flows = Indicator.find_by_id_or_slug!("energy-flows-energy-flows", {}, [])
+    energy_flows = Indicator.find_by_id_or_slug!("energy-flows-energy-sankey-diagrams", {}, [])
     years = []
 
     unless energy_flows.sankey.nil? || energy_flows.sankey["data"].nil?
@@ -38,7 +38,7 @@ class SankeyMeta
 
     meta_object = {}
     meta_object["default_visualization"] = "sankey"
-    emission_flows = Indicator.find_by_id_or_slug!("energy-flows-emission-flows", {}, [])
+    emission_flows = Indicator.find_by_id_or_slug!("energy-flows-carbon-sankey-diagrams", {}, [])
     years = []
 
     unless emission_flows.sankey.nil? || emission_flows.sankey["data"].nil?
